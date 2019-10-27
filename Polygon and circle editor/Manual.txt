@@ -1,0 +1,37 @@
+﻿CZĘŚĆ PODSTAWOWA:
+Aby narysować wielokąt należy wybrać pole wyboru Polygon, następnie klikając lewym przyciskiem myszy tworzyć kolejne wierzchołki wielokąta, które automatcznie połączą się krawędzią z poprzednim wierzchołkiem.
+Aby domknąć wielokąt należy przycisnąć środkowy przycisk myszy lub wcisnąć kombinacje klawiszy ctrl + enter. Poprawny wielokąt musi posiadać conajmniej 3 wierzchołki oraz być domknięty.
+Aby narysować okrąg należy wybrać pole wyboru Circle, następnie klikając lewym przyciskiem myszy wybrać środek okręgu oraz następnym kliknięciem lewego przycisku myszy wybrać promień okręgu.
+Nie można narysować figury, która nie mieści się na danym rozmiarze obszaru rysowania.
+Na obecnym obszarze roboczym widoczne są jedynie figury, które da się w pełni narysować na danym rozmiarze.
+W przypadku niedomkniętego wielokąta lub okręgu bez wybranego promienia, gdy zmienione zostanie pole wyboru lub któregokolwiek elementu figury nie da się narysować na danym rozmiarze (w przypadku zmiany rozmiaru okna aplikacji), to figura ta znika bezpowrotnie.
+Podczas rysowania figury zanim wielokąt będzię domknięty i zanim zostanie wybrany promień okręgu, można usunąć ostatnio narysowany wierzchołek i środek okręgu klikając prawy przycisk myszy.
+Aby zmienić kolor rysowanej figury należy zmienić kolor klikając w przycisk obok napisu Color. Nie można zmienić koloru w pełni narysowanej figury (domknięty wielokąt i okrąg z wybranym promieniem).
+Rozmiar aplikacji można dowolnie zmieniać, aczkolwiek największą wygodę użytkowania osiąga się przy stałym rozmiarze, ponieważ widać wszystkie narysowane figury.
+Aby wyczyścić obszar rysowania należy kliknąć przycisk Clear.
+W prawym górnym rogu wyświetlać się będą komunikaty o ostaniej wykonanej akcji lub powód, przez który danej akcji wykonać nie można.
+Aby wykonać akcję edycji figur należy wybrać pole wyboru Edit.
+Na wielokącie można wykonać następujące edycje: 
+- przesunięcie wierzchołka (nie poza obszar rysowania) - klikając lewym przyciskiem myszy na wierzchołku i przesuwając go,
+- dodanie wierzchołka na krawędzi - dwa razy klikając na krawędzi wielokąta, w miejscu, w którym chcemy dodać wierzchołek,
+- przesunięcie krawędzi (nie poza obszar rysowania) - klikając lewym przyciskiem myszy na krawędź i przesuwając ją, 
+- usunięcie wierzchołka (jeśli zachowana jest poprawność wielokąta) - klikając prawym przyciskiem myszy na wierzchołku,
+- usunięcie całego wielokąta - klikając prawym przyciskiem myszy wewnątrz wielokąta,
+- przesunięcie całego wielokąta (nie poza obszar rysowania) - klikając lewym przyciskiem myszy wewnątrz wielokąta i przesuwając.
+Na okręgu można wykonać następujące edycje:
+- przesunięcie okręgu (nie poza obszar rysowania) - klikając lewym przyciskiem myszy wewnątrz okręgu i przesuwając,
+- usunięcie okręgu - klikając prawym przyciskiem myszy wewnątrz okręgu,
+- zmiana promienia okręgu (niewykraczając poza obszar rysowania) - klikając lewym przyciskiem myszy na granicy okręgu i przesuwając.
+
+CZĘŚĆ DODATKOWA (GRUPA 2) - MOŻLIWOŚĆ COFANIA ORAZ PRZYWRACANIA ZMIAN/AKCJI:
+Wszystkie możliwe do cofnięcia lub przywrócenia akcje widoczne są po prawej stronie okna aplikacji w panelu Actions.
+Akcja reprezentowana jest jako lista wielokątów i okręgów, kolor bieżącej figury oraz opis co się zmieniło w danej akcji.
+Podczas wykonywania przez użytkownika operacji (dodanie figury, usunięcie figury, edycja figury etc.), poprzedni stan wielokątów, okręgów i kolor zapisywane są w akcji.
+Akcje przechowywane są w dwóch listach - tych możliwych do cofnięcia i możliwych do przywrócenia. Listy te po każdej operacji wykonanej przez użytkownika są uaktualniane.
+Po naciśnieciu odpowiedniego przycisku Undo/Redo (jeśli warunki są spełnione) odpowiednia akcja jest usuwana ze swojej listy i dodawana do drugiej. Następnie ładowany jest stan figur z przeniesionej aplikacji.
+Bardzo ważne jest, aby akcje nie zawierały referecji obiektów, lecz były nowymi obiekatami. Inaczej wszystkie zmiany byłyby również wykonane obiektach, które mają odzwierciedlać stan przed zmianą.
+Aby cofnąć akcję należy wcisnąć przycisk Undo lub zastosować kombinację klawiszy ctrl + z.
+Aby przywrócić akcję należy wcisnąć przycisk Redo lub zastosować kombinację klawiszy ctrl + shift + z.
+Akcję można przywrócić tylko wtedy, gdy po cofnięciu danej akcji użytkownik nie wykonał żadnej innej akcji.
+Nie można cofnąc ani przywrócić akcji na niewidocznej figurze, która po cofnięciu lub przywróceniu akcji byłaby niepoprawna tj. niedomknięty wielokąt lub okrąg bez promienia. Cofanie i przywracanie innych akcji na niewidocznych figurach jest możliwe np. przesuwanie figury.
+Zmiana rozmiaru okna aplikacji, w wyniku której niepoprawna figura zniknie spowoduje usunięcie wszystkich zmian możliwych do przywrócenia oraz usunie wszystkie akcje możliwe do cofnięcia, które mogłyby stworzyć niepoprawną figurę poza obszarem rysowania. Stąd rekomenduje się, aby użytkownik, przed rozpoczęciem rysowania wybrał stosowny dla niego rozmiar okna i na nim pracował.
