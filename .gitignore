@@ -1,1 +1,6 @@
-Polygon_Filler/
+Polygon_Filler/.vs/
+Polygon_Filler/obj/
+Polygon_Filler/bin/
+Polygon_Filler/Properties/
+Polygon_Filler/*.sln
+Polygon_Filler/*.csproj
