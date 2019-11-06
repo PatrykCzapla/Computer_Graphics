@@ -18,6 +18,16 @@ namespace Polygon_Filler
             this.v2 = v2;
         }
 
+        public bool canDraw(List<Edge> edges)
+        {
+            if (edges.Count == 0) return true;
+            List<Edge> tmpEdges = new List<Edge>(edges);
+            tmpEdges.Remove(tmpEdges.Last());
+            if (tmpEdges.Any(e => this.LinesIntersect(this.v1.center, this.v2.center, e.v1.center, e.v2.center) == true))
+                return false;
+            else return true;
+        }
+
         public void Draw(Bitmap bitmap)
         {
             Point a = this.v1.center;
@@ -46,8 +56,8 @@ namespace Polygon_Filler
                 dy = a.Y - b.Y;
             }
 
-            bitmap.SetPixel(a.X, a.Y, Color.Black);
-            Form.pixelsOfEdges[a.X, a.Y] = this;
+            //bitmap.SetPixel(a.X, a.Y, Color.Black);
+            //Form.pixelsOfEdges[a.X, a.Y] = this;
 
             if (dx > dy)
             {
@@ -67,6 +77,7 @@ namespace Polygon_Filler
                         d += bi;
                         a.X += xi;
                     }
+                    if (a.X < 0 || a.X >= bitmap.Width || a.Y < 0 || a.Y >= bitmap.Height) continue;
                     bitmap.SetPixel(a.X, a.Y, Color.Black);
                     Form.pixelsOfEdges[a.X, a.Y] = this;
                 }
@@ -90,11 +101,47 @@ namespace Polygon_Filler
                         d += bi;
                         a.Y += yi;
                     }
+                    if (a.X < 0 || a.X >= bitmap.Width || a.Y < 0 || a.Y >= bitmap.Height) continue;
                     bitmap.SetPixel(a.X, a.Y, Color.Black);
                     Form.pixelsOfEdges[a.X, a.Y] = this;
                 }
             }
             return;
+        }
+
+        private bool LinesIntersect(Point p1, Point p2, Point p3, Point p4)
+        {
+
+            int d1 = Orientation(p1, p2, p3);
+            int d2 = Orientation(p1, p2, p4);
+            int d3 = Orientation(p3, p4, p1);
+            int d4 = Orientation(p3, p4, p2);
+
+            if (d1 != d2 && d3 != d4)
+                return true;
+
+            if (d1 == 0 && OnSegment(p1, p3, p2)) return true;
+            if (d2 == 0 && OnSegment(p1, p4, p2)) return true;
+            if (d3 == 0 && OnSegment(p3, p1, p4)) return true;
+            if (d4 == 0 && OnSegment(p3, p2, p4)) return true;
+
+            return false;
+        }
+
+        private int Orientation(Point p1, Point p2, Point q)
+        {
+            int val = (p2.Y - p1.Y) * (q.X - p2.X) - (p2.X - p1.X) * (q.Y - p2.Y);
+
+            if (val == 0) return 0;
+            return (val > 0) ? 1 : 2;
+        }
+
+        private bool OnSegment(Point p, Point q, Point r)
+        {
+            if (q.X <= Math.Max(p.X, r.X) && q.X >= Math.Min(p.X, r.X) &&
+                q.Y <= Math.Max(p.Y, r.Y) && q.Y >= Math.Min(p.Y, r.Y))
+                return true;
+            return false;
         }
     }
 }
