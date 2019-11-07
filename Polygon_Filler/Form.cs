@@ -13,6 +13,8 @@ namespace Polygon_Filler
 {
     public partial class Form : System.Windows.Forms.Form
     {
+        public static DirectBitmap dbm = null;
+
         public static Edge[,] pixelsOfEdges;
         public static Vertex[,] pixelsOfVertices;
 
@@ -35,12 +37,14 @@ namespace Polygon_Filler
 
         private void drawAllPolygons()
         {
-            drawingPictureBox.Image.Dispose();
-            drawingPictureBox.Image = new Bitmap(drawingPictureBox.Size.Width, drawingPictureBox.Size.Height);
-            pixelsOfEdges = new Edge[drawingPictureBox.Image.Width, drawingPictureBox.Image.Height];
-            pixelsOfVertices = new Vertex[drawingPictureBox.Image.Width, drawingPictureBox.Image.Height];
+            dbm.Dispose();
+            dbm = new DirectBitmap(drawingPictureBox.Size.Width, drawingPictureBox.Size.Height);
+            pixelsOfEdges = new Edge[drawingPictureBox.Width, drawingPictureBox.Height];
+            pixelsOfVertices = new Vertex[drawingPictureBox.Width, drawingPictureBox.Height];
             foreach (Polygon p in polygons)
-                p.Draw((Bitmap)drawingPictureBox.Image);
+                p.Draw();
+            drawingPictureBox.Image = dbm.Bitmap;
+            return;
         }
 
         private void clearButton_Click(object sender, EventArgs e)
@@ -49,10 +53,12 @@ namespace Polygon_Filler
             convexPolygons = new List<ConvexPolygon>();
             previousPoint = new Point(-1, -1);
             markedVertex = null;
-            markedPolygon = null;  
-            drawingPictureBox.Image = new Bitmap(drawingPictureBox.Width, drawingPictureBox.Height);
-            pixelsOfEdges = new Edge[drawingPictureBox.Image.Width, drawingPictureBox.Image.Height];
+            markedPolygon = null;
+            dbm = new DirectBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
+            drawingPictureBox.Image = dbm.Bitmap;
+            pixelsOfEdges = new Edge[drawingPictureBox.Width, drawingPictureBox.Height];
             pixelsOfVertices = new Vertex[drawingPictureBox.Width, drawingPictureBox.Height];
+            return;
         }
 
         private void drawingPictureBox_Click(object sender, EventArgs e)
@@ -69,11 +75,7 @@ namespace Polygon_Filler
                 if (((MouseEventArgs)e).Button == MouseButtons.Left)
                 {
                     if (polygons.Count == 0 || polygons.Last().isCorrect == true)
-                    {
                         polygons.Add(new Polygon(new List<Vertex> { newVertex }, new List<Edge>()));
-                        drawingPictureBox.Image = new Bitmap(drawingPictureBox.Size.Width, drawingPictureBox.Size.Height);
-                        drawAllPolygons();
-                    }
                     else
                     {
                         Edge newEdge = new Edge(polygons.Last().vertices.Last(), newVertex);
@@ -82,22 +84,21 @@ namespace Polygon_Filler
                             polygons.Last().edges.Add(newEdge);
                             polygons.Last().vertices.Add(newVertex);
                         }
-                        drawingPictureBox.Image = new Bitmap(drawingPictureBox.Size.Width, drawingPictureBox.Size.Height);
-                        drawAllPolygons();
                     }
+                    drawAllPolygons();
+                    return;
                 }
                 else if (((MouseEventArgs)e).Button == MouseButtons.Middle)
                 {
                     if (polygons.Count == 0 || polygons.Last().isCorrect == true || polygons.Last().vertices.Count < 3) return;
-                    Edge newEdge = new Edge(polygons.Last().vertices.Last(), polygons.Last().vertices.First());
-                    List<Edge> tmpEdges = new List<Edge>(polygons.Last().edges);
-                    tmpEdges.Remove(tmpEdges.First());
-                    if (newEdge.canDraw(tmpEdges) == true)
+                    Edge newEdge = new Edge(polygons.Last().vertices.Last(), polygons.Last().vertices.First());                    
+                    if (newEdge.canDraw(polygons.Last().edges) == true)
                         polygons.Last().edges.Add(newEdge);
                     else return;
                     polygons.Last().isCorrect = true;
                     drawingPictureBox.Image = new Bitmap(drawingPictureBox.Size.Width, drawingPictureBox.Size.Height);
                     drawAllPolygons();
+                    return;
                 }
                 else if (((MouseEventArgs)e).Button == MouseButtons.Right)
                 {
@@ -111,7 +112,9 @@ namespace Polygon_Filler
                             polygons.Remove(polygons.Last());
                         drawAllPolygons();
                     }
+                    return;
                 }
+                return;
             }
             else if (editRadioButton.Checked == true && previousPoint.X != -1)
             {
@@ -119,19 +122,27 @@ namespace Polygon_Filler
                 {
                     if (markedVertex != null)
                     {
-                        Polygon p = polygons.Find(a => a.vertices.Contains(markedVertex));
-                        if (p.vertices.Count <= 3)
+                        Polygon currentPolygon = polygons.Find(a => a.vertices.Contains(markedVertex));
+                        if (currentPolygon.vertices.Count <= 3)
                         {
                             previousPoint.X = -1;
                             return;
                         }
-                        Edge e1 = p.edges.Find(a => a.v2 == markedVertex);
-                        Edge e2 = p.edges.Find(a => a.v1 == markedVertex);
+                        Edge e1 = currentPolygon.edges.Find(a => a.v2 == markedVertex);
+                        Edge e2 = currentPolygon.edges.Find(a => a.v1 == markedVertex);
                         Edge newEdge = new Edge(e1.v1, e2.v2);
-                        p.edges.Insert(p.edges.IndexOf(e1), newEdge);
-                        p.edges.Remove(e1);
-                        p.edges.Remove(e2);
-                        p.vertices.Remove(markedVertex);
+                        currentPolygon.edges.Insert(currentPolygon.edges.IndexOf(e1), newEdge);
+                        currentPolygon.edges.Remove(e1);
+                        currentPolygon.edges.Remove(e2);
+                        currentPolygon.vertices.Remove(markedVertex);
+
+                        if (currentPolygon.edges.Any(ed => ed.canDraw(currentPolygon.edges) == false))
+                        {
+                            currentPolygon.edges.Insert(currentPolygon.edges.IndexOf(newEdge), e1);
+                            currentPolygon.edges.Insert(currentPolygon.edges.IndexOf(e1), e2);
+                            currentPolygon.vertices.Insert(currentPolygon.vertices.IndexOf(newEdge.v2), markedVertex);
+                            currentPolygon.edges.Remove(newEdge);
+                        }
                         previousPoint.X = -1;
                         return;
                     }
@@ -145,8 +156,10 @@ namespace Polygon_Filler
                     markedVertex = null;
                     previousPoint.X = -1;
                     return;
-                }                
+                }
+                return;
             }
+            return;
         }
 
         private void generateConvexButton_Click(object sender, EventArgs e)
@@ -160,7 +173,8 @@ namespace Polygon_Filler
             drawingPictureBox.Image = new Bitmap(drawingPictureBox.Size.Width, drawingPictureBox.Size.Height);
             drawAllPolygons();
             foreach (ConvexPolygon cp in convexPolygons)
-                cp.Draw((Bitmap)drawingPictureBox.Image);
+                cp.Draw();
+            return;
         }
 
         private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
@@ -174,14 +188,14 @@ namespace Polygon_Filler
                 Vertex newVertex = new Vertex(currentPoint);
 
                 if (polygons.Count == 0 || polygons.Last().isCorrect == true)
-                    newVertex.Draw((Bitmap)drawingPictureBox.Image);
+                    newVertex.Draw();
                 else if (polygons.Last().isCorrect == false)
                 {
                     Edge newEdge = new Edge(polygons.Last().vertices.Last(), newVertex);
                     if (newEdge.canDraw(polygons.Last().edges) == true)
                     {
-                        newEdge.Draw((Bitmap)drawingPictureBox.Image);
-                        newVertex.Draw((Bitmap)drawingPictureBox.Image);
+                        newEdge.Draw();
+                        newVertex.Draw();
                     }
                 }
             }
@@ -193,15 +207,11 @@ namespace Polygon_Filler
                     markedVertex.Move(currentPoint.X - previousPoint.X, currentPoint.Y - previousPoint.Y);
                     if (currentPolygon.edges.Any(ed => ed.canDraw(currentPolygon.edges) == false))
                         markedVertex.Move(previousPoint.X - currentPoint.X, previousPoint.Y - currentPoint.Y);
-                    previousPoint = currentPoint;
-                    return;
                 }
                 else if (markedPolygon != null)
-                {
-                    markedPolygon.Move(currentPoint.X - previousPoint.X, currentPoint.Y - previousPoint.Y);                    
-                    previousPoint = currentPoint;
-                    return;
-                }
+                    markedPolygon.Move(currentPoint.X - previousPoint.X, currentPoint.Y - previousPoint.Y);                                       
+                previousPoint = currentPoint;
+                return;
             }
         }
 
@@ -214,15 +224,15 @@ namespace Polygon_Filler
                 if (markedVertex == null)
                     markedPolygon = Editor.searchForPolygon(previousPoint);
             }
+            return;
         }
 
         private void CheckedChanged(object sender, EventArgs e)
         {
             if (polygons.Count > 0 && polygons.Last().isCorrect == false)
-            {
                 polygons.RemoveAt(polygons.Count - 1);
-            }
             drawAllPolygons();
+            return;
         }
 
         private void drawingPictureBox_MouseLeave(object sender, EventArgs e)
@@ -230,6 +240,13 @@ namespace Polygon_Filler
             markedVertex = null;
             markedPolygon = null;
             drawAllPolygons();
+            return;
+        }
+
+        private void drawingPictureBox_SizeChanged(object sender, EventArgs e)
+        {
+            drawAllPolygons();
+            return;
         }
     }
 }

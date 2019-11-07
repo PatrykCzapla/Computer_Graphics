@@ -16,6 +16,7 @@ namespace Polygon_Filler
         {
             this.v1 = v1;
             this.v2 = v2;
+            return;
         }
 
         public bool canDraw(List<Edge> edges)
@@ -26,7 +27,7 @@ namespace Polygon_Filler
             else return true;
         }
 
-        public void Draw(Bitmap bitmap)
+        public void Draw()
         {
             Point a = this.v1.center;
             Point b = this.v2.center;
@@ -43,6 +44,7 @@ namespace Polygon_Filler
                 xi = -1;
                 dx = a.X - b.X;
             }
+
             if (a.Y < b.Y)
             {
                 yi = 1;
@@ -53,9 +55,6 @@ namespace Polygon_Filler
                 yi = -1;
                 dy = a.Y - b.Y;
             }
-
-            //bitmap.SetPixel(a.X, a.Y, Color.Black);
-            //Form.pixelsOfEdges[a.X, a.Y] = this;
 
             if (dx > dy)
             {
@@ -75,11 +74,10 @@ namespace Polygon_Filler
                         d += bi;
                         a.X += xi;
                     }
-                    if (a.X < 0 || a.X >= bitmap.Width || a.Y < 0 || a.Y >= bitmap.Height) continue;
-                    bitmap.SetPixel(a.X, a.Y, Color.Black);
+                    if (a.X < 0 || a.X >= Form.dbm.Width || a.Y < 0 || a.Y >= Form.dbm.Height) continue;
+                    Form.dbm.SetPixel(a.X, a.Y, Color.Black);
                     Form.pixelsOfEdges[a.X, a.Y] = this;
                 }
-
             }
             else
             {
@@ -99,8 +97,8 @@ namespace Polygon_Filler
                         d += bi;
                         a.Y += yi;
                     }
-                    if (a.X < 0 || a.X >= bitmap.Width || a.Y < 0 || a.Y >= bitmap.Height) continue;
-                    bitmap.SetPixel(a.X, a.Y, Color.Black);
+                    if (a.X < 0 || a.X >= Form.dbm.Width || a.Y < 0 || a.Y >= Form.dbm.Height) continue;
+                    Form.dbm.SetPixel(a.X, a.Y, Color.Black);
                     Form.pixelsOfEdges[a.X, a.Y] = this;
                 }
             }
@@ -138,9 +136,7 @@ namespace Polygon_Filler
 
         private bool OnSegment(Point p, Point q, Point r)
         {
-            if (q.X <= Math.Max(p.X, r.X) && q.X >= Math.Min(p.X, r.X) &&
-                q.Y <= Math.Max(p.Y, r.Y) && q.Y >= Math.Min(p.Y, r.Y))
-                return true;
+            if (q.X <= Math.Max(p.X, r.X) && q.X >= Math.Min(p.X, r.X) && q.Y <= Math.Max(p.Y, r.Y) && q.Y >= Math.Min(p.Y, r.Y)) return true;
             return false;
         }
     }
