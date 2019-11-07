@@ -177,6 +177,7 @@
             this.drawingPictureBox.TabStop = false;
             this.drawingPictureBox.Click += new System.EventHandler(this.drawingPictureBox_Click);
             this.drawingPictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drawingPictureBox_MouseDown);
+            this.drawingPictureBox.MouseLeave += new System.EventHandler(this.drawingPictureBox_MouseLeave);
             this.drawingPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.drawingPictureBox_MouseMove);
             // 
             // Form

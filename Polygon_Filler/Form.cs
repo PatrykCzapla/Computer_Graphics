@@ -156,7 +156,7 @@ namespace Polygon_Filler
             List<Vertex> convexVertices = new List<Vertex>();
             for(int i = 0; i < noOfCovex; i++)
                 convexVertices.Add(new Vertex(new Point(rand.Next(0, drawingPictureBox.Image.Width - 1), rand.Next(0, drawingPictureBox.Image.Height - 1))));
-            convexPolygons.Add(new ConvexPolygon(convexVertices));
+            convexPolygons.Add(new ConvexPolygon(convexVertices, new List<Edge>()));
             drawingPictureBox.Image = new Bitmap(drawingPictureBox.Size.Width, drawingPictureBox.Size.Height);
             drawAllPolygons();
             foreach (ConvexPolygon cp in convexPolygons)
@@ -189,15 +189,16 @@ namespace Polygon_Filler
             {
                 if (markedVertex != null)
                 {
+                    Polygon currentPolygon = polygons.Find(p => p.vertices.Contains(markedVertex));
                     markedVertex.Move(currentPoint.X - previousPoint.X, currentPoint.Y - previousPoint.Y);
+                    if (currentPolygon.edges.Any(ed => ed.canDraw(currentPolygon.edges) == false))
+                        markedVertex.Move(previousPoint.X - currentPoint.X, previousPoint.Y - currentPoint.Y);
                     previousPoint = currentPoint;
                     return;
                 }
                 else if (markedPolygon != null)
                 {
-                    Console.WriteLine("yuytaj");
-
-                    markedPolygon.Move(currentPoint.X - previousPoint.X, currentPoint.Y - previousPoint.Y);
+                    markedPolygon.Move(currentPoint.X - previousPoint.X, currentPoint.Y - previousPoint.Y);                    
                     previousPoint = currentPoint;
                     return;
                 }
@@ -221,6 +222,13 @@ namespace Polygon_Filler
             {
                 polygons.RemoveAt(polygons.Count - 1);
             }
+            drawAllPolygons();
+        }
+
+        private void drawingPictureBox_MouseLeave(object sender, EventArgs e)
+        {
+            markedVertex = null;
+            markedPolygon = null;
             drawAllPolygons();
         }
     }

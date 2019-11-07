@@ -21,9 +21,7 @@ namespace Polygon_Filler
         public bool canDraw(List<Edge> edges)
         {
             if (edges.Count == 0) return true;
-            List<Edge> tmpEdges = new List<Edge>(edges);
-            tmpEdges.Remove(tmpEdges.Last());
-            if (tmpEdges.Any(e => this.LinesIntersect(this.v1.center, this.v2.center, e.v1.center, e.v2.center) == true))
+            if (edges.Any(e => this.LinesIntersect(this.v1.center, this.v2.center, e.v1.center, e.v2.center) == true))
                 return false;
             else return true;
         }
@@ -111,6 +109,8 @@ namespace Polygon_Filler
 
         private bool LinesIntersect(Point p1, Point p2, Point p3, Point p4)
         {
+            if (p1 == p4 || p2 == p3) return false;
+            if (p1 == p3 || p2 == p4) return false;
 
             int d1 = Orientation(p1, p2, p3);
             int d2 = Orientation(p1, p2, p4);

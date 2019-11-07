@@ -31,20 +31,16 @@ namespace Polygon_Filler
             return;
         }
 
-        public void Move(int dx, int dy)
+        public virtual void Move(int dx, int dy)
         {
             for (int i = 0; i < vertices.Count; i++)
                 vertices[i].Move(dx, dy);
         }
     }
 
-    public class ConvexPolygon
+    public class ConvexPolygon : Polygon
     {
-        public List<Vertex> vertices = new List<Vertex>();
-        public List<Edge> edges = new List<Edge>();
-
-
-        public ConvexPolygon(List<Vertex> vertices)
+        public ConvexPolygon(List<Vertex> vertices, List<Edge> edges) : base(vertices, edges)
         {
             for (int i = 0; i < vertices.Count; i++)
                 this.vertices.Add(vertices[i]);
@@ -60,16 +56,12 @@ namespace Polygon_Filler
             }
             this.vertices = convex;
             for (int i = 0; i < this.vertices.Count - 1; i++)
-                edges.Add(new Edge(this.vertices[i], this.vertices[i + 1]));
-            edges.Add(new Edge(this.vertices.Last(), this.vertices.First()));
+                this.edges.Add(new Edge(this.vertices[i], this.vertices[i + 1]));
+            this.edges.Add(new Edge(this.vertices.Last(), this.vertices.First()));
         }
 
-        public void Draw(Bitmap bitmap)
+        public override void Move(int dx, int dy)
         {
-            foreach (Edge e in edges)
-                e.Draw(bitmap);
-            foreach (Vertex v in vertices)
-                v.Draw(bitmap);
             return;
         }
 
