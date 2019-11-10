@@ -53,6 +53,6 @@ namespace Polygon_Filler
             Disposed = true;
             Bitmap.Dispose();
             BitsHandle.Free();
-        }
-    }
+        }        
+    }    
 }

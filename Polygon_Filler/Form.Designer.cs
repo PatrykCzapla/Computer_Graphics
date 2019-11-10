@@ -32,14 +32,17 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
             this.backTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.optionsTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.fillingColorButton = new System.Windows.Forms.Button();
             this.polygonRadioButton = new System.Windows.Forms.RadioButton();
             this.clearButton = new System.Windows.Forms.Button();
             this.editRadioButton = new System.Windows.Forms.RadioButton();
             this.generateConvexButton = new System.Windows.Forms.Button();
             this.convexDomain = new System.Windows.Forms.DomainUpDown();
+            this.fillButton = new System.Windows.Forms.Button();
             this.drawingPanel = new System.Windows.Forms.Panel();
             this.drawingPictureBox = new System.Windows.Forms.PictureBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.fillingColorDialog = new System.Windows.Forms.ColorDialog();
             this.backTableLayoutPanel.SuspendLayout();
             this.optionsTableLayoutPanel.SuspendLayout();
             this.drawingPanel.SuspendLayout();
@@ -67,11 +70,13 @@
             this.optionsTableLayoutPanel.ColumnCount = 2;
             this.optionsTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.optionsTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.optionsTableLayoutPanel.Controls.Add(this.fillingColorButton, 0, 3);
             this.optionsTableLayoutPanel.Controls.Add(this.polygonRadioButton, 0, 0);
             this.optionsTableLayoutPanel.Controls.Add(this.clearButton, 1, 1);
             this.optionsTableLayoutPanel.Controls.Add(this.editRadioButton, 1, 0);
             this.optionsTableLayoutPanel.Controls.Add(this.generateConvexButton, 1, 2);
             this.optionsTableLayoutPanel.Controls.Add(this.convexDomain, 0, 2);
+            this.optionsTableLayoutPanel.Controls.Add(this.fillButton, 1, 3);
             this.optionsTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.optionsTableLayoutPanel.Location = new System.Drawing.Point(1187, 3);
             this.optionsTableLayoutPanel.Name = "optionsTableLayoutPanel";
@@ -83,6 +88,18 @@
             this.optionsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.optionsTableLayoutPanel.Size = new System.Drawing.Size(194, 855);
             this.optionsTableLayoutPanel.TabIndex = 1;
+            // 
+            // fillingColorButton
+            // 
+            this.fillingColorButton.BackColor = System.Drawing.Color.Black;
+            this.fillingColorButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fillingColorButton.Location = new System.Drawing.Point(7, 160);
+            this.fillingColorButton.Margin = new System.Windows.Forms.Padding(7, 10, 7, 10);
+            this.fillingColorButton.Name = "fillingColorButton";
+            this.fillingColorButton.Size = new System.Drawing.Size(83, 30);
+            this.fillingColorButton.TabIndex = 1;
+            this.fillingColorButton.UseVisualStyleBackColor = false;
+            this.fillingColorButton.Click += new System.EventHandler(this.fillingColorButton_Click);
             // 
             // polygonRadioButton
             // 
@@ -157,6 +174,18 @@
             this.convexDomain.Text = "3";
             this.convexDomain.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // fillButton
+            // 
+            this.fillButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fillButton.Location = new System.Drawing.Point(104, 160);
+            this.fillButton.Margin = new System.Windows.Forms.Padding(7, 10, 7, 10);
+            this.fillButton.Name = "fillButton";
+            this.fillButton.Size = new System.Drawing.Size(83, 30);
+            this.fillButton.TabIndex = 5;
+            this.fillButton.Text = "Fill polygon";
+            this.fillButton.UseVisualStyleBackColor = true;
+            this.fillButton.Click += new System.EventHandler(this.fillButton_Click);
+            // 
             // drawingPanel
             // 
             this.drawingPanel.Controls.Add(this.drawingPictureBox);
@@ -188,11 +217,13 @@
             this.ClientSize = new System.Drawing.Size(1384, 861);
             this.Controls.Add(this.backTableLayoutPanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(800, 500);
             this.Name = "Form";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Polygon filler";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_KeyDown);
             this.backTableLayoutPanel.ResumeLayout(false);
             this.optionsTableLayoutPanel.ResumeLayout(false);
             this.optionsTableLayoutPanel.PerformLayout();
@@ -214,6 +245,9 @@
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.DomainUpDown convexDomain;
         private System.Windows.Forms.Button generateConvexButton;
+        private System.Windows.Forms.Button fillingColorButton;
+        private System.Windows.Forms.ColorDialog fillingColorDialog;
+        private System.Windows.Forms.Button fillButton;
     }
 }
 

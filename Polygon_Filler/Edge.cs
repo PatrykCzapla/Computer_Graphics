@@ -27,7 +27,7 @@ namespace Polygon_Filler
             else return true;
         }
 
-        public void Draw()
+        public void Draw(Color color)
         {
             Point a = this.v1.center;
             Point b = this.v2.center;
@@ -75,7 +75,7 @@ namespace Polygon_Filler
                         a.X += xi;
                     }
                     if (a.X < 0 || a.X >= Form.dbm.Width || a.Y < 0 || a.Y >= Form.dbm.Height) continue;
-                    Form.dbm.SetPixel(a.X, a.Y, Color.Black);
+                    Form.dbm.SetPixel(a.X, a.Y, color);
                     Form.pixelsOfEdges[a.X, a.Y] = this;
                 }
             }
@@ -98,7 +98,7 @@ namespace Polygon_Filler
                         a.Y += yi;
                     }
                     if (a.X < 0 || a.X >= Form.dbm.Width || a.Y < 0 || a.Y >= Form.dbm.Height) continue;
-                    Form.dbm.SetPixel(a.X, a.Y, Color.Black);
+                    Form.dbm.SetPixel(a.X, a.Y, color);
                     Form.pixelsOfEdges[a.X, a.Y] = this;
                 }
             }

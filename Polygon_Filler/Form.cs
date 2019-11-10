@@ -39,10 +39,13 @@ namespace Polygon_Filler
         {
             dbm.Dispose();
             dbm = new DirectBitmap(drawingPictureBox.Size.Width, drawingPictureBox.Size.Height);
-            pixelsOfEdges = new Edge[drawingPictureBox.Width, drawingPictureBox.Height];
-            pixelsOfVertices = new Vertex[drawingPictureBox.Width, drawingPictureBox.Height];
+            pixelsOfEdges = new Edge[dbm.Width, dbm.Height];
+            pixelsOfVertices = new Vertex[dbm.Width, dbm.Height];
             foreach (Polygon p in polygons)
+            {
                 p.Draw();
+                if (p.isFilled == true) p.Fill(p.colorOfFilling);
+            }
             drawingPictureBox.Image = dbm.Bitmap;
             return;
         }
@@ -56,8 +59,8 @@ namespace Polygon_Filler
             markedPolygon = null;
             dbm = new DirectBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
             drawingPictureBox.Image = dbm.Bitmap;
-            pixelsOfEdges = new Edge[drawingPictureBox.Width, drawingPictureBox.Height];
-            pixelsOfVertices = new Vertex[drawingPictureBox.Width, drawingPictureBox.Height];
+            pixelsOfEdges = new Edge[dbm.Width, dbm.Height];
+            pixelsOfVertices = new Vertex[dbm.Width, dbm.Height];
             return;
         }
 
@@ -152,7 +155,6 @@ namespace Polygon_Filler
                         previousPoint.X = -1;
                         return;
                     }
-                    markedPolygon = null;
                     markedVertex = null;
                     previousPoint.X = -1;
                     return;
@@ -180,22 +182,22 @@ namespace Polygon_Filler
         private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
         {
             Point currentPoint = new Point(e.X, e.Y);
-
-            drawAllPolygons();
+            drawAllPolygons();            
 
             if (polygonRadioButton.Checked == true)
             {
+
                 Vertex newVertex = new Vertex(currentPoint);
 
                 if (polygons.Count == 0 || polygons.Last().isCorrect == true)
-                    newVertex.Draw();
+                    newVertex.Draw(Color.Black);
                 else if (polygons.Last().isCorrect == false)
                 {
                     Edge newEdge = new Edge(polygons.Last().vertices.Last(), newVertex);
                     if (newEdge.canDraw(polygons.Last().edges) == true)
                     {
-                        newEdge.Draw();
-                        newVertex.Draw();
+                        newEdge.Draw(Color.Black);
+                        newVertex.Draw(Color.Black);
                     }
                 }
             }
@@ -209,7 +211,11 @@ namespace Polygon_Filler
                         markedVertex.Move(previousPoint.X - currentPoint.X, previousPoint.Y - currentPoint.Y);
                 }
                 else if (markedPolygon != null)
-                    markedPolygon.Move(currentPoint.X - previousPoint.X, currentPoint.Y - previousPoint.Y);                                       
+                {
+                    markedPolygon.Move(currentPoint.X - previousPoint.X, currentPoint.Y - previousPoint.Y);
+                    if (markedPolygon.vertices.Any(v => v.CanDraw() == false))
+                        markedPolygon.Move(previousPoint.X - currentPoint.X, previousPoint.Y - currentPoint.Y);
+                }
                 previousPoint = currentPoint;
                 return;
             }
@@ -217,12 +223,19 @@ namespace Polygon_Filler
 
         private void drawingPictureBox_MouseDown(object sender, MouseEventArgs e)
         {
+            if(markedPolygon != null) markedPolygon.color = Color.Black;
+            markedPolygon = null;
             if(editRadioButton.Checked == true)
             {
                 previousPoint = e.Location;
                 markedVertex = Editor.searchForVertex(previousPoint);
                 if (markedVertex == null)
                     markedPolygon = Editor.searchForPolygon(previousPoint);
+                if(markedPolygon != null)
+                {
+                    markedPolygon.color = Color.Red;
+                    drawAllPolygons();
+                }
             }
             return;
         }
@@ -238,7 +251,6 @@ namespace Polygon_Filler
         private void drawingPictureBox_MouseLeave(object sender, EventArgs e)
         {
             markedVertex = null;
-            markedPolygon = null;
             drawAllPolygons();
             return;
         }
@@ -247,6 +259,25 @@ namespace Polygon_Filler
         {
             drawAllPolygons();
             return;
+        }
+
+        private void fillingColorButton_Click(object sender, EventArgs e)
+        {
+            if (fillingColorDialog.ShowDialog() == DialogResult.OK)
+                fillingColorButton.BackColor = fillingColorDialog.Color;
+        }
+
+        private void fillButton_Click(object sender, EventArgs e)
+        {
+            if (markedPolygon != null)
+                markedPolygon.Fill(fillingColorButton.BackColor);
+            drawAllPolygons();
+        }
+
+        private void Form_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Enter)
+                drawingPictureBox_Click(sender, new MouseEventArgs(MouseButtons.Middle, 1, 0, 0, 0));
         }
     }
 }
