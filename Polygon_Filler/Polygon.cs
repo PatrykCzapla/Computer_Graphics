@@ -9,33 +9,6 @@ namespace Polygon_Filler
 {
     public class Polygon
     {
-        class AET
-        {
-            public int ymax;
-            public double x;
-            public double diff;
-            public Edge e;
-
-            public AET(int ymax, double x, double diff, Edge e)
-            {
-                this.ymax = ymax;
-                this.x = x;
-                this.diff = diff;
-                this.e = e;
-            }
-        }
-
-        public Polygon(Polygon p)
-        {
-            this.color = p.color;
-            this.isCorrect = p.isCorrect;
-            for (int i = 0; i < p.vertices.Count; i++)
-                this.vertices.Add(new Vertex(p.vertices[i]));
-            for (int i = 0; i < vertices.Count - 1; i++)
-                this.edges.Add(new Edge(vertices[i], vertices[i + 1]));
-            if (this.isCorrect == true) this.edges.Add(new Edge(vertices.Last(), vertices.First()));
-        }
-
         public List<Vertex> vertices = new List<Vertex>();
         public List<Edge> edges = new List<Edge>();
 
@@ -50,7 +23,19 @@ namespace Polygon_Filler
                 this.vertices.Add(vertices[i]);
             for (int i = 0; i < edges.Count; i++)
                 this.edges.Add(edges[i]);
+
             return;
+        }
+
+        public Polygon(Polygon p)
+        {
+            this.color = p.color;
+            this.isCorrect = p.isCorrect;
+            for (int i = 0; i < p.vertices.Count; i++)
+                this.vertices.Add(new Vertex(new Point(p.vertices[i].center.X, p.vertices[i].center.Y)));
+            for (int i = 0; i < vertices.Count - 1; i++)
+                this.edges.Add(new Edge(vertices[i], vertices[i + 1]));
+            if (this.isCorrect == true) this.edges.Add(new Edge(vertices.Last(), vertices.First()));
         }
 
         public void Draw()
@@ -62,11 +47,27 @@ namespace Polygon_Filler
             return;
         }
 
-        public virtual void Move(int dx, int dy)
+        public void Move(int dx, int dy)
         {
             for (int i = 0; i < vertices.Count; i++)
                 vertices[i].Move(dx, dy);
             return;
+        }
+
+        class AET
+        {
+            public int ymax;
+            public double x;
+            public double diff;
+            public Edge e;
+
+            public AET(int ymax, double x, double diff, Edge e)
+            {
+                this.ymax = ymax;
+                this.x = x;
+                this.diff = diff;
+                this.e = e;
+            }
         }
 
         public virtual void Fill(Color color)
@@ -84,7 +85,7 @@ namespace Polygon_Filler
             {
                 foreach (Vertex v in vertices.FindAll(u => u.center.Y == y ))
                 {
-
+                    bool horizontalLine = false;
                     Vertex vertex = null;
                     int index = vertices.IndexOf(v);
                     if (index > 0) vertex = vertices[index - 1];
@@ -93,11 +94,10 @@ namespace Polygon_Filler
                     {
                         Edge edge = edges.Find(e => e.v1 == vertex && e.v2 == v);
                         double diff = 0;
-                        if (vertex.center.Y - v.center.Y == 0) diff = (double)vertex.center.X - (double)v.center.X;
+                        if (vertex.center.Y - v.center.Y == 0) horizontalLine = true;
                         else diff = ((double)(vertex.center.X - v.center.X) / (double)(vertex.center.Y - v.center.Y));
-                        if (vertex.center.Y <= v.center.Y) AETs.Add(new AET(vertex.center.Y, v.center.X, diff, edge));
+                        if (horizontalLine == false &&vertex.center.Y <= v.center.Y) AETs.Add(new AET(vertex.center.Y, v.center.X, diff, edge));
                         else AETs.RemoveAll(e => e.e == edge);
-
                     }
                     vertex = null;
                     if (index < vertices.Count - 1) vertex = vertices[index + 1];
@@ -106,9 +106,13 @@ namespace Polygon_Filler
                     {
                         Edge edge = edges.Find(e => e.v1 == v && e.v2 == vertex);
                         double diff = 0;
-                        if (vertex.center.Y - v.center.Y == 0) diff = (double)vertex.center.X - (double)v.center.X;
-                        else diff = ((double)(vertex.center.X - v.center.X) / (double)(vertex.center.Y - v.center.Y));
-                        if (vertex.center.Y <= v.center.Y) AETs.Add(new AET(vertex.center.Y, v.center.X, diff, edge));
+                        if (vertex.center.Y - v.center.Y == 0) horizontalLine = true;
+                        else
+                        {
+                            diff = ((double)(vertex.center.X - v.center.X) / (double)(vertex.center.Y - v.center.Y));
+                            horizontalLine = false;
+                        }                        
+                        if (horizontalLine == false && vertex.center.Y <= v.center.Y) AETs.Add(new AET(vertex.center.Y, v.center.X, diff, edge));
                         else AETs.RemoveAll(e => e.e == edge);
                     }
                 }
@@ -132,37 +136,35 @@ namespace Polygon_Filler
 
     public class ConvexPolygon : Polygon
     {
+        public ConvexPolygon(Polygon p) : base(p)
+        {
+
+        }
+
         public ConvexPolygon(List<Vertex> vertices, List<Edge> edges) : base(vertices, edges)
         {
-            for (int i = 0; i < vertices.Count; i++)
-                this.vertices.Add(vertices[i]);
-            List<Vertex> convexHull = new List<Vertex>();
-            vertices.Sort((v, u) => (v.center.Y, v.center.X).CompareTo((u.center.Y, u.center.X)));
-            vertices = vertices.OrderBy(v => (vertices.First().center.X - v.center.X) / Distance(vertices.First(), v)).ToList();
-            convexHull.Add(vertices.First());
-            convexHull.Add(vertices[1]);
-            for (int i = 2; i < vertices.Count; i++)
-            {
-                while (convexHull.Count >= 2 && Cross(vertices[i], convexHull[convexHull.Count - 2], convexHull[convexHull.Count - 1]) <= 0) convexHull.RemoveAt(convexHull.Count - 1);
-                convexHull.Add(vertices[i]);
-            }
-            this.vertices = convexHull;
-            for (int i = 0; i < this.vertices.Count - 1; i++)
-                this.edges.Add(new Edge(this.vertices[i], this.vertices[i + 1]));
-            this.edges.Add(new Edge(this.vertices.Last(), this.vertices.First()));
+            //for (int i = 0; i < vertices.Count; i++)
+            //    this.vertices.Add(vertices[i]);
+            //List<Vertex> convexHull = new List<Vertex>();
+            //vertices.Sort((v, u) => (v.center.Y, v.center.X).CompareTo((u.center.Y, u.center.X)));
+            //vertices = vertices.OrderBy(v => (vertices.First().center.X - v.center.X) / Distance(vertices.First(), v)).ToList();
+            //convexHull.Add(vertices.First());
+            //convexHull.Add(vertices[1]);
+            //for (int i = 2; i < vertices.Count; i++)
+            //{
+            //    while (convexHull.Count >= 2 && Cross(vertices[i], convexHull[convexHull.Count - 2], convexHull[convexHull.Count - 1]) <= 0) convexHull.RemoveAt(convexHull.Count - 1);
+            //    convexHull.Add(vertices[i]);
+            //}
+            //this.vertices = new List<Vertex>();
+            //for (int i = 0; i < convexHull.Count; i++)
+            //    this.vertices.Add(convexHull[i]);
+            //for (int i = 0; i < this.vertices.Count - 1; i++)
+            //    this.edges.Add(new Edge(this.vertices[i], this.vertices[i + 1]));
+            //this.edges.Add(new Edge(this.vertices.Last(), this.vertices.First()));
             return;
         }
 
-        public override void Move(int dx, int dy)
-        {
-            return;
-        }
-
-        private int Cross(Vertex o, Vertex v, Vertex u)
-        {
-            double value = (v.center.X - o.center.X) * (u.center.Y - o.center.Y) - (v.center.Y - o.center.Y) * (u.center.X - o.center.X);
-            return Math.Abs(value) < 1e-10 ? 0 : value < 0 ? -1 : 1;
-        }
+        
 
         public static double Distance(Vertex v1, Vertex v2)
         {

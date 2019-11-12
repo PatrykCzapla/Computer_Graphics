@@ -4,8 +4,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,12 +16,16 @@ namespace Polygon_Filler
     public partial class Form : System.Windows.Forms.Form
     {
         public static DirectBitmap dbm = null;
+        public static DirectBitmap backgroundDBM = null;
 
         public static Edge[,] pixelsOfEdges;
         public static Vertex[,] pixelsOfVertices;
 
+        private bool animationOn = false; 
+
         public static List<Polygon> polygons = new List<Polygon>();
-        private List<ConvexPolygon> convexPolygons = new List<ConvexPolygon>();
+        private List<Polygon> convexPolygons = new List<Polygon>();
+        private List<Polygon> clippedPolygons = new List<Polygon>();
 
         private Point previousPoint = new Point(-1, -1);
         private Vertex markedVertex = null;
@@ -46,6 +52,16 @@ namespace Polygon_Filler
                 p.Draw();
                 if (p.isFilled == true) p.Fill(p.colorOfFilling);
             }
+            foreach (Polygon p in convexPolygons)
+            {
+                p.Draw();
+            }
+            foreach (Polygon p in clippedPolygons)
+            {
+                //p.color = Color.Blue;
+                p.Draw();
+                p.Fill(Color.Black);
+            }
             drawingPictureBox.Image = dbm.Bitmap;
             return;
         }
@@ -53,10 +69,12 @@ namespace Polygon_Filler
         private void clearButton_Click(object sender, EventArgs e)
         {
             polygons = new List<Polygon>();
-            convexPolygons = new List<ConvexPolygon>();
+            convexPolygons = new List<Polygon>();
+            clippedPolygons = new List<Polygon>();
             previousPoint = new Point(-1, -1);
             markedVertex = null;
             markedPolygon = null;
+            backgroundDBM = null;
             dbm = new DirectBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
             drawingPictureBox.Image = dbm.Bitmap;
             pixelsOfEdges = new Edge[dbm.Width, dbm.Height];
@@ -67,7 +85,6 @@ namespace Polygon_Filler
         private void drawingPictureBox_Click(object sender, EventArgs e)
         {
             Point currentPoint = new Point(((MouseEventArgs)e).X, ((MouseEventArgs)e).Y);
-
             drawAllPolygons();
 
             if (polygonRadioButton.Checked == true)
@@ -170,17 +187,18 @@ namespace Polygon_Filler
             int noOfCovex = Int32.Parse(convexDomain.Text);
             List<Vertex> convexVertices = new List<Vertex>();
             for(int i = 0; i < noOfCovex; i++)
-                convexVertices.Add(new Vertex(new Point(rand.Next(0, drawingPictureBox.Image.Width - 1), rand.Next(0, drawingPictureBox.Image.Height - 1))));
-            convexPolygons.Add(new ConvexPolygon(convexVertices, new List<Edge>()));
-            drawingPictureBox.Image = new Bitmap(drawingPictureBox.Size.Width, drawingPictureBox.Size.Height);
+                convexVertices.Add(new Vertex(new Point(rand.Next(2 * (drawingPictureBox.Image.Width / 3), drawingPictureBox.Image.Width - 1), rand.Next(0, drawingPictureBox.Image.Height - 1))));
+            List<Edge> edges = new List<Edge>();
+            for (int i = 0; i < convexVertices.Count - 1; i++)
+                edges.Add(new Edge(convexVertices[i], convexVertices[i + 1]));
+            edges.Add(new Edge(convexVertices.Last(), convexVertices.First()));
+            convexPolygons.Add(new Polygon(convexVertices, edges));
             drawAllPolygons();
-            foreach (ConvexPolygon cp in convexPolygons)
-                cp.Draw();
-            return;
         }
 
         private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
         {
+            button1_Click(sender, e);
             Point currentPoint = new Point(e.X, e.Y);
             drawAllPolygons();            
 
@@ -231,8 +249,14 @@ namespace Polygon_Filler
                 markedVertex = Editor.searchForVertex(previousPoint);
                 if (markedVertex == null)
                     markedPolygon = Editor.searchForPolygon(previousPoint);
+                else if (!polygons.Any(p => p.vertices.Contains(markedVertex))) markedVertex = null;
                 if(markedPolygon != null)
                 {
+                    if (markedPolygon.GetType() == typeof(ConvexPolygon))
+                    {
+                        markedPolygon = null;
+                        return;
+                    }
                     markedPolygon.color = Color.Red;
                     drawAllPolygons();
                 }
@@ -278,6 +302,62 @@ namespace Polygon_Filler
         {
             if (e.Control && e.KeyCode == Keys.Enter)
                 drawingPictureBox_Click(sender, new MouseEventArgs(MouseButtons.Middle, 1, 0, 0, 0));
+        }
+
+        private void colorOfFillingButton_Click(object sender, EventArgs e)
+        {
+            if (fillingColorDialog.ShowDialog() == DialogResult.OK)
+                colorOfFillingButton.BackColor = fillingColorDialog.Color;
+        }
+
+        private void textureButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files (*.png, *.jpg, *.jpeg)|*.png; *.jpg; *.jpeg";
+            if(openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                if (openFileDialog.CheckFileExists == false) return;
+                backgroundDBM = new DirectBitmap(dbm.Width, dbm.Height);
+                Bitmap tmp = new Bitmap(Image.FromFile(openFileDialog.FileName), new Size(dbm.Width, dbm.Height));
+                for (int i = 0; i < tmp.Width; i++)
+                    for (int j = 0; j < tmp.Height; j++)
+                        backgroundDBM.SetPixel(i, j, Color.FromArgb(tmp.GetPixel(i, j).R, tmp.GetPixel(i, j).G, tmp.GetPixel(i, j).B));
+                textureButton.Image = Image.FromFile(openFileDialog.FileName);
+            }
+        }
+
+        private void startStopButton_Click(object sender, EventArgs e)
+        {
+            if (convexPolygons.Count == 0) return;
+            int maxX = 0;
+            foreach (Polygon p in convexPolygons)
+                foreach (Vertex v in p.vertices)
+                    if (v.center.X > maxX) maxX = v.center.X;
+            for(int i = maxX / speedTrackBar.Value; i >= 0; i--)
+            {
+                if (convexPolygons.All(p => p.vertices.All(v => v.center.X < 0))) return;
+                foreach (Polygon cp in convexPolygons)
+                {
+                    cp.Move(-1 * speedTrackBar.Value, 0);
+                }
+
+                clippedPolygons = new List<Polygon>();
+                foreach (Polygon p in polygons)
+                    foreach (Polygon cp in convexPolygons)
+                        foreach (Polygon pol in Editor.WeilerAtherton(cp, p))
+                            clippedPolygons.Add(pol);
+                
+                drawAllPolygons();
+                this.Refresh();
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (polygons.Count < 2 || polygons.Last().isCorrect == false) return;
+            clippedPolygons = new List<Polygon>();
+            clippedPolygons.AddRange(Editor.WeilerAtherton(polygons[0], polygons[1]));
+            drawAllPolygons();
         }
     }
 }
