@@ -21,12 +21,9 @@ namespace Polygon_Filler
 
         public bool canDraw(List<Edge> edges)
         {
-            //if (edges.Count == 0 && v2.center.X <= v1.center.X) return false;
-            //if (edges.Count > 0 && v2.center.X < edges.First().v1.center.X) return false;
-            //else 
             if (edges.Count == 0) return true;
-            //if (edges.Count > 0 && Editor.Cross(v2, v1, edges.Last().v1) > 0) return false;
-            if (edges.Any(e => Editor.LinesIntersect(this.v1.center, this.v2.center, e.v1.center, e.v2.center) == true))
+            if (edges.Count > 0 && Tools.Orientation(edges.Last().v1.center, v1.center, v2.center) != 1) return false;
+            if (edges.Any(e => Tools.LinesIntersect(this.v1.center, this.v2.center, e.v1.center, e.v2.center) == true))
                 return false;
             else return true;
         }

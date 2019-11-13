@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Polygon_Filler
 {
-    public static class Editor
+    public static class Tools
     {
         public static int Cross(Vertex o, Vertex v, Vertex u)
         {
             double value = (v.center.X - o.center.X) * (u.center.Y - o.center.Y) - (v.center.Y - o.center.Y) * (u.center.X - o.center.X);
-            return Math.Abs(value) < 1e-10 ? 0 : value < 0 ? -1 : 1;
+            return Math.Abs(value) < 1e-1 ? 0 : value < 0 ? -1 : 1;
         }
         public static bool LinesIntersect(Point p1, Point p2, Point p3, Point p4)
         {
@@ -35,7 +35,7 @@ namespace Polygon_Filler
             return false;
         }
 
-        private static int Orientation(Point p1, Point p2, Point q)
+        public static int Orientation(Point p1, Point p2, Point q)
         {
             int val = (p2.Y - p1.Y) * (q.X - p2.X) - (p2.X - p1.X) * (q.Y - p2.Y);
 
@@ -105,11 +105,11 @@ namespace Polygon_Filler
 
         public static (Vertex, Vertex)? GetIntersectionPoints(Vertex s1, Vertex s2, Vertex c1, Vertex c2)
         {
+            if (s1 == c1 || s1 == c2 || s2 == c1 || s2 == c2) return null;
             double d = (c2.center.Y - c1.center.Y) * (s2.center.X - s1.center.X) - (c2.center.X - c1.center.X) * (s2.center.Y - s1.center.Y);
-            if (d == 0.0)
-                return null;
-            double toSource = (double)((c2.center.X - c1.center.X) * (s1.center.Y - c1.center.Y) - (c2.center.Y - c1.center.Y) * (s1.center.X - c1.center.X)) / d;
-            double toClip = (double)((s2.center.X - s1.center.X) * (s1.center.Y - c1.center.Y) - (s2.center.Y - s1.center.Y) * (s1.center.X - c1.center.X)) / d;
+            if (d == 0.0) return null;
+            double toSource = (double)((double)((c2.center.X - c1.center.X) * (s1.center.Y - c1.center.Y) - (c2.center.Y - c1.center.Y) * (s1.center.X - c1.center.X))) / d;
+            double toClip = (double)((double)((s2.center.X - s1.center.X) * (s1.center.Y - c1.center.Y) - (s2.center.Y - s1.center.Y) * (s1.center.X - c1.center.X))) / d;
 
             Vertex s = new Vertex(new Point(s1.center.X + (int)(toSource * (s2.center.X - s1.center.X)), s1.center.Y + (int)(toSource * (s2.center.Y - s1.center.Y))), 1)
             {
@@ -121,6 +121,11 @@ namespace Polygon_Filler
                 distance = toClip,
                 IsIntersection = true
             };
+
+
+            if (s.center.X < Math.Min(s1.center.X, s2.center.X) || s.center.X > Math.Max(s1.center.X, s2.center.X) || s.center.X < Math.Min(c1.center.X, c2.center.X) || s.center.X > Math.Max(c1.center.X, c2.center.X)) return null;
+            if (s.center.Y < Math.Min(s1.center.Y, s2.center.Y) || s.center.Y > Math.Max(s1.center.Y, s2.center.Y) || s.center.Y < Math.Min(c1.center.Y, c2.center.Y) || s.center.Y > Math.Max(c1.center.Y, c2.center.Y)) return null;
+
 
             if ((0 < toSource && toSource < 1) && (0 < toClip && toClip < 1))
             {
@@ -142,8 +147,13 @@ namespace Polygon_Filler
                     Vertex c1 = e1.v1;
                     Vertex c2 = e1.v2;
                     (Vertex s, Vertex c)? inter = GetIntersectionPoints(s1, s2, c1, c2);
+
+
+
                     if (inter.HasValue)
                     {
+                        
+
                         if (sourceCopy.vertices[(sourceCopy.vertices.IndexOf(s1) + 1) % sourceCopy.vertices.Count].IsIntersection && (sourceCopy.vertices[(sourceCopy.vertices.IndexOf(s1) + 1) % sourceCopy.vertices.Count].distance < inter.Value.s.distance))
                         {
                             Vertex tmp = sourceCopy.vertices[(sourceCopy.vertices.IndexOf(s1) + 1) % sourceCopy.vertices.Count];
@@ -194,29 +204,34 @@ namespace Polygon_Filler
             }
             do
             {
-            if(s1.IsIntersection == true)
-            {
-                s1.IsEntry = !flag;
-                flag = !flag;
-            }
-            s1 = sourceCopy.vertices[(sourceCopy.vertices.IndexOf(s1) + 1) % sourceCopy.vertices.Count];
-            }while (s1 != sourceCopy.vertices.First());
-            s1 = clipCopy.vertices.First();
-            if (isInside2(s1, sourceCopy))
-            {
-                flag = true;
-                s1.tmp = true;
-            }
-            else flag = false;
-            do
-            {
-                if(s1.IsIntersection == true)
+                if (isInside2(s1, clipCopy)) s1.tmp = true;
+
+                if (s1.IsIntersection == true)
                 {
+
                     s1.IsEntry = !flag;
                     flag = !flag;
                 }
-                s1 = clipCopy.vertices[(clipCopy.vertices.IndexOf(s1) + 1) % clipCopy.vertices.Count];
-            } while (s1 != clipCopy.vertices.First());
+                s1 = sourceCopy.vertices[(sourceCopy.vertices.IndexOf(s1) + 1) % sourceCopy.vertices.Count];
+            } while (s1 != sourceCopy.vertices.First());
+            //s1 = clipCopy.vertices.First();
+            //if (isInside2(s1, sourceCopy))
+            //{
+            //    flag = true;
+            //    s1.tmp = true;
+            //}
+            //else flag = false;
+            //do
+            //{
+            //    if (isInside2(s1, sourceCopy)) s1.tmp = true;
+
+            //    if (s1.IsIntersection == true)
+            //    {
+            //        s1.IsEntry = !flag;
+            //        flag = !flag;
+            //    }
+            //    s1 = clipCopy.vertices[(clipCopy.vertices.IndexOf(s1) + 1) % clipCopy.vertices.Count];
+            //} while (s1 != clipCopy.vertices.First());
             return (sourceCopy, clipCopy);
         }
         public static List<Polygon> WeilerAtherton(Polygon source, Polygon clip)
@@ -230,7 +245,7 @@ namespace Polygon_Filler
                 {
                     intersections.Add(v);
                 }
-            if(intersections.Count == 0)
+            if (intersections.Count == 0)
             {
                 if(isInside2(clipCopy.vertices.First(), sourceCopy))
                 {
@@ -246,8 +261,15 @@ namespace Polygon_Filler
             while(intersections.Count > 0)
             {
                 List<Vertex> partialResult = new List<Vertex>();
-                Vertex s1 = sourceCopy.vertices.FindLast(v => v.center.X == intersections.First().center.X && v.center.Y == intersections.First().center.Y && v.IsIntersection == true);
-                while(true)
+                Vertex s1 = sourceCopy.vertices.Find(v => v.center.X == intersections.First().center.X && v.center.Y == intersections.First().center.Y && v.IsEntry == true);
+                if(s1 == null)
+                {
+                    //to jest do usuniecia jak bede dobrze rozpoznawal wierzcholki
+                    intersections.RemoveAt(0);
+                    continue;
+                }
+                //Vertex s1 = sourceCopy.vertices.Find(v => v.center.X == intersections.First().center.X && v.center.Y == intersections.First().center.Y && v.IsIntersection == true);
+                while (true)
                 {
                     if (s1.Visited == true) break;
                     s1.Visited = true;
@@ -284,6 +306,22 @@ namespace Polygon_Filler
 
         public static bool isInside2(Vertex v, Polygon polygon)
         {
+            int yMin = int.MaxValue;
+            int yMax = 0;
+            int xMin = int.MaxValue;
+            int xMax = 0;
+            foreach (Vertex vertex in polygon.vertices)
+            {
+                if (vertex.center.Y < yMin) yMin = vertex.center.Y;
+                if (vertex.center.Y > yMax) yMax = vertex.center.Y;
+                if (vertex.center.X < xMin) xMin = vertex.center.X;
+                if (vertex.center.X > xMax) xMax = vertex.center.X;
+            }
+
+            if (v.center.Y > yMax || v.center.Y < yMin || v.center.X > xMax || v.center.X < xMin) return false;
+
+
+
             Point extreme = new Point( Form.dbm.Width - 1, v.center.Y);
 
             int count = 0, i = 0;
@@ -291,6 +329,21 @@ namespace Polygon_Filler
             do
             {
                 int next = (i + 1) % polygon.vertices.Count;
+
+                Vertex vert = null;
+                if (polygon.vertices[i].center.Y == v.center.Y) vert = polygon.vertices[i];
+                if (polygon.vertices[next].center.Y == v.center.Y) vert = polygon.vertices[next];
+                if (vert != null)
+                {
+                    Edge e1 = polygon.edges.Find(a => a.v1 == vert);
+                    Edge e2 = polygon.edges.Find(a => a.v2 == vert);
+                    if (e1.v2.center.Y >= v.center.Y && e2.v1.center.Y >= v.center.Y || e1.v2.center.Y <= v.center.Y && e2.v1.center.Y <= v.center.Y) count += 2;
+                    else if (e1.v2.center.Y > v.center.Y && e2.v1.center.Y < v.center.Y || e1.v2.center.Y < v.center.Y && e2.v1.center.Y > v.center.Y) count++;
+
+                    i = next;
+                    continue;
+                }
+
                 if (LinesIntersect(polygon.vertices[i].center, polygon.vertices[next].center, v.center, extreme))
                 {
                     if (Orientation(polygon.vertices[i].center, v.center, polygon.vertices[next].center) == 0)
@@ -299,8 +352,7 @@ namespace Polygon_Filler
                     count++;
                 }
                 i = next;
-            } while (i != 0);
-
+            } while (i != 0);           
             return count % 2 == 1 ? true : false;
         }
     }

@@ -246,9 +246,9 @@ namespace Polygon_Filler
             if(editRadioButton.Checked == true)
             {
                 previousPoint = e.Location;
-                markedVertex = Editor.searchForVertex(previousPoint);
+                markedVertex = Tools.searchForVertex(previousPoint);
                 if (markedVertex == null)
-                    markedPolygon = Editor.searchForPolygon(previousPoint);
+                    markedPolygon = Tools.searchForPolygon(previousPoint);
                 else if (!polygons.Any(p => p.vertices.Contains(markedVertex))) markedVertex = null;
                 if(markedPolygon != null)
                 {
@@ -344,7 +344,7 @@ namespace Polygon_Filler
                 clippedPolygons = new List<Polygon>();
                 foreach (Polygon p in polygons)
                     foreach (Polygon cp in convexPolygons)
-                        foreach (Polygon pol in Editor.WeilerAtherton(cp, p))
+                        foreach (Polygon pol in Tools.WeilerAtherton(cp, p))
                             clippedPolygons.Add(pol);
                 
                 drawAllPolygons();
@@ -356,8 +356,56 @@ namespace Polygon_Filler
         {
             if (polygons.Count < 2 || polygons.Last().isCorrect == false) return;
             clippedPolygons = new List<Polygon>();
-            clippedPolygons.AddRange(Editor.WeilerAtherton(polygons[0], polygons[1]));
+            clippedPolygons.AddRange(Tools.WeilerAtherton(polygons[1], polygons[0]));
             drawAllPolygons();
+
+            //foreach (Polygon p in polygons)
+            //    foreach (Vertex v in p.vertices)
+            //    {
+            //        Console.WriteLine("Polygon no: " + polygons.IndexOf(p));
+            //        Console.WriteLine("X: " + v.center.X + " Y: " + v.center.Y);
+            //        Console.WriteLine("Intersection: " + v.IsIntersection);
+            //        Console.WriteLine("Entry: " + v.IsEntry);
+            //        Console.WriteLine("Inside: " + v.tmp);
+            //        Console.WriteLine();
+            //    }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //if (polygons.Count < 2) return;
+            //List<Vertex> vertices = new List<Vertex>();
+            //if (polygons.Count > 2)polygons.RemoveAt(polygons.Count - 1);
+            //Random rand = new Random();
+            //for (int i = 0; i < 10000; i++)
+            //    vertices.Add(new Vertex(new Point(rand.Next(0, dbm.Width -1), rand.Next(0, dbm.Height - 1))));
+            //foreach (Polygon p in polygons)
+            //    foreach (Vertex v in p.vertices)
+            //        vertices.Add(v);
+
+            //foreach (Polygon p in clippedPolygons)
+            //    foreach (Vertex v in p.vertices)
+            //        vertices.Add(v);
+            //foreach (Vertex v in vertices)
+            //if (Tools.isInside2(v, polygons.First()) || Tools.isInside2(v, polygons[1]))
+            // v.tmp = true;//koloruje wierzcholek ktory jest w srodku
+
+            if (polygons.Count < 2 || polygons.Last().isCorrect == false) return;
+            clippedPolygons = new List<Polygon>();
+            clippedPolygons.AddRange(Tools.WeilerAtherton(polygons[1], polygons[0]));
+            drawAllPolygons();
+            foreach (Polygon p in clippedPolygons)
+                foreach (Vertex v in p.vertices)
+                {
+                    Console.WriteLine("Polygon no: " + clippedPolygons.IndexOf(p));
+                    Console.WriteLine("X: " + v.center.X + " Y: " + v.center.Y);
+                    Console.WriteLine("Intersection: " + v.IsIntersection);
+                    Console.WriteLine("Entry: " + v.IsEntry);
+                    Console.WriteLine("Inside: " + v.tmp);
+                    Console.WriteLine();
+                }
+            //polygons.Add(new Polygon(vertices, new List<Edge>()));
+
         }
     }
 }

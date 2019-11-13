@@ -60,10 +60,12 @@ namespace Polygon_Filler
                 for (int j = -2; j < 3; j++)
                 {
                     if (this.center.X + i < 0 || this.center.X + i >= Form.dbm.Width || this.center.Y + j < 0 || this.center.Y + j >= Form.dbm.Height) continue;
-                    Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, color);                    
+                    Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, color);
                     if(IsEntry == true) Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, Color.Orange);
-                    if (tmp == true) Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, Color.Green);
-                }                    
+                    //if (IsIntersection == true) Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, Color.Orange);
+
+                    if (tmp == true) Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, Color.Cyan);
+                }
             Form.pixelsOfVertices[this.center.X, this.center.Y ] = this;
             return;
         }
