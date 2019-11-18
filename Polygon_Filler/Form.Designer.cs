@@ -36,18 +36,18 @@
             this.button1 = new System.Windows.Forms.Button();
             this.polygonRadioButton = new System.Windows.Forms.RadioButton();
             this.editRadioButton = new System.Windows.Forms.RadioButton();
-            this.noOfPolygonsLabel = new System.Windows.Forms.Label();
+            this.noOfConvexLabel = new System.Windows.Forms.Label();
             this.speedLabel = new System.Windows.Forms.Label();
             this.speedTrackBar = new System.Windows.Forms.TrackBar();
-            this.colorOfFillingClippedLabel = new System.Windows.Forms.Label();
+            this.colorOfFillingLabel = new System.Windows.Forms.Label();
             this.textureButton = new System.Windows.Forms.Button();
-            this.colorHeightLabel = new System.Windows.Forms.Label();
+            this.heightOfLightLabel = new System.Windows.Forms.Label();
             this.lightColorLabel = new System.Windows.Forms.Label();
             this.lightColorButton = new System.Windows.Forms.Button();
             this.heightOfLightTextBox = new System.Windows.Forms.TextBox();
-            this.noOfVerticesInPolygonsLabel = new System.Windows.Forms.Label();
-            this.convexDomain = new System.Windows.Forms.DomainUpDown();
-            this.convexNoDomain = new System.Windows.Forms.DomainUpDown();
+            this.noOfVerticesLabel = new System.Windows.Forms.Label();
+            this.noOfVerticesDomain = new System.Windows.Forms.DomainUpDown();
+            this.noOfConvexDomain = new System.Windows.Forms.DomainUpDown();
             this.clearButton = new System.Windows.Forms.Button();
             this.generateConvexButton = new System.Windows.Forms.Button();
             this.startStopButton = new System.Windows.Forms.Button();
@@ -91,18 +91,18 @@
             this.optionsTableLayoutPanel.Controls.Add(this.button1, 0, 12);
             this.optionsTableLayoutPanel.Controls.Add(this.polygonRadioButton, 0, 0);
             this.optionsTableLayoutPanel.Controls.Add(this.editRadioButton, 1, 0);
-            this.optionsTableLayoutPanel.Controls.Add(this.noOfPolygonsLabel, 0, 3);
+            this.optionsTableLayoutPanel.Controls.Add(this.noOfConvexLabel, 0, 3);
             this.optionsTableLayoutPanel.Controls.Add(this.speedLabel, 0, 6);
             this.optionsTableLayoutPanel.Controls.Add(this.speedTrackBar, 1, 6);
-            this.optionsTableLayoutPanel.Controls.Add(this.colorOfFillingClippedLabel, 0, 7);
+            this.optionsTableLayoutPanel.Controls.Add(this.colorOfFillingLabel, 0, 7);
             this.optionsTableLayoutPanel.Controls.Add(this.textureButton, 1, 8);
-            this.optionsTableLayoutPanel.Controls.Add(this.colorHeightLabel, 0, 10);
+            this.optionsTableLayoutPanel.Controls.Add(this.heightOfLightLabel, 0, 10);
             this.optionsTableLayoutPanel.Controls.Add(this.lightColorLabel, 0, 11);
             this.optionsTableLayoutPanel.Controls.Add(this.lightColorButton, 1, 11);
             this.optionsTableLayoutPanel.Controls.Add(this.heightOfLightTextBox, 1, 10);
-            this.optionsTableLayoutPanel.Controls.Add(this.noOfVerticesInPolygonsLabel, 0, 2);
-            this.optionsTableLayoutPanel.Controls.Add(this.convexDomain, 1, 2);
-            this.optionsTableLayoutPanel.Controls.Add(this.convexNoDomain, 1, 3);
+            this.optionsTableLayoutPanel.Controls.Add(this.noOfVerticesLabel, 0, 2);
+            this.optionsTableLayoutPanel.Controls.Add(this.noOfVerticesDomain, 1, 2);
+            this.optionsTableLayoutPanel.Controls.Add(this.noOfConvexDomain, 1, 3);
             this.optionsTableLayoutPanel.Controls.Add(this.clearButton, 0, 1);
             this.optionsTableLayoutPanel.Controls.Add(this.generateConvexButton, 0, 4);
             this.optionsTableLayoutPanel.Controls.Add(this.startStopButton, 0, 5);
@@ -151,7 +151,7 @@
             this.button1.TabIndex = 1;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.button1.Click += new System.EventHandler(this.button2_Click);
             // 
             // polygonRadioButton
             // 
@@ -180,17 +180,17 @@
             this.editRadioButton.UseVisualStyleBackColor = true;
             this.editRadioButton.CheckedChanged += new System.EventHandler(this.CheckedChanged);
             // 
-            // noOfPolygonsLabel
+            // noOfConvexLabel
             // 
-            this.noOfPolygonsLabel.AutoSize = true;
-            this.noOfPolygonsLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.noOfPolygonsLabel.Location = new System.Drawing.Point(3, 153);
-            this.noOfPolygonsLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.noOfPolygonsLabel.Name = "noOfPolygonsLabel";
-            this.noOfPolygonsLabel.Size = new System.Drawing.Size(88, 44);
-            this.noOfPolygonsLabel.TabIndex = 6;
-            this.noOfPolygonsLabel.Text = "Number of convex polygons:";
-            this.noOfPolygonsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.noOfConvexLabel.AutoSize = true;
+            this.noOfConvexLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.noOfConvexLabel.Location = new System.Drawing.Point(3, 153);
+            this.noOfConvexLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.noOfConvexLabel.Name = "noOfConvexLabel";
+            this.noOfConvexLabel.Size = new System.Drawing.Size(88, 44);
+            this.noOfConvexLabel.TabIndex = 6;
+            this.noOfConvexLabel.Text = "Number of convex polygons:";
+            this.noOfConvexLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // speedLabel
             // 
@@ -215,17 +215,17 @@
             this.speedTrackBar.TabIndex = 12;
             this.speedTrackBar.Value = 1;
             // 
-            // colorOfFillingClippedLabel
+            // colorOfFillingLabel
             // 
-            this.colorOfFillingClippedLabel.AutoSize = true;
-            this.colorOfFillingClippedLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.colorOfFillingClippedLabel.Location = new System.Drawing.Point(3, 353);
-            this.colorOfFillingClippedLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.colorOfFillingClippedLabel.Name = "colorOfFillingClippedLabel";
-            this.colorOfFillingClippedLabel.Size = new System.Drawing.Size(88, 44);
-            this.colorOfFillingClippedLabel.TabIndex = 9;
-            this.colorOfFillingClippedLabel.Text = "Color of clipped filling:";
-            this.colorOfFillingClippedLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.colorOfFillingLabel.AutoSize = true;
+            this.colorOfFillingLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.colorOfFillingLabel.Location = new System.Drawing.Point(3, 353);
+            this.colorOfFillingLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.colorOfFillingLabel.Name = "colorOfFillingLabel";
+            this.colorOfFillingLabel.Size = new System.Drawing.Size(88, 44);
+            this.colorOfFillingLabel.TabIndex = 9;
+            this.colorOfFillingLabel.Text = "Color of clipped filling:";
+            this.colorOfFillingLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // textureButton
             // 
@@ -239,17 +239,17 @@
             this.textureButton.UseVisualStyleBackColor = false;
             this.textureButton.Click += new System.EventHandler(this.textureButton_Click);
             // 
-            // colorHeightLabel
+            // heightOfLightLabel
             // 
-            this.colorHeightLabel.AutoSize = true;
-            this.colorHeightLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.colorHeightLabel.Location = new System.Drawing.Point(3, 503);
-            this.colorHeightLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.colorHeightLabel.Name = "colorHeightLabel";
-            this.colorHeightLabel.Size = new System.Drawing.Size(88, 44);
-            this.colorHeightLabel.TabIndex = 16;
-            this.colorHeightLabel.Text = "Height of light:";
-            this.colorHeightLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.heightOfLightLabel.AutoSize = true;
+            this.heightOfLightLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.heightOfLightLabel.Location = new System.Drawing.Point(3, 503);
+            this.heightOfLightLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.heightOfLightLabel.Name = "heightOfLightLabel";
+            this.heightOfLightLabel.Size = new System.Drawing.Size(88, 44);
+            this.heightOfLightLabel.TabIndex = 16;
+            this.heightOfLightLabel.Text = "Height of light:";
+            this.heightOfLightLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lightColorLabel
             // 
@@ -286,57 +286,57 @@
             this.heightOfLightTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.heightOfLightTextBox.TextChanged += new System.EventHandler(this.heightOfLightTextBox_TextChanged);
             // 
-            // noOfVerticesInPolygonsLabel
+            // noOfVerticesLabel
             // 
-            this.noOfVerticesInPolygonsLabel.AutoSize = true;
-            this.noOfVerticesInPolygonsLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.noOfVerticesInPolygonsLabel.Location = new System.Drawing.Point(3, 103);
-            this.noOfVerticesInPolygonsLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.noOfVerticesInPolygonsLabel.Name = "noOfVerticesInPolygonsLabel";
-            this.noOfVerticesInPolygonsLabel.Size = new System.Drawing.Size(88, 44);
-            this.noOfVerticesInPolygonsLabel.TabIndex = 7;
-            this.noOfVerticesInPolygonsLabel.Text = "Number of vertices in convex polygons:";
-            this.noOfVerticesInPolygonsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.noOfVerticesLabel.AutoSize = true;
+            this.noOfVerticesLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.noOfVerticesLabel.Location = new System.Drawing.Point(3, 103);
+            this.noOfVerticesLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.noOfVerticesLabel.Name = "noOfVerticesLabel";
+            this.noOfVerticesLabel.Size = new System.Drawing.Size(88, 44);
+            this.noOfVerticesLabel.TabIndex = 7;
+            this.noOfVerticesLabel.Text = "Number of vertices in convex polygons:";
+            this.noOfVerticesLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // convexDomain
+            // noOfVerticesDomain
             // 
-            this.convexDomain.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.convexDomain.Items.Add("15");
-            this.convexDomain.Items.Add("14");
-            this.convexDomain.Items.Add("13");
-            this.convexDomain.Items.Add("12");
-            this.convexDomain.Items.Add("11");
-            this.convexDomain.Items.Add("10");
-            this.convexDomain.Items.Add("9");
-            this.convexDomain.Items.Add("8");
-            this.convexDomain.Items.Add("7");
-            this.convexDomain.Items.Add("6");
-            this.convexDomain.Items.Add("5");
-            this.convexDomain.Items.Add("4");
-            this.convexDomain.Items.Add("3");
-            this.convexDomain.Location = new System.Drawing.Point(119, 115);
-            this.convexDomain.Name = "convexDomain";
-            this.convexDomain.Size = new System.Drawing.Size(49, 20);
-            this.convexDomain.TabIndex = 3;
-            this.convexDomain.Text = "3";
-            this.convexDomain.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.noOfVerticesDomain.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.noOfVerticesDomain.Items.Add("15");
+            this.noOfVerticesDomain.Items.Add("14");
+            this.noOfVerticesDomain.Items.Add("13");
+            this.noOfVerticesDomain.Items.Add("12");
+            this.noOfVerticesDomain.Items.Add("11");
+            this.noOfVerticesDomain.Items.Add("10");
+            this.noOfVerticesDomain.Items.Add("9");
+            this.noOfVerticesDomain.Items.Add("8");
+            this.noOfVerticesDomain.Items.Add("7");
+            this.noOfVerticesDomain.Items.Add("6");
+            this.noOfVerticesDomain.Items.Add("5");
+            this.noOfVerticesDomain.Items.Add("4");
+            this.noOfVerticesDomain.Items.Add("3");
+            this.noOfVerticesDomain.Location = new System.Drawing.Point(119, 115);
+            this.noOfVerticesDomain.Name = "noOfVerticesDomain";
+            this.noOfVerticesDomain.Size = new System.Drawing.Size(49, 20);
+            this.noOfVerticesDomain.TabIndex = 3;
+            this.noOfVerticesDomain.Text = "3";
+            this.noOfVerticesDomain.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // convexNoDomain
+            // noOfConvexDomain
             // 
-            this.convexNoDomain.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.convexNoDomain.Items.Add("7");
-            this.convexNoDomain.Items.Add("6");
-            this.convexNoDomain.Items.Add("5");
-            this.convexNoDomain.Items.Add("4");
-            this.convexNoDomain.Items.Add("3");
-            this.convexNoDomain.Items.Add("2");
-            this.convexNoDomain.Items.Add("1");
-            this.convexNoDomain.Location = new System.Drawing.Point(119, 165);
-            this.convexNoDomain.Name = "convexNoDomain";
-            this.convexNoDomain.Size = new System.Drawing.Size(49, 20);
-            this.convexNoDomain.TabIndex = 11;
-            this.convexNoDomain.Text = "1";
-            this.convexNoDomain.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.noOfConvexDomain.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.noOfConvexDomain.Items.Add("7");
+            this.noOfConvexDomain.Items.Add("6");
+            this.noOfConvexDomain.Items.Add("5");
+            this.noOfConvexDomain.Items.Add("4");
+            this.noOfConvexDomain.Items.Add("3");
+            this.noOfConvexDomain.Items.Add("2");
+            this.noOfConvexDomain.Items.Add("1");
+            this.noOfConvexDomain.Location = new System.Drawing.Point(119, 165);
+            this.noOfConvexDomain.Name = "noOfConvexDomain";
+            this.noOfConvexDomain.Size = new System.Drawing.Size(49, 20);
+            this.noOfConvexDomain.TabIndex = 11;
+            this.noOfConvexDomain.Text = "1";
+            this.noOfConvexDomain.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // clearButton
             // 
@@ -479,26 +479,26 @@
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.RadioButton editRadioButton;
         private System.Windows.Forms.ToolTip toolTip;
-        private System.Windows.Forms.DomainUpDown convexDomain;
+        private System.Windows.Forms.DomainUpDown noOfVerticesDomain;
         private System.Windows.Forms.Button generateConvexButton;
         private System.Windows.Forms.ColorDialog fillingColorDialog;
-        private System.Windows.Forms.Label noOfPolygonsLabel;
-        private System.Windows.Forms.Label noOfVerticesInPolygonsLabel;
+        private System.Windows.Forms.Label noOfConvexLabel;
+        private System.Windows.Forms.Label noOfVerticesLabel;
         private System.Windows.Forms.Label speedLabel;
-        private System.Windows.Forms.DomainUpDown convexNoDomain;
+        private System.Windows.Forms.DomainUpDown noOfConvexDomain;
         private System.Windows.Forms.TrackBar speedTrackBar;
         private System.Windows.Forms.Label textureLabel;
         private System.Windows.Forms.Button textureButton;
         private System.Windows.Forms.Button startStopButton;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
-        private System.Windows.Forms.Label colorHeightLabel;
+        private System.Windows.Forms.Label heightOfLightLabel;
         private System.Windows.Forms.Label lightColorLabel;
         private System.Windows.Forms.Button lightColorButton;
         private System.Windows.Forms.TextBox heightOfLightTextBox;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label bumpMapLabel;
         private System.Windows.Forms.Button bumpMapButton;
-        private System.Windows.Forms.Label colorOfFillingClippedLabel;
+        private System.Windows.Forms.Label colorOfFillingLabel;
         private System.Windows.Forms.Button colorOfFillingButton;
     }
 }

@@ -9,45 +9,45 @@ namespace Polygon_Filler
 {
     public static class Tools
     {
-        public static float ScalarProduct(float[] v, float[] u)
+        public static float scalarProduct(float[] v, float[] u)
         {
             if (v.Count() != 3 || u.Count() != 3) return 0;
             return v[0] * u[0] + v[1] * u[1] + v[2] * u[2];
         }
 
-        public static double Distance(Vertex v1, Vertex v2)
+        public static double distance(Vertex v1, Vertex v2)
         {
             return Math.Sqrt(Math.Pow(v2.center.X - v1.center.X, 2) + Math.Pow(v2.center.Y - v1.center.Y, 2));
         }
 
-        public static int Cross(Vertex o, Vertex v, Vertex u)
+        public static int cross(Vertex o, Vertex v, Vertex u)
         {
             double value = (v.center.X - o.center.X) * (u.center.Y - o.center.Y) - (v.center.Y - o.center.Y) * (u.center.X - o.center.X);
             return Math.Abs(value) < 1e-1 ? 0 : value < 0 ? -1 : 1;
         }
 
-        public static bool LinesIntersect(Point p1, Point p2, Point p3, Point p4)
+        public static bool linesIntersect(Point p1, Point p2, Point p3, Point p4)
         {
             if (p1 == p4 || p2 == p3) return false;
             if (p1 == p3 || p2 == p4) return false;
 
-            int d1 = Orientation(p1, p2, p3);
-            int d2 = Orientation(p1, p2, p4);
-            int d3 = Orientation(p3, p4, p1);
-            int d4 = Orientation(p3, p4, p2);
+            int d1 = orientation(p1, p2, p3);
+            int d2 = orientation(p1, p2, p4);
+            int d3 = orientation(p3, p4, p1);
+            int d4 = orientation(p3, p4, p2);
 
             if (d1 != d2 && d3 != d4)
                 return true;
 
-            if (d1 == 0 && OnSegment(p1, p3, p2)) return true;
-            if (d2 == 0 && OnSegment(p1, p4, p2)) return true;
-            if (d3 == 0 && OnSegment(p3, p1, p4)) return true;
-            if (d4 == 0 && OnSegment(p3, p2, p4)) return true;
+            if (d1 == 0 && onLine(p1, p3, p2)) return true;
+            if (d2 == 0 && onLine(p1, p4, p2)) return true;
+            if (d3 == 0 && onLine(p3, p1, p4)) return true;
+            if (d4 == 0 && onLine(p3, p2, p4)) return true;
 
             return false;
         }
 
-        public static int Orientation(Point p1, Point p2, Point q)
+        public static int orientation(Point p1, Point p2, Point q)
         {
             int val = (p2.Y - p1.Y) * (q.X - p2.X) - (p2.X - p1.X) * (q.Y - p2.Y);
 
@@ -55,7 +55,7 @@ namespace Polygon_Filler
             return (val > 0) ? 1 : 2;
         }
 
-        public static bool OnSegment(Point p, Point q, Point r)
+        public static bool onLine(Point p, Point q, Point r)
         {
             if (q.X <= Math.Max(p.X, r.X) && q.X >= Math.Min(p.X, r.X) && q.Y <= Math.Max(p.Y, r.Y) && q.Y >= Math.Min(p.Y, r.Y)) return true;
             return false;
@@ -63,6 +63,14 @@ namespace Polygon_Filler
 
         public static Vertex searchForVertex(Point p)
         {
+            for (int i = -6; i < 7; i++)
+                for (int j = -6; j < 7; j++)
+                {
+                    if (p.X + i < 0 || p.X + i >= Form.dbm.Width || p.Y + j < 0 || p.Y + j >= Form.dbm.Height) continue;
+
+                    if (p.X + i == Form.icon.center.X && p.Y + j == Form.icon.center.Y) return Form.icon;
+
+                }
             for (int i = -2; i < 3; i++)
                 for (int j = -2; j < 3; j++)
                 {
@@ -71,7 +79,6 @@ namespace Polygon_Filler
                         {
                             if (p.X + i >= Form.dbm.Width || p.X + i < 0 || p.Y + j >= Form.dbm.Height || p.Y + j < 0) continue;
                             if (p.X + i == v.center.X && p.Y + j == v.center.Y) return v;
-
                         }
                 }
             return null;
@@ -79,7 +86,6 @@ namespace Polygon_Filler
 
         public static Polygon searchForPolygon(Point p)
         {
-            if (isInside(p, Form.lightPolygon)) return Form.lightPolygon;
             foreach (Polygon polygon in Form.polygons)
                 if (isInside(p, polygon) == true) return polygon;
             foreach (ConvexPolygon polygon in Form.convexPolygons)
@@ -125,10 +131,10 @@ namespace Polygon_Filler
                     continue;
                 }
 
-                if (LinesIntersect(polygon.vertices[i].center, polygon.vertices[next].center, v, extreme))
+                if (linesIntersect(polygon.vertices[i].center, polygon.vertices[next].center, v, extreme))
                 {
-                    if (Orientation(polygon.vertices[i].center, v, polygon.vertices[next].center) == 0)
-                        return OnSegment(polygon.vertices[i].center, v, polygon.vertices[next].center);
+                    if (orientation(polygon.vertices[i].center, v, polygon.vertices[next].center) == 0)
+                        return onLine(polygon.vertices[i].center, v, polygon.vertices[next].center);
 
                     count++;
                 }
@@ -138,7 +144,7 @@ namespace Polygon_Filler
         }
 
         //-----WEILER - ATHERTON-----//
-        public static (Vertex, Vertex)? GetIntersectionPoints(Vertex s1, Vertex s2, Vertex c1, Vertex c2)
+        public static (Vertex, Vertex)? getIntersectionPoints(Vertex s1, Vertex s2, Vertex c1, Vertex c2)
         {
             if (s1 == c1 || s1 == c2 || s2 == c1 || s2 == c2) return null;
             double d = (c2.center.Y - c1.center.Y) * (s2.center.X - s1.center.X) - (c2.center.X - c1.center.X) * (s2.center.Y - s1.center.Y);
@@ -168,7 +174,7 @@ namespace Polygon_Filler
                 return null;
         }
 
-        public static (Polygon, Polygon) MakeIntersectionPoints(Polygon source, Polygon clip)
+        public static (Polygon, Polygon) makeIntersectionPoints(Polygon source, Polygon clip)
         {
             Polygon sourceCopy = new Polygon(source);
             Polygon clipCopy = new Polygon(clip);
@@ -179,7 +185,7 @@ namespace Polygon_Filler
                     Vertex s2 = e.v2;
                     Vertex c1 = e1.v1;
                     Vertex c2 = e1.v2;
-                    (Vertex s, Vertex c)? inter = GetIntersectionPoints(s1, s2, c1, c2);
+                    (Vertex s, Vertex c)? inter = getIntersectionPoints(s1, s2, c1, c2);
                     if (inter.HasValue)
                     {                   
                         if (sourceCopy.vertices[(sourceCopy.vertices.IndexOf(s1) + 1) % sourceCopy.vertices.Count].IsIntersection && (sourceCopy.vertices[(sourceCopy.vertices.IndexOf(s1) + 1) % sourceCopy.vertices.Count].distance < inter.Value.s.distance))
@@ -220,9 +226,9 @@ namespace Polygon_Filler
             return (sourceCopy, clipCopy);
         }
 
-        public static (Polygon, Polygon) MarkEntryPoints(Polygon source, Polygon clip)
+        public static (Polygon, Polygon) markEntryPoints(Polygon source, Polygon clip)
         {
-            (Polygon sourceCopy, Polygon clipCopy) = MakeIntersectionPoints(source, clip);
+            (Polygon sourceCopy, Polygon clipCopy) = makeIntersectionPoints(source, clip);
             bool flag = false;
             Vertex s1 = sourceCopy.vertices.First();
             if (isInside(s1.center, clipCopy))
@@ -263,7 +269,7 @@ namespace Polygon_Filler
 
         public static List<Polygon> WeilerAtherton(Polygon source, Polygon clip)
         {
-            (Polygon sourceCopy, Polygon clipCopy) = MarkEntryPoints(source, clip);
+            (Polygon sourceCopy, Polygon clipCopy) = markEntryPoints(source, clip);
             List<Polygon> result = new List<Polygon>();
             List<Vertex> intersections = new List<Vertex>();
             bool isMovingForward = true;
@@ -331,32 +337,5 @@ namespace Polygon_Filler
             }
             return result;
         }
-
-        //public static bool isInside2(Point p, Polygon polygon)
-        //{
-        //    int count = 0;
-        //    if (p.X < 0 || p.X >= Form.dbm.Width || p.Y < 0  || p.Y >= Form.dbm.Height) return false;
-        //    for (int i = p.X; i < Form.pixelsOfEdges.GetLength(0); i++)
-        //        if (Form.pixelsOfEdges[i, p.Y] != null)
-        //        {
-        //            if (Form.pixelsOfVertices[i, p.Y] != null) continue;
-        //            if (polygon.edges.Contains((Form.pixelsOfEdges[i, p.Y])))
-        //            {
-        //                if (i != p.X && Form.pixelsOfEdges[i - 1, p.Y] == Form.pixelsOfEdges[i, p.Y]) continue;                            
-        //                count++;
-        //            }
-        //        }
-
-        //    List<Vertex> v = polygon.vertices.FindAll(a => a.center.X >= p.X && a.center.Y == p.Y);
-        //    foreach (Vertex vertex in v)
-        //    {
-        //        Edge e1 = polygon.edges.Find(a => a.v1 == vertex);
-        //        Edge e2 = polygon.edges.Find(a => a.v2 == vertex);
-        //        if (e1.v2.center.Y > p.Y && e2.v1.center.Y > p.Y || e1.v2.center.Y < p.Y && e2.v1.center.Y < p.Y) count +=2;
-        //        else if (e1.v2.center.Y > p.Y && e2.v1.center.Y < p.Y || e1.v2.center.Y < p.Y && e2.v1.center.Y > p.Y) count++;
-        //    }
-        //    if (count % 2 == 1) return true;
-        //    else return false;
-        //}
     }
 }

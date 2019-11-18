@@ -117,7 +117,7 @@ namespace Polygon_Filler
                 }
                 AETs = AETs.OrderBy(a => a.x).ToList();
 
-                if (Form.backgroundDBM != null && Form.bumpMap != null && this != Form.lightPolygon)
+                if (Form.backgroundDBM != null && Form.bumpMap != null)
                 {
                     for (int i = 0; i < AETs.Count; i += 2)
                     {
@@ -151,19 +151,19 @@ namespace Polygon_Filler
                                 N[j] /= lengthN;
                             }
 
-                            float[] color = new float[] { Io[0] * Form.colorOfLight[0] * Tools.ScalarProduct(N, L), Io[1] * Form.colorOfLight[1] * Tools.ScalarProduct(N, L), Io[2] * Form.colorOfLight[2] * Tools.ScalarProduct(N, L) };
+                            float[] color = new float[] { Io[0] * Form.colorOfLight[0] * Tools.scalarProduct(N, L), Io[1] * Form.colorOfLight[1] * Tools.scalarProduct(N, L), Io[2] * Form.colorOfLight[2] * Tools.scalarProduct(N, L) };
                             for (int j = 0; j < color.Count(); j++)
                             {
                                 color[j] *= 255;
                                 if (color[j] < 0) color[j] = 0;
                                 if (color[j] > 255) color[j] = 255;
                             }
-                            if (Tools.ScalarProduct(N, L) < 0) Form.dbm.SetPixel(x, y, Color.Black);    
+                            if (Tools.scalarProduct(N, L) < 0) Form.dbm.SetPixel(x, y, Color.Black);    
                             Form.dbm.SetPixel(x, y, Color.FromArgb((int)color[0], (int)color[1], (int)color[2]));
                         }
                     }
                 }
-                else if (Form.backgroundDBM == null && Form.bumpMap != null && this != Form.lightPolygon)
+                else if (Form.backgroundDBM == null && Form.bumpMap != null)
                 {
                     for (int i = 0; i < AETs.Count; i += 2)
                     {
@@ -197,7 +197,7 @@ namespace Polygon_Filler
                                 N[j] /= lengthN;
                             }
 
-                            float[] color = new float[] { Io[0] * Form.colorOfLight[0] * Tools.ScalarProduct(N, L), Io[1] * Form.colorOfLight[1] * Tools.ScalarProduct(N, L), Io[2] * Form.colorOfLight[2] * Tools.ScalarProduct(N, L) };
+                            float[] color = new float[] { Io[0] * Form.colorOfLight[0] * Tools.scalarProduct(N, L), Io[1] * Form.colorOfLight[1] * Tools.scalarProduct(N, L), Io[2] * Form.colorOfLight[2] * Tools.scalarProduct(N, L) };
                             for (int j = 0; j < color.Count(); j++)
                             {
                                 color[j] *= 255;
@@ -208,7 +208,7 @@ namespace Polygon_Filler
                         }
                     }
                 }
-                else if (Form.backgroundDBM != null && this != Form.lightPolygon)
+                else if (Form.backgroundDBM != null)
                 {
                     for (int i = 0; i < AETs.Count; i += 2)
                     {
@@ -223,7 +223,7 @@ namespace Polygon_Filler
                                 L[j] /= length;
                             }
                             float[] N = new float[] { (float)0, (float)0, (float)1 };
-                            float[] color = new float[] { Io[0] * Form.colorOfLight[0] * Tools.ScalarProduct(N, L), Io[1] * Form.colorOfLight[1] * Tools.ScalarProduct(N, L), Io[2] * Form.colorOfLight[2] * Tools.ScalarProduct(N, L)};
+                            float[] color = new float[] { Io[0] * Form.colorOfLight[0] * Tools.scalarProduct(N, L), Io[1] * Form.colorOfLight[1] * Tools.scalarProduct(N, L), Io[2] * Form.colorOfLight[2] * Tools.scalarProduct(N, L)};
                             for (int j = 0; j < color.Count(); j++)
                             {
                                 color[j] *= 255;
@@ -261,15 +261,16 @@ namespace Polygon_Filler
         {
             List<Vertex> convexHull = new List<Vertex>();
             vertices.Sort((v, u) => (v.center.Y, v.center.X).CompareTo((u.center.Y, u.center.X)));
-            vertices = vertices.OrderBy(v => (vertices.First().center.X - v.center.X) / Tools.Distance(vertices.First(), v)).ToList();
+            vertices = vertices.OrderBy(v => (vertices.First().center.X - v.center.X) / Tools.distance(vertices.First(), v)).ToList();
             convexHull.Add(vertices.First());
             convexHull.Add(vertices[1]);
             for (int i = 2; i < vertices.Count; i++)
             {
-                while (convexHull.Count >= 2 && Tools.Cross(vertices[i], convexHull[convexHull.Count - 2], convexHull[convexHull.Count - 1]) <= 0) convexHull.RemoveAt(convexHull.Count - 1);
+                while (convexHull.Count >= 2 && Tools.cross(vertices[i], convexHull[convexHull.Count - 2], convexHull[convexHull.Count - 1]) <= 0) convexHull.RemoveAt(convexHull.Count - 1);
                 convexHull.Add(vertices[i]);
             }
             this.vertices = new List<Vertex>();
+            this.edges = new List<Edge>();
             for (int i = 0; i < convexHull.Count; i++)
                 this.vertices.Add(convexHull[i]);
             for (int i = 0; i < this.vertices.Count - 1; i++)

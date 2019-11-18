@@ -11,7 +11,7 @@ namespace Polygon_Filler
     {
         public Point center;
 
-        public bool Inside = false;//pomocnicze
+        public bool Inside = false;//pomocnicze, do usuniecia
 
         public bool IsIntersection = false;
         public bool IsEntry = false;
@@ -42,7 +42,7 @@ namespace Polygon_Filler
             return;
         }
 
-        public bool CanDraw()
+        public virtual bool CanDraw()
         {
             if (this.center.X < 0 || this.center.X >= Form.dbm.Width || this.center.Y < 0 || this.center.Y >= Form.dbm.Height) return false;
             else return true;
