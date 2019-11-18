@@ -11,7 +11,8 @@ namespace Polygon_Filler
     {
         public Point center;
 
-        public bool tmp = false;
+        public bool Inside = false;//pomocnicze
+
         public bool IsIntersection = false;
         public bool IsEntry = false;
         public bool Visited = false;
@@ -34,12 +35,6 @@ namespace Polygon_Filler
             return;
         }
 
-        public Vertex(Point p, int d)
-        {
-            this.center = new Point(p.X, p.Y);
-            return;
-        }
-
         public void Move(int dx, int dy)
         {
             this.center.X += dx;
@@ -53,20 +48,15 @@ namespace Polygon_Filler
             else return true;
         }
 
-        public void Draw(Color color)
+        public virtual void Draw(Color color)
         {
-            if (this.CanDraw() == false /*|| IsIntersection == true*/) return;
+            if (this.CanDraw() == false || IsIntersection == true) return;
             for (int i = -2; i < 3; i++)
                 for (int j = -2; j < 3; j++)
                 {
                     if (this.center.X + i < 0 || this.center.X + i >= Form.dbm.Width || this.center.Y + j < 0 || this.center.Y + j >= Form.dbm.Height) continue;
                     Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, color);
-                    if(IsEntry == true) Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, Color.Orange);
-                    //if (IsIntersection == true) Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, Color.Orange);
-
-                    if (tmp == true) Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, Color.Cyan);
                 }
-            Form.pixelsOfVertices[this.center.X, this.center.Y ] = this;
             return;
         }
     }

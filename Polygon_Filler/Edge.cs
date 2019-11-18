@@ -22,7 +22,9 @@ namespace Polygon_Filler
         public bool canDraw(List<Edge> edges)
         {
             if (edges.Count == 0) return true;
-            if (edges.Count > 0 && Tools.Orientation(edges.Last().v1.center, v1.center, v2.center) != 1) return false;
+
+            //if (edges.Count > 0 && Tools.Orientation(edges.Last().v1.center, v1.center, v2.center) != 1) return false;//mozna rysowac tylko wielakat wypukly w lewa strone idac
+
             if (edges.Any(e => Tools.LinesIntersect(this.v1.center, this.v2.center, e.v1.center, e.v2.center) == true))
                 return false;
             else return true;
@@ -56,8 +58,7 @@ namespace Polygon_Filler
                 yi = -1;
                 dy = a.Y - b.Y;
             }
-            //Form.dbm.SetPixel(a.X, a.Y, color);
-            //Form.pixelsOfEdges[a.X, a.Y] = this;
+            Form.dbm.SetPixel(a.X, a.Y, color);
             if (dx > dy)
             {
                 int ai = (dy - dx) * 2;
@@ -78,7 +79,6 @@ namespace Polygon_Filler
                     }
                     if (a.X < 0 || a.X >= Form.dbm.Width || a.Y < 0 || a.Y >= Form.dbm.Height) continue;
                     Form.dbm.SetPixel(a.X, a.Y, color);
-                    Form.pixelsOfEdges[a.X, a.Y] = this;
                 }
             }
             else
@@ -101,7 +101,6 @@ namespace Polygon_Filler
                     }
                     if (a.X < 0 || a.X >= Form.dbm.Width || a.Y < 0 || a.Y >= Form.dbm.Height) continue;
                     Form.dbm.SetPixel(a.X, a.Y, color);
-                    Form.pixelsOfEdges[a.X, a.Y] = this;
                 }
             }
             return;
