@@ -32,33 +32,31 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
             this.backTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.optionsTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.bumpMapLabel = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.polygonRadioButton = new System.Windows.Forms.RadioButton();
             this.editRadioButton = new System.Windows.Forms.RadioButton();
             this.noOfConvexLabel = new System.Windows.Forms.Label();
             this.speedLabel = new System.Windows.Forms.Label();
             this.speedTrackBar = new System.Windows.Forms.TrackBar();
-            this.colorOfFillingLabel = new System.Windows.Forms.Label();
-            this.textureButton = new System.Windows.Forms.Button();
-            this.heightOfLightLabel = new System.Windows.Forms.Label();
-            this.lightColorLabel = new System.Windows.Forms.Label();
-            this.lightColorButton = new System.Windows.Forms.Button();
-            this.heightOfLightTextBox = new System.Windows.Forms.TextBox();
             this.noOfVerticesLabel = new System.Windows.Forms.Label();
             this.noOfVerticesDomain = new System.Windows.Forms.DomainUpDown();
             this.noOfConvexDomain = new System.Windows.Forms.DomainUpDown();
             this.clearButton = new System.Windows.Forms.Button();
             this.generateConvexButton = new System.Windows.Forms.Button();
             this.startStopButton = new System.Windows.Forms.Button();
-            this.colorOfFillingButton = new System.Windows.Forms.Button();
             this.textureLabel = new System.Windows.Forms.Label();
+            this.bumpMapLabel = new System.Windows.Forms.Label();
+            this.textureButton = new System.Windows.Forms.Button();
             this.bumpMapButton = new System.Windows.Forms.Button();
+            this.heightOfLightLabel = new System.Windows.Forms.Label();
+            this.heightOfLightTextBox = new System.Windows.Forms.TextBox();
+            this.lightColorLabel = new System.Windows.Forms.Label();
+            this.lightColorButton = new System.Windows.Forms.Button();
             this.drawingPanel = new System.Windows.Forms.Panel();
             this.drawingPictureBox = new System.Windows.Forms.PictureBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.fillingColorDialog = new System.Windows.Forms.ColorDialog();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.backTableLayoutPanel.SuspendLayout();
             this.optionsTableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.speedTrackBar)).BeginInit();
@@ -87,28 +85,26 @@
             this.optionsTableLayoutPanel.ColumnCount = 2;
             this.optionsTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 48.45361F));
             this.optionsTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.54639F));
-            this.optionsTableLayoutPanel.Controls.Add(this.bumpMapLabel, 0, 9);
             this.optionsTableLayoutPanel.Controls.Add(this.button1, 0, 12);
             this.optionsTableLayoutPanel.Controls.Add(this.polygonRadioButton, 0, 0);
             this.optionsTableLayoutPanel.Controls.Add(this.editRadioButton, 1, 0);
             this.optionsTableLayoutPanel.Controls.Add(this.noOfConvexLabel, 0, 3);
             this.optionsTableLayoutPanel.Controls.Add(this.speedLabel, 0, 6);
             this.optionsTableLayoutPanel.Controls.Add(this.speedTrackBar, 1, 6);
-            this.optionsTableLayoutPanel.Controls.Add(this.colorOfFillingLabel, 0, 7);
-            this.optionsTableLayoutPanel.Controls.Add(this.textureButton, 1, 8);
-            this.optionsTableLayoutPanel.Controls.Add(this.heightOfLightLabel, 0, 10);
-            this.optionsTableLayoutPanel.Controls.Add(this.lightColorLabel, 0, 11);
-            this.optionsTableLayoutPanel.Controls.Add(this.lightColorButton, 1, 11);
-            this.optionsTableLayoutPanel.Controls.Add(this.heightOfLightTextBox, 1, 10);
             this.optionsTableLayoutPanel.Controls.Add(this.noOfVerticesLabel, 0, 2);
             this.optionsTableLayoutPanel.Controls.Add(this.noOfVerticesDomain, 1, 2);
             this.optionsTableLayoutPanel.Controls.Add(this.noOfConvexDomain, 1, 3);
             this.optionsTableLayoutPanel.Controls.Add(this.clearButton, 0, 1);
             this.optionsTableLayoutPanel.Controls.Add(this.generateConvexButton, 0, 4);
             this.optionsTableLayoutPanel.Controls.Add(this.startStopButton, 0, 5);
-            this.optionsTableLayoutPanel.Controls.Add(this.colorOfFillingButton, 1, 7);
-            this.optionsTableLayoutPanel.Controls.Add(this.textureLabel, 0, 8);
-            this.optionsTableLayoutPanel.Controls.Add(this.bumpMapButton, 1, 9);
+            this.optionsTableLayoutPanel.Controls.Add(this.textureLabel, 0, 7);
+            this.optionsTableLayoutPanel.Controls.Add(this.bumpMapLabel, 0, 8);
+            this.optionsTableLayoutPanel.Controls.Add(this.textureButton, 1, 7);
+            this.optionsTableLayoutPanel.Controls.Add(this.bumpMapButton, 1, 8);
+            this.optionsTableLayoutPanel.Controls.Add(this.heightOfLightLabel, 0, 9);
+            this.optionsTableLayoutPanel.Controls.Add(this.heightOfLightTextBox, 1, 9);
+            this.optionsTableLayoutPanel.Controls.Add(this.lightColorLabel, 0, 10);
+            this.optionsTableLayoutPanel.Controls.Add(this.lightColorButton, 1, 10);
             this.optionsTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.optionsTableLayoutPanel.Location = new System.Drawing.Point(1187, 3);
             this.optionsTableLayoutPanel.Name = "optionsTableLayoutPanel";
@@ -131,18 +127,6 @@
             this.optionsTableLayoutPanel.Size = new System.Drawing.Size(194, 655);
             this.optionsTableLayoutPanel.TabIndex = 1;
             // 
-            // bumpMapLabel
-            // 
-            this.bumpMapLabel.AutoSize = true;
-            this.bumpMapLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bumpMapLabel.Location = new System.Drawing.Point(3, 453);
-            this.bumpMapLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.bumpMapLabel.Name = "bumpMapLabel";
-            this.bumpMapLabel.Size = new System.Drawing.Size(88, 44);
-            this.bumpMapLabel.TabIndex = 1;
-            this.bumpMapLabel.Text = "Bump map:";
-            this.bumpMapLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(3, 603);
@@ -151,7 +135,7 @@
             this.button1.TabIndex = 1;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button2_Click);
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // polygonRadioButton
             // 
@@ -207,6 +191,7 @@
             // speedTrackBar
             // 
             this.speedTrackBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.speedTrackBar.LargeChange = 2;
             this.speedTrackBar.Location = new System.Drawing.Point(97, 310);
             this.speedTrackBar.Margin = new System.Windows.Forms.Padding(3, 10, 3, 10);
             this.speedTrackBar.Minimum = 1;
@@ -214,77 +199,7 @@
             this.speedTrackBar.Size = new System.Drawing.Size(94, 30);
             this.speedTrackBar.TabIndex = 12;
             this.speedTrackBar.Value = 1;
-            // 
-            // colorOfFillingLabel
-            // 
-            this.colorOfFillingLabel.AutoSize = true;
-            this.colorOfFillingLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.colorOfFillingLabel.Location = new System.Drawing.Point(3, 353);
-            this.colorOfFillingLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.colorOfFillingLabel.Name = "colorOfFillingLabel";
-            this.colorOfFillingLabel.Size = new System.Drawing.Size(88, 44);
-            this.colorOfFillingLabel.TabIndex = 9;
-            this.colorOfFillingLabel.Text = "Color of clipped filling:";
-            this.colorOfFillingLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // textureButton
-            // 
-            this.textureButton.BackColor = System.Drawing.SystemColors.Control;
-            this.textureButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textureButton.Location = new System.Drawing.Point(101, 410);
-            this.textureButton.Margin = new System.Windows.Forms.Padding(7, 10, 7, 10);
-            this.textureButton.Name = "textureButton";
-            this.textureButton.Size = new System.Drawing.Size(86, 30);
-            this.textureButton.TabIndex = 14;
-            this.textureButton.UseVisualStyleBackColor = false;
-            this.textureButton.Click += new System.EventHandler(this.textureButton_Click);
-            // 
-            // heightOfLightLabel
-            // 
-            this.heightOfLightLabel.AutoSize = true;
-            this.heightOfLightLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.heightOfLightLabel.Location = new System.Drawing.Point(3, 503);
-            this.heightOfLightLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.heightOfLightLabel.Name = "heightOfLightLabel";
-            this.heightOfLightLabel.Size = new System.Drawing.Size(88, 44);
-            this.heightOfLightLabel.TabIndex = 16;
-            this.heightOfLightLabel.Text = "Height of light:";
-            this.heightOfLightLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lightColorLabel
-            // 
-            this.lightColorLabel.AutoSize = true;
-            this.lightColorLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lightColorLabel.Location = new System.Drawing.Point(3, 553);
-            this.lightColorLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.lightColorLabel.Name = "lightColorLabel";
-            this.lightColorLabel.Size = new System.Drawing.Size(88, 44);
-            this.lightColorLabel.TabIndex = 17;
-            this.lightColorLabel.Text = "Color of light";
-            this.lightColorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lightColorButton
-            // 
-            this.lightColorButton.BackColor = System.Drawing.Color.Yellow;
-            this.lightColorButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lightColorButton.Location = new System.Drawing.Point(101, 560);
-            this.lightColorButton.Margin = new System.Windows.Forms.Padding(7, 10, 7, 10);
-            this.lightColorButton.Name = "lightColorButton";
-            this.lightColorButton.Size = new System.Drawing.Size(86, 30);
-            this.lightColorButton.TabIndex = 18;
-            this.lightColorButton.UseVisualStyleBackColor = false;
-            this.lightColorButton.Click += new System.EventHandler(this.lightColorButton_Click);
-            // 
-            // heightOfLightTextBox
-            // 
-            this.heightOfLightTextBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.heightOfLightTextBox.Location = new System.Drawing.Point(119, 515);
-            this.heightOfLightTextBox.Name = "heightOfLightTextBox";
-            this.heightOfLightTextBox.Size = new System.Drawing.Size(50, 20);
-            this.heightOfLightTextBox.TabIndex = 19;
-            this.heightOfLightTextBox.Text = "1";
-            this.heightOfLightTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.heightOfLightTextBox.TextChanged += new System.EventHandler(this.heightOfLightTextBox_TextChanged);
+            this.speedTrackBar.ValueChanged += new System.EventHandler(this.speedTrackBar_ValueChanged);
             // 
             // noOfVerticesLabel
             // 
@@ -301,16 +216,6 @@
             // noOfVerticesDomain
             // 
             this.noOfVerticesDomain.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.noOfVerticesDomain.Items.Add("15");
-            this.noOfVerticesDomain.Items.Add("14");
-            this.noOfVerticesDomain.Items.Add("13");
-            this.noOfVerticesDomain.Items.Add("12");
-            this.noOfVerticesDomain.Items.Add("11");
-            this.noOfVerticesDomain.Items.Add("10");
-            this.noOfVerticesDomain.Items.Add("9");
-            this.noOfVerticesDomain.Items.Add("8");
-            this.noOfVerticesDomain.Items.Add("7");
-            this.noOfVerticesDomain.Items.Add("6");
             this.noOfVerticesDomain.Items.Add("5");
             this.noOfVerticesDomain.Items.Add("4");
             this.noOfVerticesDomain.Items.Add("3");
@@ -324,10 +229,6 @@
             // noOfConvexDomain
             // 
             this.noOfConvexDomain.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.noOfConvexDomain.Items.Add("7");
-            this.noOfConvexDomain.Items.Add("6");
-            this.noOfConvexDomain.Items.Add("5");
-            this.noOfConvexDomain.Items.Add("4");
             this.noOfConvexDomain.Items.Add("3");
             this.noOfConvexDomain.Items.Add("2");
             this.noOfConvexDomain.Items.Add("1");
@@ -377,23 +278,11 @@
             this.startStopButton.UseVisualStyleBackColor = true;
             this.startStopButton.Click += new System.EventHandler(this.startStopButton_Click);
             // 
-            // colorOfFillingButton
-            // 
-            this.colorOfFillingButton.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.colorOfFillingButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.colorOfFillingButton.Location = new System.Drawing.Point(101, 360);
-            this.colorOfFillingButton.Margin = new System.Windows.Forms.Padding(7, 10, 7, 10);
-            this.colorOfFillingButton.Name = "colorOfFillingButton";
-            this.colorOfFillingButton.Size = new System.Drawing.Size(86, 30);
-            this.colorOfFillingButton.TabIndex = 13;
-            this.colorOfFillingButton.UseVisualStyleBackColor = false;
-            this.colorOfFillingButton.Click += new System.EventHandler(this.colorOfFillingButton_Click);
-            // 
             // textureLabel
             // 
             this.textureLabel.AutoSize = true;
             this.textureLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textureLabel.Location = new System.Drawing.Point(3, 403);
+            this.textureLabel.Location = new System.Drawing.Point(3, 353);
             this.textureLabel.Margin = new System.Windows.Forms.Padding(3);
             this.textureLabel.Name = "textureLabel";
             this.textureLabel.Size = new System.Drawing.Size(88, 44);
@@ -401,17 +290,88 @@
             this.textureLabel.Text = "Texture of clipped filling:";
             this.textureLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // bumpMapLabel
+            // 
+            this.bumpMapLabel.AutoSize = true;
+            this.bumpMapLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bumpMapLabel.Location = new System.Drawing.Point(3, 403);
+            this.bumpMapLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.bumpMapLabel.Name = "bumpMapLabel";
+            this.bumpMapLabel.Size = new System.Drawing.Size(88, 44);
+            this.bumpMapLabel.TabIndex = 1;
+            this.bumpMapLabel.Text = "Bump map:";
+            this.bumpMapLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textureButton
+            // 
+            this.textureButton.BackColor = System.Drawing.Color.Transparent;
+            this.textureButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textureButton.Location = new System.Drawing.Point(101, 360);
+            this.textureButton.Margin = new System.Windows.Forms.Padding(7, 10, 7, 10);
+            this.textureButton.Name = "textureButton";
+            this.textureButton.Size = new System.Drawing.Size(86, 30);
+            this.textureButton.TabIndex = 14;
+            this.textureButton.UseVisualStyleBackColor = false;
+            this.textureButton.Click += new System.EventHandler(this.textureButton_Click);
+            // 
             // bumpMapButton
             // 
             this.bumpMapButton.BackColor = System.Drawing.Color.Transparent;
             this.bumpMapButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bumpMapButton.Location = new System.Drawing.Point(101, 460);
+            this.bumpMapButton.Location = new System.Drawing.Point(101, 410);
             this.bumpMapButton.Margin = new System.Windows.Forms.Padding(7, 10, 7, 10);
             this.bumpMapButton.Name = "bumpMapButton";
             this.bumpMapButton.Size = new System.Drawing.Size(86, 30);
             this.bumpMapButton.TabIndex = 20;
             this.bumpMapButton.UseVisualStyleBackColor = false;
             this.bumpMapButton.Click += new System.EventHandler(this.bumpMapButton_Click);
+            // 
+            // heightOfLightLabel
+            // 
+            this.heightOfLightLabel.AutoSize = true;
+            this.heightOfLightLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.heightOfLightLabel.Location = new System.Drawing.Point(3, 453);
+            this.heightOfLightLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.heightOfLightLabel.Name = "heightOfLightLabel";
+            this.heightOfLightLabel.Size = new System.Drawing.Size(88, 44);
+            this.heightOfLightLabel.TabIndex = 16;
+            this.heightOfLightLabel.Text = "Height of light:";
+            this.heightOfLightLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // heightOfLightTextBox
+            // 
+            this.heightOfLightTextBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.heightOfLightTextBox.Location = new System.Drawing.Point(119, 465);
+            this.heightOfLightTextBox.Name = "heightOfLightTextBox";
+            this.heightOfLightTextBox.Size = new System.Drawing.Size(50, 20);
+            this.heightOfLightTextBox.TabIndex = 19;
+            this.heightOfLightTextBox.Text = "100";
+            this.heightOfLightTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.heightOfLightTextBox.TextChanged += new System.EventHandler(this.heightOfLightTextBox_TextChanged);
+            // 
+            // lightColorLabel
+            // 
+            this.lightColorLabel.AutoSize = true;
+            this.lightColorLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lightColorLabel.Location = new System.Drawing.Point(3, 503);
+            this.lightColorLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.lightColorLabel.Name = "lightColorLabel";
+            this.lightColorLabel.Size = new System.Drawing.Size(88, 44);
+            this.lightColorLabel.TabIndex = 17;
+            this.lightColorLabel.Text = "Color of light";
+            this.lightColorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lightColorButton
+            // 
+            this.lightColorButton.BackColor = System.Drawing.Color.Red;
+            this.lightColorButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lightColorButton.Location = new System.Drawing.Point(101, 510);
+            this.lightColorButton.Margin = new System.Windows.Forms.Padding(7, 10, 7, 10);
+            this.lightColorButton.Name = "lightColorButton";
+            this.lightColorButton.Size = new System.Drawing.Size(86, 30);
+            this.lightColorButton.TabIndex = 18;
+            this.lightColorButton.UseVisualStyleBackColor = false;
+            this.lightColorButton.Click += new System.EventHandler(this.lightColorButton_Click);
             // 
             // drawingPanel
             // 
@@ -438,12 +398,9 @@
             this.drawingPictureBox.MouseLeave += new System.EventHandler(this.drawingPictureBox_MouseLeave);
             this.drawingPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.drawingPictureBox_MouseMove);
             // 
-            // backgroundWorker
+            // timer
             // 
-            this.backgroundWorker.WorkerReportsProgress = true;
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
             // Form
             // 
@@ -490,7 +447,6 @@
         private System.Windows.Forms.Label textureLabel;
         private System.Windows.Forms.Button textureButton;
         private System.Windows.Forms.Button startStopButton;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.Label heightOfLightLabel;
         private System.Windows.Forms.Label lightColorLabel;
         private System.Windows.Forms.Button lightColorButton;
@@ -498,8 +454,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label bumpMapLabel;
         private System.Windows.Forms.Button bumpMapButton;
-        private System.Windows.Forms.Label colorOfFillingLabel;
-        private System.Windows.Forms.Button colorOfFillingButton;
+        private System.Windows.Forms.Timer timer;
     }
 }
 

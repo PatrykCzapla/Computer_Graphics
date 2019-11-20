@@ -27,7 +27,7 @@ namespace Polygon_Filler
                 {
                     if (this.center.X + i < 0 || this.center.X + i >= Form.dbm.Width || this.center.Y + j < 0 || this.center.Y + j >= Form.dbm.Height) continue;
                     if (Tools.distance(this, new Vertex(new Point(center.X + i, center.Y + j))) > 6) continue;
-                    if(Math.Abs(i) == Math.Abs(j) || Tools.distance(this, new Vertex(new Point(center.X + i, center.Y + j))) == 6)
+                    if(Math.Abs(i) == Math.Abs(j) || Tools.distance(this, new Vertex(new Point(center.X + i, center.Y + j))) == 6 || i == 0 || j == 0)
                         Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, color);
                 }
             return;

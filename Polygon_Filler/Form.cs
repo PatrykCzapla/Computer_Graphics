@@ -16,6 +16,9 @@ namespace Polygon_Filler
 {
     public partial class Form : System.Windows.Forms.Form
     {
+        Stopwatch stopwatch = new Stopwatch();
+        int FPScounter = 0;
+
         public static DirectBitmap dbm = null;
         
         private Image backgroundImage = null;
@@ -28,7 +31,9 @@ namespace Polygon_Filler
         public static Icon icon = new Icon(new Point(100, 100));
         public static float[] colorOfLight = new float[3];
         public static float[] lightVector = new float[3];
-        
+
+        public static Color[,] colorsToFill;
+
         private int speed = 0;
         private List<Polygon> clippedPolygons = new List<Polygon>();
         
@@ -59,18 +64,14 @@ namespace Polygon_Filler
             foreach (Polygon p in convexPolygons)
                 p.Draw();
             foreach (Polygon p in clippedPolygons)
-            {
-                p.colorOfFilling = colorOfFillingButton.BackColor;
                 p.Draw();
-                p.Fill();
-            }
             icon.Draw(lightColorButton.BackColor);
-            drawingPictureBox.Image = dbm.Bitmap;
+            drawingPictureBox.Image = dbm.Bitmap;            
         }
 
         private void clearButton_Click(object sender, EventArgs e)
         {
-            if (backgroundWorker.IsBusy == true) return;
+            if (timer.Enabled == true) return;
 
             dbm = new DirectBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
             drawingPictureBox.Image = dbm.Bitmap;
@@ -113,7 +114,7 @@ namespace Polygon_Filler
 
         private void drawingPictureBox_Click(object sender, EventArgs e)
         {
-            if (backgroundWorker.IsBusy == true) return;
+            if (timer.Enabled == true) return;
 
             Point currentPoint = new Point(((MouseEventArgs)e).X, ((MouseEventArgs)e).Y);
             drawAllPolygons();
@@ -146,6 +147,7 @@ namespace Polygon_Filler
                         polygons.Last().edges.Add(newEdge);
                     else return;
                     polygons.Last().isCorrect = true;
+                    polygons.Last().checkVerticesOrder();
                     drawingPictureBox.Image = new Bitmap(drawingPictureBox.Size.Width, drawingPictureBox.Size.Height);
                     drawAllPolygons();
                 }
@@ -204,10 +206,13 @@ namespace Polygon_Filler
 
         private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
         {
-            if (backgroundWorker.IsBusy == true) return;
+            if (clippedPolygons.Count > 0) clippedPolygons = new List<Polygon>();
+            if (timer.Enabled == true && markedVertex != icon) return;
+
 
             Point currentPoint = new Point(e.X, e.Y);
             drawAllPolygons();
+            button1_Click(sender, e);
 
             if (polygonRadioButton.Checked == true)
             {
@@ -248,6 +253,7 @@ namespace Polygon_Filler
                         if (markedVertex.CanDraw() == false)
                             markedVertex.Move(previousPoint.X - currentPoint.X, previousPoint.Y - currentPoint.Y);
                         previousPoint = currentPoint;
+                        Tools.makeColors();
                         return;
                     }
                     if (currentPolygon.edges.Any(ed => ed.canDraw(currentPolygon.edges) == false))
@@ -267,27 +273,26 @@ namespace Polygon_Filler
 
         private void drawingPictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (backgroundWorker.IsBusy == true) return;
-
             if (markedPolygon != null) markedPolygon.color = Color.Black;
             markedPolygon = null;
             if(editRadioButton.Checked == true)
             {
                 previousPoint = e.Location;
                 markedVertex = Tools.searchForVertex(previousPoint);
+                if (timer.Enabled == true && markedVertex != icon) return;
+
                 if (markedVertex == null)
                     markedPolygon = Tools.searchForPolygon(previousPoint);
-                if(markedPolygon != null)
-                {
+                if (markedPolygon != null)
                     markedPolygon.color = Color.Red;
-                    drawAllPolygons();
-                }
+                drawAllPolygons();
+                drawingPictureBox.Invalidate();
             }
         }
 
         private void CheckedChanged(object sender, EventArgs e)
         {
-            if (backgroundWorker.IsBusy == true) return;
+            if (timer.Enabled == true) return;
 
             if (polygons.Count > 0 && polygons.Last().isCorrect == false)
                 polygons.RemoveAt(polygons.Count - 1);
@@ -296,7 +301,7 @@ namespace Polygon_Filler
 
         private void drawingPictureBox_MouseLeave(object sender, EventArgs e)
         {
-            if (backgroundWorker.IsBusy == true) return;
+            if (timer.Enabled == true) return;
 
             markedVertex = null;
             drawAllPolygons();
@@ -334,8 +339,6 @@ namespace Polygon_Filler
 
         private void lightColorButton_Click(object sender, EventArgs e)
         {
-            if (backgroundWorker.IsBusy == true) return;
-
             if (fillingColorDialog.ShowDialog() == DialogResult.OK)
             {
                 lightColorButton.BackColor = fillingColorDialog.Color;                
@@ -343,17 +346,9 @@ namespace Polygon_Filler
             }
         }
 
-        private void colorOfFillingButton_Click(object sender, EventArgs e)
-        {
-            if (backgroundWorker.IsBusy == true) return;
-
-            if (fillingColorDialog.ShowDialog() == DialogResult.OK)
-                colorOfFillingButton.BackColor = fillingColorDialog.Color;
-        }
-
         private void textureButton_Click(object sender, EventArgs e)
         {
-            if (backgroundWorker.IsBusy == true) return;
+            if (timer.Enabled == true) return;
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Image Files (*.png, *.jpg, *.jpeg)|*.png; *.jpg; *.jpeg";
@@ -370,11 +365,12 @@ namespace Polygon_Filler
                 tmp.Dispose();
                 backgroundImage = Image.FromFile(openFileDialog.FileName);
             }
+            Tools.makeColors();
         }
 
         private void bumpMapButton_Click(object sender, EventArgs e)
         {
-            if (backgroundWorker.IsBusy == true) return;
+            if (timer.Enabled == true) return;
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Image Files (*.png, *.jpg, *.jpeg)|*.png; *.jpg; *.jpeg";
@@ -396,6 +392,7 @@ namespace Polygon_Filler
                     for (int j = 0; j < heightMap.GetLength(1); j++)
                         heightMap[i, j] = bumpMap.GetPixel(i, j).R;
             }
+            Tools.makeColors();
         }
 
         private void heightOfLightTextBox_TextChanged(object sender, EventArgs e)
@@ -418,23 +415,23 @@ namespace Polygon_Filler
 
         private void generateConvexButton_Click(object sender, EventArgs e)
         {
-            if (backgroundWorker.IsBusy == true) return;
-
+            stopwatch.Reset();
+            FPScounter = 0;
             convexPolygons = new List<ConvexPolygon>();
             Random rand = new Random();
             try
             {
                 int noOfCovex = Int32.Parse(noOfVerticesDomain.Text);
-                if (noOfCovex > 15)
+                if (noOfCovex > 5)
                 {
                     noOfVerticesDomain.SelectedIndex = 0;
-                    noOfCovex = 15;
+                    noOfCovex = 5;
                 }
                 int noOfPolygons = Int32.Parse(noOfConvexDomain.Text);
-                if(noOfPolygons > 7)
+                if(noOfPolygons > 3)
                 {
                     noOfConvexDomain.SelectedIndex = 0;
-                    noOfPolygons = 7;
+                    noOfPolygons = 3;
                 }
                 for (int n = 0; n < noOfPolygons; n++)
                 {
@@ -442,7 +439,20 @@ namespace Polygon_Filler
                     for (int i = 0; i < noOfCovex; i++)
                         convexVertices.Add(new Vertex(new Point(rand.Next(2 * (drawingPictureBox.Image.Width / 3), drawingPictureBox.Image.Width - 1), rand.Next(0, drawingPictureBox.Image.Height - 1))));
                     List<Edge> edges = new List<Edge>();
-                    convexPolygons.Add(new ConvexPolygon(convexVertices, edges));
+                    ConvexPolygon cp = new ConvexPolygon(convexVertices, edges);
+                    bool canAdd = true;
+                    foreach(ConvexPolygon p1 in convexPolygons)
+                    {
+                        foreach (Edge edge in cp.edges)
+                        {
+                            if (p1.edges.Any(ed => Tools.linesIntersect(ed.v1.center, ed.v2.center, edge.v1.center, edge.v2.center) == true)) canAdd = false;
+                        }
+                        if (canAdd == true && (p1.vertices.Any(v => Tools.isInside(v.center, cp))) == true) canAdd = false;
+                        if (canAdd == true && (cp.vertices.Any(v => Tools.isInside(v.center, p1))) == true) canAdd = false;
+                    }
+                        
+                    if (canAdd == true) convexPolygons.Add(cp);
+                    else n--;
                 }
                 drawAllPolygons();
             }
@@ -453,52 +463,62 @@ namespace Polygon_Filler
         }
 
         private void startStopButton_Click(object sender, EventArgs e)
-        {           
-            if (backgroundWorker.IsBusy == false)
-            {
-                this.FormBorderStyle = FormBorderStyle.FixedSingle;
-                speed = speedTrackBar.Value;
-                backgroundWorker.RunWorkerAsync();
-            }
-        }
-
-        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            BackgroundWorker worker = sender as BackgroundWorker;
-
             if (convexPolygons.Count == 0 || polygons.Count == 0) return;
-            int maxX = 0;
-            foreach (Polygon p in convexPolygons)
-                foreach (Vertex v in p.vertices)
-                    if (v.center.X > maxX) maxX = v.center.X;
-
-            for (int i = maxX; i >= 0; i--)
+            if(backgroundImage == null || bumpMapImage == null)
             {
-                if (convexPolygons.All(p => p.vertices.All(v => v.center.X < 0))) return;
-                foreach (Polygon cp in convexPolygons)
-                {
-                    cp.Move(-1, 0);
-                }
-
-                clippedPolygons = new List<Polygon>();
-                foreach (Polygon p in polygons)
-                    foreach (Polygon cp in convexPolygons)
-                        foreach (Polygon pol in Tools.WeilerAtherton(cp, p))
-                            clippedPolygons.Add(pol);
-                Thread.Sleep(100 / (2 * speed));
-                worker.ReportProgress(((maxX / speed) - i) * (100 / (maxX / speed))); 
+                MessageBox.Show("Cannot run animation. Upload bumb map and texture first.", "Cannot run animation!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
+            if (polygonRadioButton.Checked == true) editRadioButton.Checked = true;
+            if (timer.Enabled)
+            {
+                startStopButton.Text = "Start animation";
+                timer.Stop();
+                stopwatch.Stop();
+                this.FormBorderStyle = FormBorderStyle.Sizable;
+                return;
+            }
+            if(colorsToFill == null) Tools.makeColors();
+            startStopButton.Text = "Stop animation";
+            speed = speedTrackBar.Value;
+            timer.Interval = 1;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            timer.Start();
+            stopwatch.Start();
         }
 
-        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void timer_Tick(object sender, EventArgs e)
         {
+            FPScounter++;
+            if (convexPolygons.All(p => p.vertices.All(v => v.center.X < 0)))
+            {
+                this.FormBorderStyle = FormBorderStyle.Sizable;
+                timer.Stop();
+                convexPolygons = new List<ConvexPolygon>();
+                startStopButton.Text = "Start animation";
+                stopwatch.Stop();
+                Console.WriteLine("average FPS: " + (int)((double)FPScounter / ((double)stopwatch.ElapsedMilliseconds / (double)(1000))));
+                return;
+            }
+            foreach (Polygon cp in convexPolygons)
+                cp.Move(-1 * speed, 0);
+
+            clippedPolygons = new List<Polygon>();
+            foreach (Polygon p in polygons)
+                foreach (Polygon cp in convexPolygons)
+                    foreach (Polygon pol in Tools.WeilerAtherton(cp, p))
+                    {
+                        pol.isFilled = true;
+                        clippedPolygons.Add(pol);
+                    }
             drawAllPolygons();
-            drawingPictureBox.Refresh();
+            //drawingPictureBox.Invalidate();
         }
 
-        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void speedTrackBar_ValueChanged(object sender, EventArgs e)
         {
-            this.FormBorderStyle = FormBorderStyle.Sizable;
+            speed = speedTrackBar.Value;
         }
 
         private void Form_KeyDown(object sender, KeyEventArgs e)
@@ -508,12 +528,7 @@ namespace Polygon_Filler
         }
                 
 
-
-
-
-
-
-
+                              
         //-----TESTY-----//
         private void button1_Click(object sender, EventArgs e)
         {
@@ -521,6 +536,7 @@ namespace Polygon_Filler
             if (polygons.Count < 2 || polygons.Last().isCorrect == false) return;
             clippedPolygons = new List<Polygon>();
             clippedPolygons.AddRange(Tools.WeilerAtherton(polygons[1], polygons[0]));
+            foreach (Polygon p in clippedPolygons) p.isFilled = true;
             drawAllPolygons();
 
             ////wypisywanie info o wielokacie
@@ -538,49 +554,13 @@ namespace Polygon_Filler
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ////testuje isInside
-            if (polygons.Count < 2) return;
-            List<Vertex> vertices = new List<Vertex>();
-            if (polygons.Count > 2) polygons.RemoveAt(polygons.Count - 1);
-            Random rand = new Random();
-            for (int i = 0; i < 10000; i++)
-                vertices.Add(new Vertex(new Point(rand.Next(0, dbm.Width - 1), rand.Next(0, dbm.Height - 1))));
-            foreach (Polygon p in polygons)
-                foreach (Vertex v in p.vertices)
-                    vertices.Add(v);
-
-            foreach (Polygon p in clippedPolygons)
-                foreach (Vertex v in p.vertices)
-                    vertices.Add(v);
-            foreach (Vertex v in vertices)
-                if (Tools.isInside(v.center, polygons.First()) || Tools.isInside(v.center, polygons[1]))
-                    v.Inside = true;//koloruje wierzcholek ktory jest w srodku
-
-            //if (polygons.Count < 2 || polygons.Last().isCorrect == false) return;
-            //clippedPolygons = new List<Polygon>();
-            //clippedPolygons.AddRange(Tools.WeilerAtherton(polygons[1], polygons[0]));
-            //drawAllPolygons();
-            //foreach (Polygon p in clippedPolygons)
-            //    foreach (Vertex v in p.vertices)
-            //    {
-            //        Console.WriteLine("Polygon no: " + clippedPolygons.IndexOf(p));
-            //        Console.WriteLine("X: " + v.center.X + " Y: " + v.center.Y);
-            //        Console.WriteLine("Intersection: " + v.IsIntersection);
-            //        Console.WriteLine("Entry: " + v.IsEntry);
-            //        Console.WriteLine("Inside: " + v.Inside);
-            //        Console.WriteLine();
-            //    }
-            //polygons.Add(new Polygon(vertices, new List<Edge>()));
 
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            markedPolygon.colorOfFilling = colorOfFillingButton.BackColor;
             if (markedPolygon != null) markedPolygon.Fill();
             drawAllPolygons();
         }
-
-        
     }
 }
