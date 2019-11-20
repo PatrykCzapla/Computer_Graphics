@@ -12,7 +12,6 @@ namespace Polygon_Filler
         public Icon(Point p) : base(p) { }
         public Icon(Vertex v) : base(v) { }
 
-
         public override bool CanDraw()
         {
             if (this.center.X - 6 < 0 || this.center.X + 6 >= Form.dbm.Width || this.center.Y - 6 < 0 || this.center.Y + 6>= Form.dbm.Height) return false;

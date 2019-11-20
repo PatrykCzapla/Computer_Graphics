@@ -1,0 +1,40 @@
+﻿SKRÓCONA INSTRUKCJA OBSŁUGI:
+Aby narysować wielokąt należy wybrać pole wybory Draw, następnie klikając lewym przyciskiem myszy trworzyć 
+kolejne wierzchołki wielokąta, które automatycznie połączą się krawędzią z poprzednim wierzchołkiem.
+Nie można dodać wierzchołka, który spowodowałby przecięcie się krawędzi.
+Aby domknąć wielokąt należy przycisnąć środkowy przycisk myszy lub wcisnąc kombinację klawiszy ctrl + enter. 
+Poprawny wielokąt musi mieć co najmniej 3 wierzchołki oraz być domknięty.
+Nie można dodać wierzchołka poza obszarem rysowania.
+Na obszarze roboczym widoczne są wszystkie wielokąty mieszczące się na tym obszarze oraz części wielokątów, 
+które po zmianie rozmiaru okna, są częściwo "zasłonięte". Nie można przesuwać wielokąta, który niecałkowicie
+znajduje się na obszarze rysowania. Dlatego zaleca się najpierw wybranie rozmiaru okna, a dopiero potem rysowanie na nim.
+Jeśli wielokąt nie jest poprawny, to po zmianie pola wyboru na inne niż Draw nastąpi jego usunięcie.
+Aby wyzerować okno należy wcisnąć przycisk Clear.
+Można przesuwać wielokąt oraz jego wierchołki. W tym celu należy wybrać pole wyboru Edit i kliknąć odpowiedno wewnątrz 
+wielokąta lub na jego wierzchołek i przeciągnąć. Aby usunąć wielokąt należy kliknąć prawym przyciskiem myszy wewnątrz wielokąta.
+Podczas rysowania można usunąć ostatni narysowany wierzchołek (jeśli rysowany wielokąt nie jest już domknięty) klikając prawy przycisk myszy.
+Nie można przesunąć wielakąta ani jego wierzchołków poza obszar rysowania.
+
+W lewym rogu obszaru rysowania znajduje się ikonka reprezentująca źródło światła. Aby zmienić pozycję światła
+należy wybrać pole wyboru Change position of light a następnie lewym przyciskiem myszy wybrać nową pozycję światła
+na obszarze rysowania. Aby zmienić kolor światła należy nacisnąć przycisk obok napisu Color of light:, 
+który reprezentuje bieżący kolor światła, a następnie wybrać nowy kolor. Aby zmienić wysokość światła względem płaszczyzny
+neleży wpisać żądaną wartość w oknienko obok napisu Height of light:. Wartośćta musi być większa od 0 i być liczbą całkowitą.
+
+Aby wygenerować losowe wielokąty wypukłe należy wybrać ich ilość w okienku obok napisu Number of convex polygons: (domyślnie 1, maksymalnie 3). 
+Wielokąty te zostaną utworzone na podstawie losowo wygenerowanych wierzchołków, których ilośćustalana jest w okienku obok napisu Number if vertices in convex (domyślnie 3, maksymalnie 5).
+Liczba ta nie oznacza, że wygenerowany wielokąt będzie miał tyle wierzchołków, a oznacza ona na podstawie ilu wierzchołków wyznaczana jest otoczka wypukła.
+Wielokąty wypukłe wypełniane są za pomocą interpolacji liniowej.
+
+Aby wybrać teksturę należy kliknąć przycisk obok Texture of clipped filling: i wybrać żądany plik .jpg lub .png.
+Aby wybrać bump mapę należy kliknąć przycisk obok napisu Bump map: i wybrać żądany plik w formacie .jpg lub .png.
+
+Aby rozpocząć animacje wymagany jest przynajmniej jeden narysowany poprawny wielokąt, wygenerowany jeden lub więcej 
+wielokąt wypukły oraz wczytana tekstura wraz z bump mapą. Prędkośćanimacji można dostosować za pomocą slider'a obok napisu Speed of animation:.
+Animację można w dowolnym momencie zatrzymać i wznowić. W trakcie animacji można zmienić pozycję światła, wtedy jednak animacja na chwilę się wstrzymuje, wykonując obliczenia.
+W trakcie animacji można zmieniać jej prędkość.
+
+Jeżeli wczytana jest tekstura lub bump mapa nie można zmienic rozmiary okna.
+
+Przycisk Change to Sutherland_Hodgman lub Change to Weiler-Atherton zmienia algorytm obcinania części wspólnej wielokątów,
+ponieważ zaimplementowany przeze mnie Weiler-Atherton nie działa poprawnie.

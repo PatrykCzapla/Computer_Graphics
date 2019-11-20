@@ -16,6 +16,8 @@ namespace Polygon_Filler
 {
     public partial class Form : System.Windows.Forms.Form
     {
+        private bool useWeiler = true;
+
         Stopwatch stopwatch = new Stopwatch();
         int FPScounter = 0;
 
@@ -47,10 +49,15 @@ namespace Polygon_Filler
         public Form()
         {
             InitializeComponent();
-            //this.toolTip.SetToolTip(this.clearButton, "Clear everything.");
-            //this.toolTip.SetToolTip(this.polygonRadioButton, "Draw polygon." + Environment.NewLine + "Left-click to add vertices." + Environment.NewLine + "Right-click to remove last drawn vertex." + Environment.NewLine + "Middle-click or Ctrl + Enter to close polygon.");
-            //this.toolTip.SetToolTip(this.editRadioButton, "Edit polygon." + Environment.NewLine + "Left-click + drag to move vertex or polygon." + Environment.NewLine + "Right-click to remove polygon.");
-
+            toolTip.SetToolTip(clearButton, "Clear everything.");
+            toolTip.SetToolTip(polygonRadioButton, "Draw polygon." + Environment.NewLine + "Left-click to add vertices." + Environment.NewLine + "Right-click to remove last drawn vertex." + Environment.NewLine + "Middle-click or Ctrl + Enter to close polygon.");
+            toolTip.SetToolTip(editRadioButton, "Edit polygon." + Environment.NewLine + "Left-click + drag to move vertex or polygon." + Environment.NewLine + "Right-click to remove polygon.");
+            toolTip.SetToolTip(noOfVerticesDomain, "Convex polygons will be based on the given number of random vertices. Max: 5, Min: 3.");
+            toolTip.SetToolTip(noOfConvexDomain, "Number of random convex polygons to generate. Max: 3, Min: 1.");
+            toolTip.SetToolTip(heightOfLightTextBox, "Height of light. Min: 1.");
+            toolTip.SetToolTip(lightPositionRadioButton, "Set light in different position." + Environment.NewLine + "Left-click to set position.");
+            toolTip.SetToolTip(changeClippingButton, "Switches clliping algorithm between Weiler-Atherton and Sutherland-Hodgman.");
+                       
             clearButton_Click(null, null);
             drawAllPolygons();
         }
@@ -99,6 +106,7 @@ namespace Polygon_Filler
             }
             catch(Exception exception)
             {
+                heightOfLightTextBox.Text = lightVector[2].ToString();
                 Console.WriteLine(exception.Message);                
             }
 
@@ -110,13 +118,39 @@ namespace Polygon_Filler
             previousPoint = new Point(-1, -1);
             markedVertex = null;
             markedPolygon = null;
+
+            this.FormBorderStyle = FormBorderStyle.Sizable;
         }
 
         private void drawingPictureBox_Click(object sender, EventArgs e)
         {
+            Point currentPoint = new Point(((MouseEventArgs)e).X, ((MouseEventArgs)e).Y);
+
+            if (lightPositionRadioButton.Checked == true)
+            {
+                icon.center.X = currentPoint.X;
+                icon.center.Y = currentPoint.Y;
+                try
+                {
+                    int height = Int32.Parse(heightOfLightTextBox.Text);
+                    if (height < 1)
+                    {
+                        heightOfLightTextBox.Text = "1";
+                        height = 1;
+                    }
+                    lightVector = new float[] { (float)icon.center.X, (float)icon.center.Y, (float)height };
+                }
+                catch (Exception exception)
+                {
+                    heightOfLightTextBox.Text = lightVector[2].ToString();
+                    Console.WriteLine(exception.Message);
+                }
+                Tools.makeColors();
+                drawAllPolygons();
+            }
+
             if (timer.Enabled == true) return;
 
-            Point currentPoint = new Point(((MouseEventArgs)e).X, ((MouseEventArgs)e).Y);
             drawAllPolygons();
 
             if (polygonRadioButton.Checked == true)
@@ -201,13 +235,13 @@ namespace Polygon_Filler
                         previousPoint.X = -1;
                     }
                 }
-            }
+            }            
         }
 
         private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
         {
             if (clippedPolygons.Count > 0) clippedPolygons = new List<Polygon>();
-            if (timer.Enabled == true && markedVertex != icon) return;
+            if (timer.Enabled == true) return;
 
 
             Point currentPoint = new Point(e.X, e.Y);
@@ -234,38 +268,16 @@ namespace Polygon_Filler
             {
                 if (markedVertex != null)
                 {
-                    if (markedVertex == icon)
-                    {
-                        try
-                        {
-                            lightVector = new float[] { (float)icon.center.X, (float)icon.center.Y, (float)Int32.Parse(heightOfLightTextBox.Text) };
-
-                        }
-                        catch (Exception exception)
-                        {
-                            Console.WriteLine(exception.Message);
-                        }                        
-                    }
                     Polygon currentPolygon = polygons.Find(p => p.vertices.Contains(markedVertex));
                     markedVertex.Move(currentPoint.X - previousPoint.X, currentPoint.Y - previousPoint.Y);
-                    if (markedVertex == icon)
-                    {
-                        if (markedVertex.CanDraw() == false)
-                            markedVertex.Move(previousPoint.X - currentPoint.X, previousPoint.Y - currentPoint.Y);
-                        previousPoint = currentPoint;
-                        Tools.makeColors();
-                        return;
-                    }
                     if (currentPolygon.edges.Any(ed => ed.canDraw(currentPolygon.edges) == false))
                         markedVertex.Move(previousPoint.X - currentPoint.X, previousPoint.Y - currentPoint.Y);
                 }
                 else if (markedPolygon != null)
-                {
-                    
+                {                    
                     markedPolygon.Move(currentPoint.X - previousPoint.X, currentPoint.Y - previousPoint.Y);
                     if (markedPolygon.vertices.Any(v => v.CanDraw() == false))
-                        markedPolygon.Move(previousPoint.X - currentPoint.X, previousPoint.Y - currentPoint.Y);
-               
+                        markedPolygon.Move(previousPoint.X - currentPoint.X, previousPoint.Y - currentPoint.Y);               
                 }
                 previousPoint = currentPoint;
             }
@@ -273,20 +285,18 @@ namespace Polygon_Filler
 
         private void drawingPictureBox_MouseDown(object sender, MouseEventArgs e)
         {
+            if (timer.Enabled == true) return;
             if (markedPolygon != null) markedPolygon.color = Color.Black;
             markedPolygon = null;
             if(editRadioButton.Checked == true)
             {
                 previousPoint = e.Location;
                 markedVertex = Tools.searchForVertex(previousPoint);
-                if (timer.Enabled == true && markedVertex != icon) return;
-
                 if (markedVertex == null)
                     markedPolygon = Tools.searchForPolygon(previousPoint);
                 if (markedPolygon != null)
                     markedPolygon.color = Color.Red;
                 drawAllPolygons();
-                drawingPictureBox.Invalidate();
             }
         }
 
@@ -344,6 +354,8 @@ namespace Polygon_Filler
                 lightColorButton.BackColor = fillingColorDialog.Color;                
                 colorOfLight = new float[] { (float)lightColorButton.BackColor.R / (float)255, (float)lightColorButton.BackColor.G / (float)255, (float)lightColorButton.BackColor.B / (float)255 };
             }
+            Tools.makeColors();
+            drawAllPolygons();
         }
 
         private void textureButton_Click(object sender, EventArgs e)
@@ -366,6 +378,7 @@ namespace Polygon_Filler
                 backgroundImage = Image.FromFile(openFileDialog.FileName);
             }
             Tools.makeColors();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
         }
 
         private void bumpMapButton_Click(object sender, EventArgs e)
@@ -393,6 +406,7 @@ namespace Polygon_Filler
                         heightMap[i, j] = bumpMap.GetPixel(i, j).R;
             }
             Tools.makeColors();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
         }
 
         private void heightOfLightTextBox_TextChanged(object sender, EventArgs e)
@@ -409,8 +423,11 @@ namespace Polygon_Filler
             }
             catch (Exception exception)
             {
+                heightOfLightTextBox.Text = lightVector[2].ToString();
                 Console.WriteLine(exception.Message);
             }
+            Tools.makeColors();
+            drawAllPolygons();
         }
 
         private void generateConvexButton_Click(object sender, EventArgs e)
@@ -427,11 +444,22 @@ namespace Polygon_Filler
                     noOfVerticesDomain.SelectedIndex = 0;
                     noOfCovex = 5;
                 }
+                if (noOfCovex < 1)
+                {
+                    noOfVerticesDomain.SelectedIndex = 2;
+                    noOfCovex = 3;
+                }
+
                 int noOfPolygons = Int32.Parse(noOfConvexDomain.Text);
                 if(noOfPolygons > 3)
                 {
                     noOfConvexDomain.SelectedIndex = 0;
                     noOfPolygons = 3;
+                }
+                if (noOfPolygons < 1)
+                {
+                    noOfConvexDomain.SelectedIndex = 2;
+                    noOfPolygons = 1;
                 }
                 for (int n = 0; n < noOfPolygons; n++)
                 {
@@ -450,7 +478,7 @@ namespace Polygon_Filler
                         if (canAdd == true && (p1.vertices.Any(v => Tools.isInside(v.center, cp))) == true) canAdd = false;
                         if (canAdd == true && (cp.vertices.Any(v => Tools.isInside(v.center, p1))) == true) canAdd = false;
                     }
-                        
+                    cp.checkVerticesOrder();
                     if (canAdd == true) convexPolygons.Add(cp);
                     else n--;
                 }
@@ -467,23 +495,21 @@ namespace Polygon_Filler
             if (convexPolygons.Count == 0 || polygons.Count == 0) return;
             if(backgroundImage == null || bumpMapImage == null)
             {
-                MessageBox.Show("Cannot run animation. Upload bumb map and texture first.", "Cannot run animation!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Cannot run animation. Upload bump map and texture first.", "Cannot run animation!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (polygonRadioButton.Checked == true) editRadioButton.Checked = true;
+            if (polygonRadioButton.Checked == true) lightPositionRadioButton.Checked = true;
             if (timer.Enabled)
             {
                 startStopButton.Text = "Start animation";
                 timer.Stop();
                 stopwatch.Stop();
-                this.FormBorderStyle = FormBorderStyle.Sizable;
                 return;
             }
             if(colorsToFill == null) Tools.makeColors();
             startStopButton.Text = "Stop animation";
             speed = speedTrackBar.Value;
             timer.Interval = 1;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             timer.Start();
             stopwatch.Start();
         }
@@ -493,7 +519,6 @@ namespace Polygon_Filler
             FPScounter++;
             if (convexPolygons.All(p => p.vertices.All(v => v.center.X < 0)))
             {
-                this.FormBorderStyle = FormBorderStyle.Sizable;
                 timer.Stop();
                 convexPolygons = new List<ConvexPolygon>();
                 startStopButton.Text = "Start animation";
@@ -505,15 +530,27 @@ namespace Polygon_Filler
                 cp.Move(-1 * speed, 0);
 
             clippedPolygons = new List<Polygon>();
-            foreach (Polygon p in polygons)
-                foreach (Polygon cp in convexPolygons)
-                    foreach (Polygon pol in Tools.WeilerAtherton(cp, p))
+            
+            if(useWeiler == true)
+            {
+                foreach (Polygon p in polygons)
+                    foreach (Polygon cp in convexPolygons)
+                        foreach (Polygon pol in Tools.WeilerAtherton(cp, p))
+                        {
+                            pol.isFilled = true;
+                            clippedPolygons.Add(pol);
+                        }
+            }
+            else
+            {
+                foreach (Polygon p in polygons)
+                    foreach (Polygon cp in convexPolygons)
                     {
-                        pol.isFilled = true;
-                        clippedPolygons.Add(pol);
+
                     }
+
+            }            
             drawAllPolygons();
-            //drawingPictureBox.Invalidate();
         }
 
         private void speedTrackBar_ValueChanged(object sender, EventArgs e)
@@ -521,45 +558,37 @@ namespace Polygon_Filler
             speed = speedTrackBar.Value;
         }
 
+        private void changeClipping(object sender, EventArgs e)
+        {
+            if(useWeiler == true)
+            {
+                useWeiler = false;
+                changeClippingButton.Text = "Change to Weiler-Atherton";
+            }
+            else
+            {
+                useWeiler = true;
+                changeClippingButton.Text = "Change to Sutherland-Hodgman";
+            }
+        }
+
         private void Form_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.Enter)
                 drawingPictureBox_Click(sender, new MouseEventArgs(MouseButtons.Middle, 1, 0, 0, 0));
+            if (e.Control && e.KeyCode == Keys.A)
+                startStopButton_Click(sender, e);
         }
                 
 
                               
-        //-----TESTY-----//
+        //-----TEST-----//
         private void button1_Click(object sender, EventArgs e)
         {
-            //wypelnianie czesci wpsolnej dwoch pierwszych narysowanych wielokatow
             if (polygons.Count < 2 || polygons.Last().isCorrect == false) return;
             clippedPolygons = new List<Polygon>();
             clippedPolygons.AddRange(Tools.WeilerAtherton(polygons[1], polygons[0]));
             foreach (Polygon p in clippedPolygons) p.isFilled = true;
-            drawAllPolygons();
-
-            ////wypisywanie info o wielokacie
-            //foreach (Polygon p in polygons)
-            //    foreach (Vertex v in p.vertices)
-            //    {
-            //        Console.WriteLine("Polygon no: " + polygons.IndexOf(p));
-            //        Console.WriteLine("X: " + v.center.X + " Y: " + v.center.Y);
-            //        Console.WriteLine("Intersection: " + v.IsIntersection);
-            //        Console.WriteLine("Entry: " + v.IsEntry);
-            //        Console.WriteLine("Inside: " + v.tmp);
-            //        Console.WriteLine();
-            //    }
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            if (markedPolygon != null) markedPolygon.Fill();
             drawAllPolygons();
         }
     }

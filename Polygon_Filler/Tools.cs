@@ -26,8 +26,8 @@ namespace Polygon_Filler
             {
                 for(int y = 0; y < Form.dbm.Height; y++)
                 {
-                    float dhdx = Form.heightMap[x, y] / 255 - Form.heightMap[(x + 1) % Form.heightMap.GetLength(0), y];
-                    float dhdy = Form.heightMap[x, y] / 255 - Form.heightMap[x, (y + 1) % Form.heightMap.GetLength(1)] - Form.heightMap[x, y];
+                    float dhdx = Form.heightMap[x, y] / 255 - Form.heightMap[(x + 1) % Form.heightMap.GetLength(0), y] / 255;
+                    float dhdy = Form.heightMap[x, y] / 255 - Form.heightMap[x, (y + 1) % Form.heightMap.GetLength(1)] / 255;
                     for (int j = 0; j < D.Count(); j++)
                         D[j] = T[j] * dhdx + B[j] * dhdy;
 
@@ -124,14 +124,6 @@ namespace Polygon_Filler
 
         public static Vertex searchForVertex(Point p)
         {
-            for (int i = -6; i < 7; i++)
-                for (int j = -6; j < 7; j++)
-                {
-                    if (p.X + i < 0 || p.X + i >= Form.dbm.Width || p.Y + j < 0 || p.Y + j >= Form.dbm.Height) continue;
-
-                    if (p.X + i == Form.icon.center.X && p.Y + j == Form.icon.center.Y) return Form.icon;
-
-                }
             for (int i = -2; i < 3; i++)
                 for (int j = -2; j < 3; j++)
                 {
@@ -203,6 +195,7 @@ namespace Polygon_Filler
         }
 
         //-----WEILER - ATHERTON-----//
+
         //public static (Vertex, Vertex)? getIntersectionPoints(Vertex s1, Vertex s2, Vertex c1, Vertex c2)
         //{
         //    if (s1 == c1 || s1 == c2 || s2 == c1 || s2 == c2) return null;
@@ -356,13 +349,9 @@ namespace Polygon_Filler
             bool flag = false;
             Vertex s1 = sourceCopy.vertices.Find(v => v.IsIntersection == true);
             if (isInside(s1.center, clipCopy))
-            {
                 flag = true;
-                s1.Inside = true;
-            }
             do
             {
-                if (isInside(s1.center, clipCopy)) s1.Inside = true;
                 if (s1.IsIntersection == true)
                 {
 
@@ -373,14 +362,10 @@ namespace Polygon_Filler
             } while (s1 != sourceCopy.vertices.First());
             s1 = clipCopy.vertices.First();
             if (isInside(s1.center, sourceCopy))
-            {
                 flag = true;
-                s1.Inside = true;
-            }
             else flag = false;
             do
             {
-                if (isInside(s1.center, sourceCopy)) s1.Inside = true;
                 if (s1.IsIntersection == true)
                 {
                     s1.IsEntry = !flag;
@@ -461,5 +446,9 @@ namespace Polygon_Filler
             }
             return result;
         }
+
+        //-----SUTHERMAN - HODGMAN-----//
+
+
     }
 }

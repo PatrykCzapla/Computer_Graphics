@@ -135,18 +135,37 @@ namespace Polygon_Filler
 
         public void checkVerticesOrder()
         {
-            if (vertices.Count < 3 || isCorrect == false) return;
-            Vertex minY = vertices.First();
-            foreach(Vertex v in vertices)
+            if (isCorrect == false) return;
+
+            float sum = 0;
+
+            int[,] vectors = new int[edges.Count, 2];
+            for(int i = 0;i < edges.Count; i++)
             {
-                if (v.center.Y < minY.center.Y) minY = v;
+                vectors[i, 0] = edges[i].v2.center.X - edges[i].v1.center.X;
+                vectors[i, 1] = edges[i].v2.center.Y - edges[i].v1.center.Y;
             }
-            Edge e1 = edges.Find(e => e.v2 == minY);
-            Edge e2 = edges.Find(e => e.v1 == minY);
-            //if (Tools.orientation(vertices[0].center, vertices[1].center, vertices[2].center) == 2)
-            if (e2.v2.center.X > e1.v1.center.X)
-            {                
-                Console.WriteLine("Zmieniam kolejnosc");
+
+            float partial = 0;
+            float lengthA = 0;
+            float lengthB = 0;
+
+            for (int i = 0; i < vectors.GetLength(0) - 1; i++)
+            {
+                partial = vectors[i, 0] * vectors[i + 1, 1] - vectors[i, 1] * vectors[i + 1, 0];
+                lengthA = (float)Math.Sqrt((vectors[i, 0] * vectors[i, 0] + vectors[i, 1] * vectors[i, 1]));
+                lengthB = (float)Math.Sqrt((vectors[i + 1, 0] * vectors[i + 1, 0] + vectors[i + 1, 1] * vectors[i + 1, 1]));
+                sum += partial / (lengthA * lengthB);
+            }
+
+            partial = vectors[vectors.GetLength(0) - 1, 0] * vectors[0, 1] - vectors[vectors.GetLength(0) - 1, 1] * vectors[0, 0];
+            lengthA = (float)Math.Sqrt((vectors[vectors.GetLength(0) - 1, 0] * vectors[vectors.GetLength(0) - 1, 0] + vectors[vectors.GetLength(0) - 1, 1] * vectors[vectors.GetLength(0) - 1, 1]));
+            lengthB = (float)Math.Sqrt((vectors[0, 0] * vectors[0, 0] + vectors[0, 1] * vectors[0, 1]));
+            sum += partial / (lengthA * lengthB);
+
+            if (sum > 0)
+            {
+                Console.WriteLine("is clockwise");
                 List<Vertex> newVertices = new List<Vertex>();
                 for (int i = vertices.Count - 1; i >= 0; i--)
                     newVertices.Add(vertices[i]);

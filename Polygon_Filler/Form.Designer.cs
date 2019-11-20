@@ -32,7 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
             this.backTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.optionsTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.lightPositionRadioButton = new System.Windows.Forms.RadioButton();
+            this.changeClippingButton = new System.Windows.Forms.Button();
             this.polygonRadioButton = new System.Windows.Forms.RadioButton();
             this.editRadioButton = new System.Windows.Forms.RadioButton();
             this.noOfConvexLabel = new System.Windows.Forms.Label();
@@ -85,7 +86,8 @@
             this.optionsTableLayoutPanel.ColumnCount = 2;
             this.optionsTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 48.45361F));
             this.optionsTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.54639F));
-            this.optionsTableLayoutPanel.Controls.Add(this.button1, 0, 12);
+            this.optionsTableLayoutPanel.Controls.Add(this.lightPositionRadioButton, 0, 11);
+            this.optionsTableLayoutPanel.Controls.Add(this.changeClippingButton, 0, 12);
             this.optionsTableLayoutPanel.Controls.Add(this.polygonRadioButton, 0, 0);
             this.optionsTableLayoutPanel.Controls.Add(this.editRadioButton, 1, 0);
             this.optionsTableLayoutPanel.Controls.Add(this.noOfConvexLabel, 0, 3);
@@ -108,8 +110,7 @@
             this.optionsTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.optionsTableLayoutPanel.Location = new System.Drawing.Point(1187, 3);
             this.optionsTableLayoutPanel.Name = "optionsTableLayoutPanel";
-            this.optionsTableLayoutPanel.RowCount = 13;
-            this.optionsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.optionsTableLayoutPanel.RowCount = 14;
             this.optionsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.optionsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.optionsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
@@ -127,15 +128,33 @@
             this.optionsTableLayoutPanel.Size = new System.Drawing.Size(194, 655);
             this.optionsTableLayoutPanel.TabIndex = 1;
             // 
-            // button1
+            // lightPositionRadioButton
             // 
-            this.button1.Location = new System.Drawing.Point(3, 603);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.lightPositionRadioButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lightPositionRadioButton.AutoSize = true;
+            this.optionsTableLayoutPanel.SetColumnSpan(this.lightPositionRadioButton, 2);
+            this.lightPositionRadioButton.Location = new System.Drawing.Point(29, 566);
+            this.lightPositionRadioButton.Name = "lightPositionRadioButton";
+            this.lightPositionRadioButton.Size = new System.Drawing.Size(135, 17);
+            this.lightPositionRadioButton.TabIndex = 1;
+            this.lightPositionRadioButton.TabStop = true;
+            this.lightPositionRadioButton.Text = "Change position of light";
+            this.lightPositionRadioButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lightPositionRadioButton.UseVisualStyleBackColor = true;
+            this.lightPositionRadioButton.CheckedChanged += new System.EventHandler(this.CheckedChanged);
+            // 
+            // changeClippingButton
+            // 
+            this.optionsTableLayoutPanel.SetColumnSpan(this.changeClippingButton, 2);
+            this.changeClippingButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.changeClippingButton.Location = new System.Drawing.Point(7, 610);
+            this.changeClippingButton.Margin = new System.Windows.Forms.Padding(7, 10, 7, 10);
+            this.changeClippingButton.Name = "changeClippingButton";
+            this.changeClippingButton.Size = new System.Drawing.Size(180, 30);
+            this.changeClippingButton.TabIndex = 1;
+            this.changeClippingButton.Text = "Change to Sutherland-Hodgman";
+            this.changeClippingButton.UseVisualStyleBackColor = true;
+            this.changeClippingButton.Click += new System.EventHandler(this.changeClipping);
             // 
             // polygonRadioButton
             // 
@@ -147,7 +166,7 @@
             this.polygonRadioButton.Size = new System.Drawing.Size(88, 44);
             this.polygonRadioButton.TabIndex = 0;
             this.polygonRadioButton.TabStop = true;
-            this.polygonRadioButton.Text = "Draw polygon";
+            this.polygonRadioButton.Text = "Draw";
             this.polygonRadioButton.UseVisualStyleBackColor = true;
             this.polygonRadioButton.CheckedChanged += new System.EventHandler(this.CheckedChanged);
             // 
@@ -160,7 +179,7 @@
             this.editRadioButton.Size = new System.Drawing.Size(94, 44);
             this.editRadioButton.TabIndex = 2;
             this.editRadioButton.TabStop = true;
-            this.editRadioButton.Text = "Edit polygon";
+            this.editRadioButton.Text = "Edit";
             this.editRadioButton.UseVisualStyleBackColor = true;
             this.editRadioButton.CheckedChanged += new System.EventHandler(this.CheckedChanged);
             // 
@@ -261,7 +280,7 @@
             this.generateConvexButton.Name = "generateConvexButton";
             this.generateConvexButton.Size = new System.Drawing.Size(180, 30);
             this.generateConvexButton.TabIndex = 4;
-            this.generateConvexButton.Text = "Generate convex";
+            this.generateConvexButton.Text = "Generate convex polygons";
             this.generateConvexButton.UseVisualStyleBackColor = true;
             this.generateConvexButton.Click += new System.EventHandler(this.generateConvexButton_Click);
             // 
@@ -451,10 +470,11 @@
         private System.Windows.Forms.Label lightColorLabel;
         private System.Windows.Forms.Button lightColorButton;
         private System.Windows.Forms.TextBox heightOfLightTextBox;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button changeClippingButton;
         private System.Windows.Forms.Label bumpMapLabel;
         private System.Windows.Forms.Button bumpMapButton;
         private System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.RadioButton lightPositionRadioButton;
     }
 }
 

@@ -11,8 +11,6 @@ namespace Polygon_Filler
     {
         public Point center;
 
-        public bool Inside = false;//pomocnicze, do usuniecia
-
         public bool IsIntersection = false;
         public bool IsEntry = false;
         public bool Visited = false;
@@ -56,7 +54,6 @@ namespace Polygon_Filler
                 {
                     if (this.center.X + i < 0 || this.center.X + i >= Form.dbm.Width || this.center.Y + j < 0 || this.center.Y + j >= Form.dbm.Height) continue;
                     Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, color);
-                    if (Inside == true) Form.dbm.SetPixel(this.center.X + i, this.center.Y + j, Color.Green);
                 }
             return;
         }
