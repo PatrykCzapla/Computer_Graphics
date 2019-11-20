@@ -196,36 +196,6 @@ namespace Polygon_Filler
 
         //-----WEILER - ATHERTON-----//
 
-        //public static (Vertex, Vertex)? getIntersectionPoints(Vertex s1, Vertex s2, Vertex c1, Vertex c2)
-        //{
-        //    if (s1 == c1 || s1 == c2 || s2 == c1 || s2 == c2) return null;
-        //    double d = (c2.center.Y - c1.center.Y) * (s2.center.X - s1.center.X) - (c2.center.X - c1.center.X) * (s2.center.Y - s1.center.Y);
-        //    if (d == 0.0) return null;
-        //    double toSource = (double)((double)((c2.center.X - c1.center.X) * (s1.center.Y - c1.center.Y) - (c2.center.Y - c1.center.Y) * (s1.center.X - c1.center.X))) / d;
-        //    double toClip = (double)((double)((s2.center.X - s1.center.X) * (s1.center.Y - c1.center.Y) - (s2.center.Y - s1.center.Y) * (s1.center.X - c1.center.X))) / d;
-
-        //    Vertex s = new Vertex(new Point(s1.center.X + (int)(toSource * (s2.center.X - s1.center.X)), s1.center.Y + (int)(toSource * (s2.center.Y - s1.center.Y))))
-        //    {
-        //        distance = toSource,
-        //        IsIntersection = true
-        //    };
-        //    Vertex c = new Vertex(new Point(s1.center.X + (int)(toSource * (s2.center.X - s1.center.X)), s1.center.Y + (int)(toSource * (s2.center.Y - s1.center.Y))))
-        //    {
-        //        distance = toClip,
-        //        IsIntersection = true
-        //    };
-
-        //    if (s.center.X < Math.Min(s1.center.X, s2.center.X) || s.center.X > Math.Max(s1.center.X, s2.center.X) || s.center.X < Math.Min(c1.center.X, c2.center.X) || s.center.X > Math.Max(c1.center.X, c2.center.X)) return null;
-        //    if (s.center.Y < Math.Min(s1.center.Y, s2.center.Y) || s.center.Y > Math.Max(s1.center.Y, s2.center.Y) || s.center.Y < Math.Min(c1.center.Y, c2.center.Y) || s.center.Y > Math.Max(c1.center.Y, c2.center.Y)) return null;
-
-        //    if ((0 < toSource && toSource < 1) && (0 < toClip && toClip < 1))
-        //    {
-        //        return (s, c);
-        //    }
-        //    else
-        //        return null;
-        //}
-
         public static (Vertex, Vertex)? getIntersectionPoints(Vertex s1, Vertex s2, Vertex c1, Vertex c2)
         {
             if (s1 == c1 || s1 == c2 || s2 == c1 || s2 == c2) return null;
@@ -243,7 +213,6 @@ namespace Polygon_Filler
             {
                 double x = ((b2 * cc1 - b1 * cc2) / det);
                 double y = ((a1 * cc2 - a2 * cc1) / det);
-                //Console.WriteLine(x + " :" + y);
                 Vertex s = new Vertex(new Point((int)x, (int)y))
                 {
                     distance = distance(s1, new Vertex(new Point((int)x, (int)y))),
@@ -262,32 +231,6 @@ namespace Polygon_Filler
 
                 return (s, c);
             }
-            //float a1 = end1.y - start1.y;
-            //float b1 = start1.x - end1.x;
-            //float c1 = a1 * (start1.x) + b1 * (start1.y);
-
-            //float a2 = end2.y - start2.y;
-            //float b2 = start2.x - end2.x;
-            //float c2 = a2 * (start2.x) + b2 * (start2.y);
-
-            //float determinant = a1 * b2 - a2 * b1;
-
-            //if (determinant == 0)
-            //{
-            //    return null;
-            //}
-            //else
-            //{
-            //    float x = (b2 * c1 - b1 * c2) / determinant;
-            //    float y = (a1 * c2 - a2 * c1) / determinant;
-            //if (x < Math.Min(start1.x, end1.x) || x > Math.Max(start1.x, end1.x) || x < Math.Min(start2.x, end2.x) || x > Math.Max(start2.x, end2.x))
-            //    return null;
-            //if (y < Math.Min(start1.y, end1.y) || y > Math.Max(start1.y, end1.y) || y < Math.Min(start2.y, end2.y) || y > Math.Max(start2.y, end2.y))
-            //    return null;
-            //    return new FloatPoint(x, y);
-            //}
-
-
         }
 
         public static (Polygon, Polygon) makeIntersectionPoints(Polygon source, Polygon clip)
@@ -403,14 +346,6 @@ namespace Polygon_Filler
             while(intersections.Count > 0)
             {
                 List<Vertex> partialResult = new List<Vertex>();
-                //??
-                //Vertex s1 = sourceCopy.vertices.Find(v => v.center.X == intersections.First().center.X && v.center.Y == intersections.First().center.Y && v.IsEntry == true);
-                //if(s1 == null)
-                //{
-                //    //to jest do usuniecia jak bede dobrze rozpoznawal wierzcholki
-                //    intersections.RemoveAt(0);
-                //    continue;
-                //}
                 Vertex s1 = sourceCopy.vertices.Find(v => v.center.X == intersections.First().center.X && v.center.Y == intersections.First().center.Y && v.IsIntersection == true);
                 while (true)
                 {
@@ -446,9 +381,5 @@ namespace Polygon_Filler
             }
             return result;
         }
-
-        //-----SUTHERMAN - HODGMAN-----//
-
-
     }
 }

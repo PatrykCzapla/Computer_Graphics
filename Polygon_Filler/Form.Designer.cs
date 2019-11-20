@@ -33,7 +33,6 @@
             this.backTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.optionsTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.lightPositionRadioButton = new System.Windows.Forms.RadioButton();
-            this.changeClippingButton = new System.Windows.Forms.Button();
             this.polygonRadioButton = new System.Windows.Forms.RadioButton();
             this.editRadioButton = new System.Windows.Forms.RadioButton();
             this.noOfConvexLabel = new System.Windows.Forms.Label();
@@ -58,6 +57,7 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.fillingColorDialog = new System.Windows.Forms.ColorDialog();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.testButton = new System.Windows.Forms.Button();
             this.backTableLayoutPanel.SuspendLayout();
             this.optionsTableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.speedTrackBar)).BeginInit();
@@ -87,7 +87,6 @@
             this.optionsTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 48.45361F));
             this.optionsTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.54639F));
             this.optionsTableLayoutPanel.Controls.Add(this.lightPositionRadioButton, 0, 11);
-            this.optionsTableLayoutPanel.Controls.Add(this.changeClippingButton, 0, 12);
             this.optionsTableLayoutPanel.Controls.Add(this.polygonRadioButton, 0, 0);
             this.optionsTableLayoutPanel.Controls.Add(this.editRadioButton, 1, 0);
             this.optionsTableLayoutPanel.Controls.Add(this.noOfConvexLabel, 0, 3);
@@ -107,6 +106,7 @@
             this.optionsTableLayoutPanel.Controls.Add(this.heightOfLightTextBox, 1, 9);
             this.optionsTableLayoutPanel.Controls.Add(this.lightColorLabel, 0, 10);
             this.optionsTableLayoutPanel.Controls.Add(this.lightColorButton, 1, 10);
+            this.optionsTableLayoutPanel.Controls.Add(this.testButton, 0, 12);
             this.optionsTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.optionsTableLayoutPanel.Location = new System.Drawing.Point(1187, 3);
             this.optionsTableLayoutPanel.Name = "optionsTableLayoutPanel";
@@ -142,19 +142,6 @@
             this.lightPositionRadioButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lightPositionRadioButton.UseVisualStyleBackColor = true;
             this.lightPositionRadioButton.CheckedChanged += new System.EventHandler(this.CheckedChanged);
-            // 
-            // changeClippingButton
-            // 
-            this.optionsTableLayoutPanel.SetColumnSpan(this.changeClippingButton, 2);
-            this.changeClippingButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.changeClippingButton.Location = new System.Drawing.Point(7, 610);
-            this.changeClippingButton.Margin = new System.Windows.Forms.Padding(7, 10, 7, 10);
-            this.changeClippingButton.Name = "changeClippingButton";
-            this.changeClippingButton.Size = new System.Drawing.Size(180, 30);
-            this.changeClippingButton.TabIndex = 1;
-            this.changeClippingButton.Text = "Change to Sutherland-Hodgman";
-            this.changeClippingButton.UseVisualStyleBackColor = true;
-            this.changeClippingButton.Click += new System.EventHandler(this.changeClipping);
             // 
             // polygonRadioButton
             // 
@@ -421,6 +408,19 @@
             // 
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
+            // testButton
+            // 
+            this.optionsTableLayoutPanel.SetColumnSpan(this.testButton, 2);
+            this.testButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.testButton.Location = new System.Drawing.Point(7, 610);
+            this.testButton.Margin = new System.Windows.Forms.Padding(7, 10, 7, 10);
+            this.testButton.Name = "testButton";
+            this.testButton.Size = new System.Drawing.Size(180, 30);
+            this.testButton.TabIndex = 21;
+            this.testButton.Text = "Test filling";
+            this.testButton.UseVisualStyleBackColor = true;
+            this.testButton.Click += new System.EventHandler(this.testButton_Click);
+            // 
             // Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -470,11 +470,11 @@
         private System.Windows.Forms.Label lightColorLabel;
         private System.Windows.Forms.Button lightColorButton;
         private System.Windows.Forms.TextBox heightOfLightTextBox;
-        private System.Windows.Forms.Button changeClippingButton;
         private System.Windows.Forms.Label bumpMapLabel;
         private System.Windows.Forms.Button bumpMapButton;
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.RadioButton lightPositionRadioButton;
+        private System.Windows.Forms.Button testButton;
     }
 }
 

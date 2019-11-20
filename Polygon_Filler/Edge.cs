@@ -22,9 +22,6 @@ namespace Polygon_Filler
         public bool canDraw(List<Edge> edges)
         {
             if (edges.Count == 0) return true;
-
-            //if (edges.Count > 0 && Tools.Orientation(edges.Last().v1.center, v1.center, v2.center) != 1) return false;//mozna rysowac tylko wielakat wypukly w lewa strone idac
-
             if (edges.Any(e => Tools.linesIntersect(this.v1.center, this.v2.center, e.v1.center, e.v2.center) == true))
                 return false;
             else return true;

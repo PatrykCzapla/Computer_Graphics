@@ -36,5 +36,5 @@ W trakcie animacji można zmieniać jej prędkość.
 
 Jeżeli wczytana jest tekstura lub bump mapa nie można zmienic rozmiary okna.
 
-Przycisk Change to Sutherland_Hodgman lub Change to Weiler-Atherton zmienia algorytm obcinania części wspólnej wielokątów,
-ponieważ zaimplementowany przeze mnie Weiler-Atherton nie działa poprawnie.
+Przycisk Test filling ma na celu pokazanie prawidłowego działania funckji, których problematycznie może być sprawdzenie z powodu niedziałającej funkcji obcinania do części wspólnej.
+Test ten wymaga załadowanej tekstury oraz bump mapy.

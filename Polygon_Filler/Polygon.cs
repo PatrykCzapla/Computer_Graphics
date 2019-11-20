@@ -70,6 +70,7 @@ namespace Polygon_Filler
             
         public virtual void Fill()
         {
+            if (vertices.Count == 0) return;
             List<AET> AETs = new List<AET>();
             isFilled = true;
 
@@ -165,7 +166,6 @@ namespace Polygon_Filler
 
             if (sum > 0)
             {
-                Console.WriteLine("is clockwise");
                 List<Vertex> newVertices = new List<Vertex>();
                 for (int i = vertices.Count - 1; i >= 0; i--)
                     newVertices.Add(vertices[i]);

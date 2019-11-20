@@ -16,8 +16,6 @@ namespace Polygon_Filler
 {
     public partial class Form : System.Windows.Forms.Form
     {
-        private bool useWeiler = true;
-
         Stopwatch stopwatch = new Stopwatch();
         int FPScounter = 0;
 
@@ -56,8 +54,6 @@ namespace Polygon_Filler
             toolTip.SetToolTip(noOfConvexDomain, "Number of random convex polygons to generate. Max: 3, Min: 1.");
             toolTip.SetToolTip(heightOfLightTextBox, "Height of light. Min: 1.");
             toolTip.SetToolTip(lightPositionRadioButton, "Set light in different position." + Environment.NewLine + "Left-click to set position.");
-            toolTip.SetToolTip(changeClippingButton, "Switches clliping algorithm between Weiler-Atherton and Sutherland-Hodgman.");
-                       
             clearButton_Click(null, null);
             drawAllPolygons();
         }
@@ -243,10 +239,8 @@ namespace Polygon_Filler
             if (clippedPolygons.Count > 0) clippedPolygons = new List<Polygon>();
             if (timer.Enabled == true) return;
 
-
             Point currentPoint = new Point(e.X, e.Y);
             drawAllPolygons();
-            button1_Click(sender, e);
 
             if (polygonRadioButton.Checked == true)
             {
@@ -531,25 +525,13 @@ namespace Polygon_Filler
 
             clippedPolygons = new List<Polygon>();
             
-            if(useWeiler == true)
-            {
-                foreach (Polygon p in polygons)
-                    foreach (Polygon cp in convexPolygons)
-                        foreach (Polygon pol in Tools.WeilerAtherton(cp, p))
-                        {
-                            pol.isFilled = true;
-                            clippedPolygons.Add(pol);
-                        }
-            }
-            else
-            {
-                foreach (Polygon p in polygons)
-                    foreach (Polygon cp in convexPolygons)
+            foreach (Polygon p in polygons)
+                foreach (Polygon cp in convexPolygons)
+                    foreach (Polygon pol in Tools.WeilerAtherton(p, cp))
                     {
-
-                    }
-
-            }            
+                        pol.isFilled = true;
+                        clippedPolygons.Add(pol);
+                    }    
             drawAllPolygons();
         }
 
@@ -558,37 +540,35 @@ namespace Polygon_Filler
             speed = speedTrackBar.Value;
         }
 
-        private void changeClipping(object sender, EventArgs e)
-        {
-            if(useWeiler == true)
-            {
-                useWeiler = false;
-                changeClippingButton.Text = "Change to Weiler-Atherton";
-            }
-            else
-            {
-                useWeiler = true;
-                changeClippingButton.Text = "Change to Sutherland-Hodgman";
-            }
-        }
-
         private void Form_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.Enter)
                 drawingPictureBox_Click(sender, new MouseEventArgs(MouseButtons.Middle, 1, 0, 0, 0));
             if (e.Control && e.KeyCode == Keys.A)
                 startStopButton_Click(sender, e);
-        }
-                
+        }                
 
-                              
-        //-----TEST-----//
-        private void button1_Click(object sender, EventArgs e)
+        private void testButton_Click(object sender, EventArgs e)
         {
-            if (polygons.Count < 2 || polygons.Last().isCorrect == false) return;
-            clippedPolygons = new List<Polygon>();
-            clippedPolygons.AddRange(Tools.WeilerAtherton(polygons[1], polygons[0]));
-            foreach (Polygon p in clippedPolygons) p.isFilled = true;
+            if (backgroundDBM == null || bumpMap == null) return;
+            List<Vertex> vertices = new List<Vertex>();
+            vertices.Add(new Vertex(new Point(0, 0)));
+            vertices.Add(new Vertex(new Point(dbm.Width - 1, 0)));
+            vertices.Add(new Vertex(new Point(dbm.Width - 1, dbm.Height - 1)));
+            vertices.Add(new Vertex(new Point(0, dbm.Height - 1)));
+
+            List<Edge> edges = new List<Edge>();
+            edges.Add(new Edge(vertices[0], vertices[1]));
+            edges.Add(new Edge(vertices[1], vertices[2]));
+            edges.Add(new Edge(vertices[2], vertices[3]));
+            edges.Add(new Edge(vertices[3], vertices[0]));
+
+            polygons.Clear();
+            Polygon p = new Polygon(vertices, edges);
+            p.isFilled = true;
+            p.isCorrect = true;
+
+            polygons.Add(p);
             drawAllPolygons();
         }
     }
