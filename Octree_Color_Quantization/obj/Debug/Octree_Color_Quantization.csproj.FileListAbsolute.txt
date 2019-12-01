@@ -1,0 +1,9 @@
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Octree_Color_Quantization\bin\Debug\Octree_Color_Quantization.exe.config
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Octree_Color_Quantization\bin\Debug\Octree_Color_Quantization.exe
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Octree_Color_Quantization\bin\Debug\Octree_Color_Quantization.pdb
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Octree_Color_Quantization\obj\Debug\Octree_Color_Quantization.csprojAssemblyReference.cache
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Octree_Color_Quantization\obj\Debug\Octree_Color_Quantization.Properties.Resources.resources
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Octree_Color_Quantization\obj\Debug\Octree_Color_Quantization.csproj.GenerateResource.cache
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Octree_Color_Quantization\obj\Debug\Octree_Color_Quantization.exe
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Octree_Color_Quantization\obj\Debug\Octree_Color_Quantization.pdb
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Octree_Color_Quantization\obj\Debug\Octree_Color_Quantization.Form.resources
