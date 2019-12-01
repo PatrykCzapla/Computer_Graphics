@@ -16,6 +16,7 @@ namespace Octree_Color_Quantization
     {
         private Image initialImage;
         private Bitmap copyImage;
+
         private int colorsCount = 256;
 
         private Stopwatch stopwatch = new Stopwatch();
@@ -59,6 +60,7 @@ namespace Octree_Color_Quantization
         {
             if (afterBackgroundWorker.IsBusy == true || alongBackgroundWorker.IsBusy == true)
             {
+                infoLabel.Text = "";
                 afterBackgroundWorker.CancelAsync();
                 alongBackgroundWorker.CancelAsync();
                 afterProgressBar.Value = 0;
@@ -74,6 +76,7 @@ namespace Octree_Color_Quantization
                 MessageBox.Show("Cannot run reduction. Upload image first.", "No image loaded", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            infoLabel.Text = "";
             copyImage = new Bitmap(initialPictureBox.Image);
             afterProgressBar.Visible = true;
             afterProgressBar.Maximum = 2 * (initialPictureBox.Image.Width * initialPictureBox.Image.Height);
@@ -89,7 +92,6 @@ namespace Octree_Color_Quantization
         private void afterBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
-
             TreeNode root = new TreeNode();
             root.level = 0;
             for (int x = 0; x < initialPictureBox.Image.Width; x++)
@@ -106,7 +108,17 @@ namespace Octree_Color_Quantization
                         afterProgressBar.Value++;
                     }));
                 }
-            Tools.ReduceTree(root, colorsCount);
+            infoLabel.Invoke(new MethodInvoker(delegate { infoLabel.Text += "Number of colors in original picture: " + Tools.countLeafs(root); }));
+            while (Tools.countLeafs(root) > colorsCount)
+            {
+                if (worker.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                Tools.ReduceTree(root);
+            }
+            infoLabel.Invoke(new MethodInvoker(delegate { infoLabel.Text += Environment.NewLine + "Number of colors after reduction: " + Tools.countLeafs(root); }));
             Bitmap newImage = new Bitmap(initialPictureBox.Image.Width, initialPictureBox.Image.Height);
             for (int x = 0; x < newImage.Width; x++)
                 for (int y = 0; y < newImage.Height; y++)
@@ -128,9 +140,10 @@ namespace Octree_Color_Quantization
         private void afterBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled == true) return;
-            afterProgressBar.Value = 0;
             if(alongBackgroundWorker.IsBusy == false)
             {
+                afterProgressBar.Value = 0;
+                alongProgressBar.Value = 0;
                 afterProgressBar.Visible = false;
                 alongProgressBar.Visible = false;
                 reduceButton.Text = "Reduce to " + colorsCount + "colors";
@@ -154,12 +167,21 @@ namespace Octree_Color_Quantization
                         return;
                     }
                     Tools.InsertTree(ref root, copyImage.GetPixel(x, y), ref root);
-                    Tools.ReduceTree(root, colorsCount);
+                    while (Tools.countLeafs(root) > colorsCount)
+                    {
+                        if (worker.CancellationPending == true)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
+                        Tools.ReduceTree(root);
+                    }
                     alongProgressBar.Invoke(new MethodInvoker(delegate
                     {
                         alongProgressBar.Value++;
                     }));
                 }
+            infoLabel.Invoke(new MethodInvoker(delegate { infoLabel.Text += Environment.NewLine + "Number of colors along reduction: " + Tools.countLeafs(root); }));
             Bitmap newImage = new Bitmap(copyImage.Width, copyImage.Height);
             for (int x = 0; x < newImage.Width; x++)
                 for (int y = 0; y < newImage.Height; y++)
@@ -169,6 +191,8 @@ namespace Octree_Color_Quantization
                         e.Cancel = true;
                         return;
                     }
+                    if (root == null) continue;
+
                     newImage.SetPixel(x, y, Tools.getColor(root, copyImage.GetPixel(x, y)));
                     alongProgressBar.Invoke(new MethodInvoker(delegate
                     {
@@ -181,9 +205,10 @@ namespace Octree_Color_Quantization
         private void alongBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled == true) return;
-            alongProgressBar.Value = 0;
             if (afterBackgroundWorker.IsBusy == false)
             {
+                afterProgressBar.Value = 0;
+                alongProgressBar.Value = 0;
                 afterProgressBar.Visible = false;
                 alongProgressBar.Visible = false;
                 reduceButton.Text = "Reduce to " + colorsCount + "colors";

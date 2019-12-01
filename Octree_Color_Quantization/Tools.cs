@@ -39,29 +39,21 @@ namespace Octree_Color_Quantization
             }
         }
 
-        public static void ReduceTree(TreeNode root, int colorsCount)
+        public static void ReduceTree(TreeNode root)
         {
-            while (countLeafs(root) > colorsCount)
+            TreeNode node = new TreeNode();
+            node.childCount = root.childCount;
+            node.level = root.level;
+            searchReduced(root, ref node);
+            for(int i = 0; i < 8; i++)
             {
-                TreeNode node = new TreeNode();
-                node.childCount = root.childCount;
-                node.references = root.references;
-                node.red = root.red;
-                node.green = root.green;
-                node.blue = root.blue;
-
-                searchReduced(root, ref node);
-
-                for(int i = 0; i < 8; i++)
-                {
-                    if (node.children[i] == null) continue;
-                    node.references += node.children[i].references;
-                    node.red += node.children[i].red;
-                    node.green += node.children[i].green;
-                    node.blue += node.children[i].blue;
-                    node.children[i] = null;
-                }
-                node.childCount = 0;
+                if (node.children[i] == null) continue;
+                node.references += node.children[i].references;
+                node.red += node.children[i].red;
+                node.green += node.children[i].green;
+                node.blue += node.children[i].blue;
+                node.children[i] = null;
+                node.childCount--;
             }
         }
 
@@ -77,6 +69,15 @@ namespace Octree_Color_Quantization
                 if (color[8 + node.level] == '1') child += 2;
                 if (color[16 + node.level] == '1') child += 1;
                 if (child < 0 || child > 7) throw new IndexOutOfRangeException("Wrong child index.");
+                if (node.children[child] == null)
+                {
+                    List<int> goodIndexes = new List<int>();
+                    for (int i = 0; i < 8; i++)
+                        if (node.children[i] != null)
+                            goodIndexes.Add(i);
+                    goodIndexes = goodIndexes.OrderBy(x => Math.Min(x, child)).ToList();
+                    child = goodIndexes.First();
+                }                    
                 return getColor(node.children[child], RGB);
             }
         }
@@ -86,21 +87,18 @@ namespace Octree_Color_Quantization
             for (int i = 0; i < 8; i++)
             {
                 if (currentNode.children[i] == null) continue;
-                if (currentNode.level != 7) searchReduced(currentNode.children[i], ref node);
-                else
-                {
-                    if (currentNode.level > node.level)
-                        node = currentNode;
-                    if (currentNode.level == node.level && node.references > currentNode.references)
-                        node = currentNode;
-                }                  
+                if (currentNode.level > node.level)
+                    node = currentNode;
+                if (currentNode.level == node.level && node.references > currentNode.references)
+                    node = currentNode;
+                searchReduced(currentNode.children[i], ref node);
             }
         }
 
-        private static int countLeafs(TreeNode node)
+        public static int countLeafs(TreeNode node)
         {
             int result = 0;
-            if (node.level == 8)
+            if (node.childCount == 0)
                 result++;
             else
                 for(int i = 0; i < 8; i++)

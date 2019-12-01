@@ -39,13 +39,14 @@
             this.alongLabel = new System.Windows.Forms.Label();
             this.afterPictureBox = new System.Windows.Forms.PictureBox();
             this.initialTable = new System.Windows.Forms.TableLayoutPanel();
-            this.reduceButton = new System.Windows.Forms.Button();
             this.colorsCountTrackBar = new System.Windows.Forms.TrackBar();
             this.loadButton = new System.Windows.Forms.Button();
             this.initialPictureBox = new System.Windows.Forms.PictureBox();
             this.initialImageLabel = new System.Windows.Forms.Label();
+            this.reduceButton = new System.Windows.Forms.Button();
             this.afterBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.alongBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.infoLabel = new System.Windows.Forms.Label();
             this.outerPanel.SuspendLayout();
             this.outerTable.SuspendLayout();
             this.resultTable.SuspendLayout();
@@ -180,6 +181,7 @@
             // 
             this.initialTable.ColumnCount = 1;
             this.initialTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.initialTable.Controls.Add(this.infoLabel, 0, 5);
             this.initialTable.Controls.Add(this.colorsCountTrackBar, 0, 3);
             this.initialTable.Controls.Add(this.loadButton, 0, 2);
             this.initialTable.Controls.Add(this.initialPictureBox, 0, 1);
@@ -197,20 +199,6 @@
             this.initialTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.initialTable.Size = new System.Drawing.Size(586, 705);
             this.initialTable.TabIndex = 0;
-            // 
-            // reduceButton
-            // 
-            this.reduceButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.reduceButton.BackColor = System.Drawing.Color.Transparent;
-            this.reduceButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.reduceButton.Location = new System.Drawing.Point(10, 410);
-            this.reduceButton.Margin = new System.Windows.Forms.Padding(10);
-            this.reduceButton.Name = "reduceButton";
-            this.reduceButton.Size = new System.Drawing.Size(566, 30);
-            this.reduceButton.TabIndex = 2;
-            this.reduceButton.Text = "Reduce to 256 colors";
-            this.reduceButton.UseVisualStyleBackColor = false;
-            this.reduceButton.Click += new System.EventHandler(this.reduceButton_Click);
             // 
             // colorsCountTrackBar
             // 
@@ -267,6 +255,20 @@
             this.initialImageLabel.Text = "Original picture";
             this.initialImageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // reduceButton
+            // 
+            this.reduceButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.reduceButton.BackColor = System.Drawing.Color.Transparent;
+            this.reduceButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.reduceButton.Location = new System.Drawing.Point(10, 410);
+            this.reduceButton.Margin = new System.Windows.Forms.Padding(10);
+            this.reduceButton.Name = "reduceButton";
+            this.reduceButton.Size = new System.Drawing.Size(566, 30);
+            this.reduceButton.TabIndex = 2;
+            this.reduceButton.Text = "Reduce to 256 colors";
+            this.reduceButton.UseVisualStyleBackColor = false;
+            this.reduceButton.Click += new System.EventHandler(this.reduceButton_Click);
+            // 
             // afterBackgroundWorker
             // 
             this.afterBackgroundWorker.WorkerSupportsCancellation = true;
@@ -278,6 +280,17 @@
             this.alongBackgroundWorker.WorkerSupportsCancellation = true;
             this.alongBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.alongBackgroundWorker_DoWork);
             this.alongBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.alongBackgroundWorker_RunWorkerCompleted);
+            // 
+            // infoLabel
+            // 
+            this.infoLabel.AutoSize = true;
+            this.infoLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.infoLabel.Location = new System.Drawing.Point(5, 455);
+            this.infoLabel.Margin = new System.Windows.Forms.Padding(5);
+            this.infoLabel.Name = "infoLabel";
+            this.infoLabel.Size = new System.Drawing.Size(576, 245);
+            this.infoLabel.TabIndex = 1;
             // 
             // Form
             // 
@@ -326,6 +339,7 @@
         private System.Windows.Forms.Button loadButton;
         private System.Windows.Forms.Label initialImageLabel;
         private System.Windows.Forms.ProgressBar alongProgressBar;
+        private System.Windows.Forms.Label infoLabel;
     }
 }
 
