@@ -11,11 +11,11 @@ namespace Octree_Color_Quantization
     {
         public TreeNode parent;
         public int level;
-        public long references;
+        public long referenceCount;
         public long red;
         public long green;
         public long blue;
         public TreeNode[] children = new TreeNode[8];
-        public int childCount;
+        public int childrenCount;
     }
 }

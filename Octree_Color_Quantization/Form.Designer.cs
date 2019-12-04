@@ -39,6 +39,7 @@
             this.alongLabel = new System.Windows.Forms.Label();
             this.afterPictureBox = new System.Windows.Forms.PictureBox();
             this.initialTable = new System.Windows.Forms.TableLayoutPanel();
+            this.infoLabel = new System.Windows.Forms.Label();
             this.colorsCountTrackBar = new System.Windows.Forms.TrackBar();
             this.loadButton = new System.Windows.Forms.Button();
             this.initialPictureBox = new System.Windows.Forms.PictureBox();
@@ -46,7 +47,6 @@
             this.reduceButton = new System.Windows.Forms.Button();
             this.afterBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.alongBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.infoLabel = new System.Windows.Forms.Label();
             this.outerPanel.SuspendLayout();
             this.outerTable.SuspendLayout();
             this.resultTable.SuspendLayout();
@@ -200,18 +200,28 @@
             this.initialTable.Size = new System.Drawing.Size(586, 705);
             this.initialTable.TabIndex = 0;
             // 
+            // infoLabel
+            // 
+            this.infoLabel.AutoSize = true;
+            this.infoLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.infoLabel.Location = new System.Drawing.Point(5, 455);
+            this.infoLabel.Margin = new System.Windows.Forms.Padding(5);
+            this.infoLabel.Name = "infoLabel";
+            this.infoLabel.Size = new System.Drawing.Size(576, 245);
+            this.infoLabel.TabIndex = 1;
+            // 
             // colorsCountTrackBar
             // 
             this.colorsCountTrackBar.BackColor = System.Drawing.SystemColors.Control;
             this.colorsCountTrackBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.colorsCountTrackBar.LargeChange = 8;
+            this.colorsCountTrackBar.LargeChange = 1;
             this.colorsCountTrackBar.Location = new System.Drawing.Point(10, 360);
             this.colorsCountTrackBar.Margin = new System.Windows.Forms.Padding(10);
             this.colorsCountTrackBar.Maximum = 32;
             this.colorsCountTrackBar.Minimum = 1;
             this.colorsCountTrackBar.Name = "colorsCountTrackBar";
             this.colorsCountTrackBar.Size = new System.Drawing.Size(566, 30);
-            this.colorsCountTrackBar.SmallChange = 8;
             this.colorsCountTrackBar.TabIndex = 1;
             this.colorsCountTrackBar.Value = 32;
             this.colorsCountTrackBar.ValueChanged += new System.EventHandler(this.colorsCountTrackBar_ValueChanged);
@@ -280,17 +290,6 @@
             this.alongBackgroundWorker.WorkerSupportsCancellation = true;
             this.alongBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.alongBackgroundWorker_DoWork);
             this.alongBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.alongBackgroundWorker_RunWorkerCompleted);
-            // 
-            // infoLabel
-            // 
-            this.infoLabel.AutoSize = true;
-            this.infoLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.infoLabel.Location = new System.Drawing.Point(5, 455);
-            this.infoLabel.Margin = new System.Windows.Forms.Padding(5);
-            this.infoLabel.Name = "infoLabel";
-            this.infoLabel.Size = new System.Drawing.Size(576, 245);
-            this.infoLabel.TabIndex = 1;
             // 
             // Form
             // 

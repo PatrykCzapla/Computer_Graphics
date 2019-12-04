@@ -108,8 +108,8 @@ namespace Octree_Color_Quantization
                         afterProgressBar.Value++;
                     }));
                 }
-            infoLabel.Invoke(new MethodInvoker(delegate { infoLabel.Text += "Number of colors in original picture: " + Tools.countLeafs(root); }));
-            while (Tools.countLeafs(root) > colorsCount)
+            infoLabel.Invoke(new MethodInvoker(delegate { infoLabel.Text += "Number of colors in original picture: " + Tools.countColors(root); }));
+            while (Tools.countColors(root) > colorsCount)
             {
                 if (worker.CancellationPending == true)
                 {
@@ -118,7 +118,7 @@ namespace Octree_Color_Quantization
                 }
                 Tools.ReduceTree(root);
             }
-            infoLabel.Invoke(new MethodInvoker(delegate { infoLabel.Text += Environment.NewLine + "Number of colors after reduction: " + Tools.countLeafs(root); }));
+            infoLabel.Invoke(new MethodInvoker(delegate { infoLabel.Text += Environment.NewLine + "Number of colors after reduction: " + Tools.countColors(root); }));
             Bitmap newImage = new Bitmap(initialPictureBox.Image.Width, initialPictureBox.Image.Height);
             for (int x = 0; x < newImage.Width; x++)
                 for (int y = 0; y < newImage.Height; y++)
@@ -167,7 +167,7 @@ namespace Octree_Color_Quantization
                         return;
                     }
                     Tools.InsertTree(ref root, copyImage.GetPixel(x, y), ref root);
-                    while (Tools.countLeafs(root) > colorsCount)
+                    while (Tools.countColors(root) > colorsCount)
                     {
                         if (worker.CancellationPending == true)
                         {
@@ -181,7 +181,7 @@ namespace Octree_Color_Quantization
                         alongProgressBar.Value++;
                     }));
                 }
-            infoLabel.Invoke(new MethodInvoker(delegate { infoLabel.Text += Environment.NewLine + "Number of colors along reduction: " + Tools.countLeafs(root); }));
+            infoLabel.Invoke(new MethodInvoker(delegate { infoLabel.Text += Environment.NewLine + "Number of colors along reduction: " + Tools.countColors(root); }));
             Bitmap newImage = new Bitmap(copyImage.Width, copyImage.Height);
             for (int x = 0; x < newImage.Width; x++)
                 for (int y = 0; y < newImage.Height; y++)

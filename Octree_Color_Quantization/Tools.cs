@@ -14,7 +14,7 @@ namespace Octree_Color_Quantization
             node = new TreeNode();
             node.parent = parent;
             node.level = parent.level + 1;
-            parent.childCount++;
+            parent.childrenCount++;
         }
 
         public static void InsertTree(ref TreeNode node, Color RGB, ref TreeNode parent)
@@ -22,7 +22,7 @@ namespace Octree_Color_Quantization
             if (node == null) initTree(ref node, ref parent);
             if (node.level == 8)
             {
-                node.references++;
+                node.referenceCount++;
                 node.red += RGB.R;
                 node.green += RGB.G;
                 node.blue += RGB.B;
@@ -34,7 +34,6 @@ namespace Octree_Color_Quantization
                 if (color[0 + node.level] == '1') child += 4;
                 if (color[8 + node.level] == '1') child += 2;
                 if (color[16 + node.level] == '1') child += 1;
-                if (child < 0 || child > 7) throw new IndexOutOfRangeException("Wrong child index.");
                 InsertTree(ref node.children[child], RGB, ref node);
             }
         }
@@ -42,25 +41,25 @@ namespace Octree_Color_Quantization
         public static void ReduceTree(TreeNode root)
         {
             TreeNode node = new TreeNode();
-            node.childCount = root.childCount;
+            node.childrenCount = root.childrenCount;
             node.level = root.level;
             searchReduced(root, ref node);
             for(int i = 0; i < 8; i++)
             {
                 if (node.children[i] == null) continue;
-                node.references += node.children[i].references;
+                node.referenceCount += node.children[i].referenceCount;
                 node.red += node.children[i].red;
                 node.green += node.children[i].green;
                 node.blue += node.children[i].blue;
                 node.children[i] = null;
-                node.childCount--;
+                node.childrenCount--;
             }
         }
 
         public static Color getColor(TreeNode node, Color RGB)
         {
-            if (node.childCount == 0)
-                return Color.FromArgb((int)(node.red / node.references), (int)(node.green / node.references), (int)(node.blue / node.references));
+            if (node.childrenCount == 0)
+                return Color.FromArgb((int)(node.red / node.referenceCount), (int)(node.green / node.referenceCount), (int)(node.blue / node.referenceCount));
             else
             {
                 int child = 0;
@@ -68,7 +67,6 @@ namespace Octree_Color_Quantization
                 if (color[0 + node.level] == '1') child += 4;
                 if (color[8 + node.level] == '1') child += 2;
                 if (color[16 + node.level] == '1') child += 1;
-                if (child < 0 || child > 7) throw new IndexOutOfRangeException("Wrong child index.");
                 if (node.children[child] == null)
                 {
                     List<int> goodIndexes = new List<int>();
@@ -89,22 +87,22 @@ namespace Octree_Color_Quantization
                 if (currentNode.children[i] == null) continue;
                 if (currentNode.level > node.level)
                     node = currentNode;
-                if (currentNode.level == node.level && node.references > currentNode.references)
+                if (currentNode.level == node.level && node.referenceCount > currentNode.referenceCount)
                     node = currentNode;
                 searchReduced(currentNode.children[i], ref node);
             }
         }
 
-        public static int countLeafs(TreeNode node)
+        public static int countColors(TreeNode node)
         {
             int result = 0;
-            if (node.childCount == 0)
+            if (node.childrenCount == 0)
                 result++;
             else
                 for(int i = 0; i < 8; i++)
                 {
                     if (node.children[i] == null) continue;
-                    result += countLeafs(node.children[i]);
+                    result += countColors(node.children[i]);
                 }
             return result;
         }
