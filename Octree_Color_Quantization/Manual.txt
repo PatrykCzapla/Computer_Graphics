@@ -1,0 +1,7 @@
+﻿Aby wczytać obraz, którego kolory będą redukowane należy wcisnąć przycisk Load image, a następnie wybrać plik w formacie .jpg lub .png.
+Obok napisu Target number of colors: nalezy wpisać do ilu kolorów nastąpi redukcja. Musi być to liczba z zakresu [1, 16777216].
+Gdy obraz jest wczytany oraz powyższa liczba jest poprawna można rozpocząć redukowanie za pomocą przycisku Reduce to x colors.
+Pod dwona pustymi polami po prawej stronie pojawią się paski pokazujące progres redukcji (odpowiednio po wstawieniu wszystkich kolorów do drzewa i podczas wstawiania do drzewa).
+Gdy proces zostanie ukończony we wcześniej pustych polach po prawej stronie pojawią się obrazy ze zredukowanymi kolorami. Wyświetlony również zostnaie całkowity czas do wykonania obu redukcji.
+Pod przyciskiem rozpoczynającym redukcję wyświetlą się informacje ile kolorów było w oryginalnym obrazie oraz ile jest w wynikowych obrazach.
+Można przerwać proces redukcji klikając przycisk Cancel reduction. Proces zostanie całkowicie przerwany, nie spauzowany.

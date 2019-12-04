@@ -25,6 +25,15 @@ namespace Octree_Color_Quantization
         public Form()
         {
             InitializeComponent();
+
+            this.toolTip.SetToolTip(initialPictureBox, "Original image.");
+            this.toolTip.SetToolTip(afterPictureBox, "Image with reduction used after insertion.");
+            this.toolTip.SetToolTip(alongPictureBox, "Image with reduction used along insertion.");
+            this.toolTip.SetToolTip(colorCountTextBox, "Number from range [1, 16777216].");
+            this.toolTip.SetToolTip(infoLabel, "Information about reduction process.");
+            this.toolTip.SetToolTip(reduceButton, "Starts/cancels reduction if target number of colors is correct number and if image is loaded.");
+            this.toolTip.SetToolTip(afterProgressBar, "Progress of reduction after insertion.");
+            this.toolTip.SetToolTip(alongProgressBar, "Progress of reduction along insertion.");
         }
 
         private void loadButton_Click(object sender, EventArgs e)
@@ -223,7 +232,6 @@ namespace Octree_Color_Quantization
                     colorCountTextBox.Text = colorsCount.ToString();
                     return;
                 }
-               // if (colorsCount == Int32.Parse(colorCountTextBox.Text) && colorCountTextBox.ForeColor == Color.Black) return;
                 tmp = Int32.Parse(colorCountTextBox.Text);
                 if (tmp < 1 || tmp > 16777216) throw new Exception("Wrong value.");
                 else colorsCount = tmp;

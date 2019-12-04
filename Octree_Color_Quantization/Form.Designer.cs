@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
             this.outerPanel = new System.Windows.Forms.Panel();
             this.outerTable = new System.Windows.Forms.TableLayoutPanel();
@@ -39,16 +40,17 @@
             this.alongLabel = new System.Windows.Forms.Label();
             this.afterPictureBox = new System.Windows.Forms.PictureBox();
             this.initialTable = new System.Windows.Forms.TableLayoutPanel();
-            this.infoLabel = new System.Windows.Forms.Label();
             this.loadButton = new System.Windows.Forms.Button();
             this.initialPictureBox = new System.Windows.Forms.PictureBox();
             this.initialImageLabel = new System.Windows.Forms.Label();
             this.reduceButton = new System.Windows.Forms.Button();
+            this.infoLabel = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.colorCountTextBox = new System.Windows.Forms.TextBox();
+            this.colorCountLabel = new System.Windows.Forms.Label();
             this.afterBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.alongBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.colorCountTextBox = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.colorCountLabel = new System.Windows.Forms.Label();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.outerPanel.SuspendLayout();
             this.outerTable.SuspendLayout();
             this.resultTable.SuspendLayout();
@@ -203,17 +205,6 @@
             this.initialTable.Size = new System.Drawing.Size(586, 705);
             this.initialTable.TabIndex = 0;
             // 
-            // infoLabel
-            // 
-            this.infoLabel.AutoSize = true;
-            this.infoLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.infoLabel.Location = new System.Drawing.Point(5, 455);
-            this.infoLabel.Margin = new System.Windows.Forms.Padding(5);
-            this.infoLabel.Name = "infoLabel";
-            this.infoLabel.Size = new System.Drawing.Size(576, 225);
-            this.infoLabel.TabIndex = 1;
-            // 
             // loadButton
             // 
             this.loadButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
@@ -250,7 +241,7 @@
             this.initialImageLabel.Name = "initialImageLabel";
             this.initialImageLabel.Size = new System.Drawing.Size(576, 20);
             this.initialImageLabel.TabIndex = 4;
-            this.initialImageLabel.Text = "Original picture";
+            this.initialImageLabel.Text = "Original image";
             this.initialImageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // reduceButton
@@ -267,30 +258,16 @@
             this.reduceButton.UseVisualStyleBackColor = false;
             this.reduceButton.Click += new System.EventHandler(this.reduceButton_Click);
             // 
-            // afterBackgroundWorker
+            // infoLabel
             // 
-            this.afterBackgroundWorker.WorkerSupportsCancellation = true;
-            this.afterBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.afterBackgroundWorker_DoWork);
-            this.afterBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.afterBackgroundWorker_RunWorkerCompleted);
-            // 
-            // alongBackgroundWorker
-            // 
-            this.alongBackgroundWorker.WorkerSupportsCancellation = true;
-            this.alongBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.alongBackgroundWorker_DoWork);
-            this.alongBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.alongBackgroundWorker_RunWorkerCompleted);
-            // 
-            // colorCountTextBox
-            // 
-            this.colorCountTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.colorCountTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.colorCountTextBox.Location = new System.Drawing.Point(300, 10);
-            this.colorCountTextBox.Margin = new System.Windows.Forms.Padding(10);
-            this.colorCountTextBox.Name = "colorCountTextBox";
-            this.colorCountTextBox.Size = new System.Drawing.Size(270, 26);
-            this.colorCountTextBox.TabIndex = 5;
-            this.colorCountTextBox.Text = "256";
-            this.colorCountTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.colorCountTextBox.TextChanged += new System.EventHandler(this.colorCountTextBox_TextChanged);
+            this.infoLabel.AutoSize = true;
+            this.infoLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.infoLabel.Location = new System.Drawing.Point(5, 455);
+            this.infoLabel.Margin = new System.Windows.Forms.Padding(5);
+            this.infoLabel.Name = "infoLabel";
+            this.infoLabel.Size = new System.Drawing.Size(576, 225);
+            this.infoLabel.TabIndex = 1;
             // 
             // tableLayoutPanel1
             // 
@@ -308,6 +285,19 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(580, 44);
             this.tableLayoutPanel1.TabIndex = 6;
             // 
+            // colorCountTextBox
+            // 
+            this.colorCountTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.colorCountTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.colorCountTextBox.Location = new System.Drawing.Point(300, 10);
+            this.colorCountTextBox.Margin = new System.Windows.Forms.Padding(10);
+            this.colorCountTextBox.Name = "colorCountTextBox";
+            this.colorCountTextBox.Size = new System.Drawing.Size(270, 26);
+            this.colorCountTextBox.TabIndex = 5;
+            this.colorCountTextBox.Text = "256";
+            this.colorCountTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.colorCountTextBox.TextChanged += new System.EventHandler(this.colorCountTextBox_TextChanged);
+            // 
             // colorCountLabel
             // 
             this.colorCountLabel.AutoSize = true;
@@ -320,6 +310,18 @@
             this.colorCountLabel.TabIndex = 6;
             this.colorCountLabel.Text = "Target number of colors:";
             this.colorCountLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // afterBackgroundWorker
+            // 
+            this.afterBackgroundWorker.WorkerSupportsCancellation = true;
+            this.afterBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.afterBackgroundWorker_DoWork);
+            this.afterBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.afterBackgroundWorker_RunWorkerCompleted);
+            // 
+            // alongBackgroundWorker
+            // 
+            this.alongBackgroundWorker.WorkerSupportsCancellation = true;
+            this.alongBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.alongBackgroundWorker_DoWork);
+            this.alongBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.alongBackgroundWorker_RunWorkerCompleted);
             // 
             // Form
             // 
@@ -372,6 +374,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TextBox colorCountTextBox;
         private System.Windows.Forms.Label colorCountLabel;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }
 
