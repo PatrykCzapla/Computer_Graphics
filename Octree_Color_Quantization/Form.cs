@@ -18,25 +18,13 @@ namespace Octree_Color_Quantization
         private Bitmap copyImage;
 
         private int colorsCount = 256;
+        private bool canReduce = true;
 
         private Stopwatch stopwatch = new Stopwatch();
 
         public Form()
         {
             InitializeComponent();
-        }
-
-        private void colorsCountTrackBar_ValueChanged(object sender, EventArgs e)
-        {
-            if (colorsCount == colorsCountTrackBar.Value * 8) return;
-            if (afterBackgroundWorker.IsBusy == true || alongBackgroundWorker.IsBusy == true)
-            {
-                MessageBox.Show("Cannot change value while reduction in progess.", "Reduction in progress", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                colorsCountTrackBar.Value = colorsCount / 8;
-                return;
-            }
-            colorsCount = colorsCountTrackBar.Value * 8;
-            reduceButton.Text = "Reduce to " + colorsCount + " colors";
         }
 
         private void loadButton_Click(object sender, EventArgs e)
@@ -74,6 +62,11 @@ namespace Octree_Color_Quantization
             if (initialImage == null)
             {
                 MessageBox.Show("Cannot run reduction. Upload image first.", "No image loaded", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if(canReduce == false)
+            {
+                MessageBox.Show("Cannot run reduction. Target number of colors must be value from range [1, 16777216].", "Wrong number format", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             infoLabel.Text = "";
@@ -214,6 +207,36 @@ namespace Octree_Color_Quantization
                 reduceButton.Text = "Reduce to " + colorsCount + "colors";
                 stopwatch.Stop();
                 MessageBox.Show("Time of reduction was: " + (stopwatch.ElapsedMilliseconds / 1000) + " seconds.", "Time of reduction", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void colorCountTextBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                int tmp = 0;
+                if(afterBackgroundWorker.IsBusy == true || alongBackgroundWorker.IsBusy == true)
+                {
+                    Int32.TryParse(colorCountTextBox.Text, out tmp);
+                    if (tmp == colorsCount) return;
+                    MessageBox.Show("Cannot change value while reduction in progess.", "Reduction in progress", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    colorCountTextBox.Text = colorsCount.ToString();
+                    return;
+                }
+               // if (colorsCount == Int32.Parse(colorCountTextBox.Text) && colorCountTextBox.ForeColor == Color.Black) return;
+                tmp = Int32.Parse(colorCountTextBox.Text);
+                if (tmp < 1 || tmp > 16777216) throw new Exception("Wrong value.");
+                else colorsCount = tmp;
+                reduceButton.Text = "Reduce to " + colorsCount + " colors";
+                canReduce = true;
+                colorCountTextBox.ForeColor = Color.Black;
+
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                canReduce = false;
+                colorCountTextBox.ForeColor = Color.Red;
             }
         }
     }

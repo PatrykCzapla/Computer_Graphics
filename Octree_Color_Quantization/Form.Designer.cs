@@ -40,21 +40,23 @@
             this.afterPictureBox = new System.Windows.Forms.PictureBox();
             this.initialTable = new System.Windows.Forms.TableLayoutPanel();
             this.infoLabel = new System.Windows.Forms.Label();
-            this.colorsCountTrackBar = new System.Windows.Forms.TrackBar();
             this.loadButton = new System.Windows.Forms.Button();
             this.initialPictureBox = new System.Windows.Forms.PictureBox();
             this.initialImageLabel = new System.Windows.Forms.Label();
             this.reduceButton = new System.Windows.Forms.Button();
             this.afterBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.alongBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.colorCountTextBox = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.colorCountLabel = new System.Windows.Forms.Label();
             this.outerPanel.SuspendLayout();
             this.outerTable.SuspendLayout();
             this.resultTable.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.alongPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.afterPictureBox)).BeginInit();
             this.initialTable.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.colorsCountTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.initialPictureBox)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // outerPanel
@@ -181,22 +183,23 @@
             // 
             this.initialTable.ColumnCount = 1;
             this.initialTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.initialTable.Controls.Add(this.infoLabel, 0, 5);
-            this.initialTable.Controls.Add(this.colorsCountTrackBar, 0, 3);
             this.initialTable.Controls.Add(this.loadButton, 0, 2);
             this.initialTable.Controls.Add(this.initialPictureBox, 0, 1);
             this.initialTable.Controls.Add(this.initialImageLabel, 0, 0);
             this.initialTable.Controls.Add(this.reduceButton, 0, 4);
+            this.initialTable.Controls.Add(this.infoLabel, 0, 5);
+            this.initialTable.Controls.Add(this.tableLayoutPanel1, 0, 3);
             this.initialTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.initialTable.Location = new System.Drawing.Point(3, 3);
             this.initialTable.Name = "initialTable";
-            this.initialTable.RowCount = 6;
+            this.initialTable.RowCount = 7;
             this.initialTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.initialTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 270F));
             this.initialTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.initialTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.initialTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.initialTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.initialTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.initialTable.Size = new System.Drawing.Size(586, 705);
             this.initialTable.TabIndex = 0;
             // 
@@ -208,23 +211,8 @@
             this.infoLabel.Location = new System.Drawing.Point(5, 455);
             this.infoLabel.Margin = new System.Windows.Forms.Padding(5);
             this.infoLabel.Name = "infoLabel";
-            this.infoLabel.Size = new System.Drawing.Size(576, 245);
+            this.infoLabel.Size = new System.Drawing.Size(576, 225);
             this.infoLabel.TabIndex = 1;
-            // 
-            // colorsCountTrackBar
-            // 
-            this.colorsCountTrackBar.BackColor = System.Drawing.SystemColors.Control;
-            this.colorsCountTrackBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.colorsCountTrackBar.LargeChange = 1;
-            this.colorsCountTrackBar.Location = new System.Drawing.Point(10, 360);
-            this.colorsCountTrackBar.Margin = new System.Windows.Forms.Padding(10);
-            this.colorsCountTrackBar.Maximum = 32;
-            this.colorsCountTrackBar.Minimum = 1;
-            this.colorsCountTrackBar.Name = "colorsCountTrackBar";
-            this.colorsCountTrackBar.Size = new System.Drawing.Size(566, 30);
-            this.colorsCountTrackBar.TabIndex = 1;
-            this.colorsCountTrackBar.Value = 32;
-            this.colorsCountTrackBar.ValueChanged += new System.EventHandler(this.colorsCountTrackBar_ValueChanged);
             // 
             // loadButton
             // 
@@ -291,6 +279,48 @@
             this.alongBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.alongBackgroundWorker_DoWork);
             this.alongBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.alongBackgroundWorker_RunWorkerCompleted);
             // 
+            // colorCountTextBox
+            // 
+            this.colorCountTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.colorCountTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.colorCountTextBox.Location = new System.Drawing.Point(300, 10);
+            this.colorCountTextBox.Margin = new System.Windows.Forms.Padding(10);
+            this.colorCountTextBox.Name = "colorCountTextBox";
+            this.colorCountTextBox.Size = new System.Drawing.Size(270, 26);
+            this.colorCountTextBox.TabIndex = 5;
+            this.colorCountTextBox.Text = "256";
+            this.colorCountTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.colorCountTextBox.TextChanged += new System.EventHandler(this.colorCountTextBox_TextChanged);
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.colorCountTextBox, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.colorCountLabel, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 353);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(580, 44);
+            this.tableLayoutPanel1.TabIndex = 6;
+            // 
+            // colorCountLabel
+            // 
+            this.colorCountLabel.AutoSize = true;
+            this.colorCountLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.colorCountLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.colorCountLabel.Location = new System.Drawing.Point(5, 5);
+            this.colorCountLabel.Margin = new System.Windows.Forms.Padding(5);
+            this.colorCountLabel.Name = "colorCountLabel";
+            this.colorCountLabel.Size = new System.Drawing.Size(280, 34);
+            this.colorCountLabel.TabIndex = 6;
+            this.colorCountLabel.Text = "Target number of colors:";
+            this.colorCountLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -313,8 +343,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.afterPictureBox)).EndInit();
             this.initialTable.ResumeLayout(false);
             this.initialTable.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.colorsCountTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.initialPictureBox)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -331,7 +362,6 @@
         private System.Windows.Forms.Label alongLabel;
         private System.Windows.Forms.PictureBox afterPictureBox;
         private System.Windows.Forms.PictureBox initialPictureBox;
-        private System.Windows.Forms.TrackBar colorsCountTrackBar;
         private System.Windows.Forms.Button reduceButton;
         private System.ComponentModel.BackgroundWorker afterBackgroundWorker;
         private System.ComponentModel.BackgroundWorker alongBackgroundWorker;
@@ -339,6 +369,9 @@
         private System.Windows.Forms.Label initialImageLabel;
         private System.Windows.Forms.ProgressBar alongProgressBar;
         private System.Windows.Forms.Label infoLabel;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TextBox colorCountTextBox;
+        private System.Windows.Forms.Label colorCountLabel;
     }
 }
 
