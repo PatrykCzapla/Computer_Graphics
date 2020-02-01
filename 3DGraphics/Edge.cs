@@ -19,6 +19,12 @@ namespace Lab4
             this.v2 = v2;
         }
 
+        public Edge(Vector v1, Vector v2)
+        {
+            this.v1 = new Vertex(v1.values[0], v1.values[1], v1.values[2]);
+            this.v2 = new Vertex(v2.values[0], v2.values[1], v2.values[2]);
+        }
+
         public void Draw(Color color)
         {
             Point a = new Point((int)v1.x, (int)v1.y);

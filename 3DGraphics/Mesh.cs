@@ -9,9 +9,9 @@ namespace Lab4
     [Serializable]
     public class Mesh
     {
-        public List<Triangle> triangles;
+        public List<Triangle> triangles = new List<Triangle>();
 
-        public List<Vertex> vertices;
+        public List<Vertex> vertices = new List<Vertex>();
 
         public void makeMesh()
         {

@@ -61,6 +61,7 @@
     <Compile Include="Form.Designer.cs">
       <DependentUpon>Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Light.cs" />
     <Compile Include="Matrix.cs" />
     <Compile Include="Mesh.cs" />
     <Compile Include="Model.cs" />

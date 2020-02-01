@@ -45,5 +45,17 @@ namespace Lab4
             return new Vector(values[1] * v.values[2] - v.values[1] * values[2],
                 values[2] * v.values[0] - values[0] * v.values[2], values[0] * v.values[1] - values[1] * v.values[0]);
         }
+
+        public double dotProduct(Vector a)
+        {
+            if (a.values.Length != size) return 0;
+            return a.values[0] * values[0] + a.values[1] * values[1] + a.values[2] * values[2];
+        }
+
+        public double distance3D(Vector a)
+        {
+            if (size != 3 || size == a.values.Length) return 0;
+            return Math.Sqrt(Math.Pow(a.values[0] - values[0], 2) + Math.Pow(a.values[2] - values[2], 2) + Math.Pow(a.values[2] - values[2], 2));
+        }
     }
 }

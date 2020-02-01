@@ -95,21 +95,28 @@ namespace Lab4
             return new Matrix(result);
         }
 
-        public void print()
+        public static Matrix projectionMatrix(double fov, double far, double close, double aspect)
         {
-            Console.Write("[");
-            for(int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
-                    Console.Write(values[i, j] + " ");
-                }
-                Console.Write(Environment.NewLine);
-            }
+            double[,] values = new double[4, 4];
 
+            double ctg = 1 / Math.Tan(fov / 2);
 
-            Console.Write("]");
+            values[0, 0] = ctg / aspect;
+            values[1, 1] = ctg;
+            values[2, 2] = (far + close) / (far - close);
+            values[3, 2] = -1;
+            values[2, 3] = (-2 * far * close) / (far - close);
+
+            return new Matrix(values);
         }
 
+        public static Matrix getModelMatrix(Model model)
+        {
+            Matrix rotations = Matrix.xRotation(model.rotation.values[0]).MatrixByMatrix(Matrix.yRotation(model.rotation.values[1])).MatrixByMatrix(Matrix.zRotation(model.rotation.values[2]));
+            Matrix scales = Matrix.Scale(model.scale.values[0], model.scale.values[1], model.scale.values[2]);
+            Matrix positions = Matrix.Translation(model.position.values[0], model.position.values[1], model.position.values[2]);
+
+            return positions.MatrixByMatrix(rotations).MatrixByMatrix(scales);
+        }
     }
 }

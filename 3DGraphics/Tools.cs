@@ -9,24 +9,15 @@ namespace Lab4
 {
     public static class Tools
     {
-
-        public static int orientation(Point p1, Point p2, Point q)
-        {
-            int val = (p2.Y - p1.Y) * (q.X - p2.X) - (p2.X - p1.X) * (q.Y - p2.Y);
-
-            if (val == 0) return 0;
-            return (val > 0) ? 1 : 2;
-        }
-
         public static double distance(Vertex v1, Vertex v2)
         {
             return Math.Sqrt(Math.Pow(v2.x - v1.x, 2) + Math.Pow(v2.y - v1.y, 2));
         }
 
-        public static int cross(Vertex a, Vertex b, Vertex c)
+        public static int cross(Vector a, Vector b, Vector c)
         {
-            double value = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-            return Math.Abs(value) < 1e-1 ? 0 : value < 0 ? -1 : 1;
+            double value = (b.values[0] - a.values[0]) * (c.values[1] - a.values[1]) - (b.values[1] - a.values[1]) * (c.values[0] - a.values[0]);
+            return Math.Abs(value) < 1e-10 ? 0 : value < 0 ? -1 : 1;
         }
 
         public static double triangleArea(Vertex v1, Vertex v2, Vertex v3)

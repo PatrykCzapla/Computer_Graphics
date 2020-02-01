@@ -8,44 +8,16 @@ using System.Threading.Tasks;
 namespace Lab4
 {
     [Serializable]
-    public class Polygon
+    public abstract class Polygon
     {
         public List<Vertex> vertices = new List<Vertex>();
         public List<Edge> edges = new List<Edge>();
-        
-        public Polygon(List<Vertex> vertices = null, List<Edge> edges = null)
-        {
-            if(vertices != null)
-                foreach (Vertex v in vertices)
-                    this.vertices.Add(v);
-            else
-            {
-                this.vertices = new List<Vertex>();
-                this.edges = new List<Edge>();
-                return;
-            }
 
-            if(edges != null)
-                foreach (Edge e in edges)
-                    this.edges.Add(e);
-            else
-            {
-                this.edges = new List<Edge>();
-                for (int i = 0; i < this.vertices.Count - 1; i++)
-                    this.edges.Add(new Edge(this.vertices[i], this.vertices[i + 1]));
-                this.edges.Add(new Edge(this.vertices.Last(), this.vertices.First()));
-            }
-        }
-
-        public void Draw(Color color)
+        public virtual void Draw(Color color)
         {
-            if (Form.fill == true) Fill(color);
-            //for (int i = 0; i < vertices.Count; i++)
-            //    vertices[i].Draw(Color.Blue);
+            Fill(color);
             for (int i = 0; i < edges.Count; i++)
                 edges[i].Draw(Color.Black);
-            
-
         }
 
         private class AET

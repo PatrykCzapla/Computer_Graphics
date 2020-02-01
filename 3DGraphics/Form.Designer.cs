@@ -97,8 +97,8 @@
             this.modelsGroupBox = new System.Windows.Forms.GroupBox();
             this.modelsListBox = new System.Windows.Forms.ListBox();
             this.optionsGroupBox = new System.Windows.Forms.GroupBox();
+            this.edgesCheckBox = new System.Windows.Forms.CheckBox();
             this.fillCheckBox = new System.Windows.Forms.CheckBox();
-            this.interpolationCheckBox = new System.Windows.Forms.CheckBox();
             this.zBufferingCheckBox = new System.Windows.Forms.CheckBox();
             this.cullingCheckBox = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -116,7 +116,20 @@
             this.cameraCloseLabel = new System.Windows.Forms.Label();
             this.cameraFarLabel = new System.Windows.Forms.Label();
             this.cameraFOVLabel = new System.Windows.Forms.Label();
+            this.lightButton = new System.Windows.Forms.Button();
+            this.lightGroupBox = new System.Windows.Forms.GroupBox();
+            this.lightZ = new System.Windows.Forms.NumericUpDown();
+            this.lightY = new System.Windows.Forms.NumericUpDown();
+            this.lightX = new System.Windows.Forms.NumericUpDown();
+            this.colorButton = new System.Windows.Forms.Button();
+            this.attentuation = new System.Windows.Forms.NumericUpDown();
+            this.intensity = new System.Windows.Forms.NumericUpDown();
+            this.lightAttentuationLabel = new System.Windows.Forms.Label();
+            this.lightIntensityLabel = new System.Windows.Forms.Label();
+            this.lightColorLabel = new System.Windows.Forms.Label();
+            this.lightPositionLabel = new System.Windows.Forms.Label();
             this.fpsTimer = new System.Windows.Forms.Timer(this.components);
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.outerTablePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingPictureBox)).BeginInit();
             this.optionsTablePanel.SuspendLayout();
@@ -159,6 +172,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.cameraClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cameraFar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cameraFOV)).BeginInit();
+            this.lightGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lightZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lightY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lightX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.attentuation)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.intensity)).BeginInit();
             this.SuspendLayout();
             // 
             // outerTablePanel
@@ -220,6 +239,8 @@
             this.optionsTablePanel.Controls.Add(this.lightsGroupBox, 0, 10);
             this.optionsTablePanel.Controls.Add(this.cameraButton, 1, 7);
             this.optionsTablePanel.Controls.Add(this.cameraGroupBox, 1, 6);
+            this.optionsTablePanel.Controls.Add(this.lightButton, 0, 7);
+            this.optionsTablePanel.Controls.Add(this.lightGroupBox, 0, 6);
             this.optionsTablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.optionsTablePanel.Location = new System.Drawing.Point(748, 3);
             this.optionsTablePanel.Name = "optionsTablePanel";
@@ -306,6 +327,7 @@
             this.lightDeleteButton.TabIndex = 2;
             this.lightDeleteButton.Text = "Delete";
             this.lightDeleteButton.UseVisualStyleBackColor = true;
+            this.lightDeleteButton.Click += new System.EventHandler(this.lightDeleteButton_Click);
             // 
             // lightEditButton
             // 
@@ -316,6 +338,7 @@
             this.lightEditButton.TabIndex = 1;
             this.lightEditButton.Text = "Edit";
             this.lightEditButton.UseVisualStyleBackColor = true;
+            this.lightEditButton.Click += new System.EventHandler(this.lightEditButton_Click);
             // 
             // cuboidGroupBox
             // 
@@ -343,7 +366,7 @@
             65536});
             this.cuboidZ.Location = new System.Drawing.Point(68, 71);
             this.cuboidZ.Maximum = new decimal(new int[] {
-            25,
+            1,
             0,
             0,
             0});
@@ -356,10 +379,10 @@
             this.cuboidZ.Size = new System.Drawing.Size(120, 20);
             this.cuboidZ.TabIndex = 5;
             this.cuboidZ.Value = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            0});
+            65536});
             // 
             // cuboidY
             // 
@@ -371,7 +394,7 @@
             65536});
             this.cuboidY.Location = new System.Drawing.Point(68, 48);
             this.cuboidY.Maximum = new decimal(new int[] {
-            25,
+            1,
             0,
             0,
             0});
@@ -384,10 +407,10 @@
             this.cuboidY.Size = new System.Drawing.Size(120, 20);
             this.cuboidY.TabIndex = 4;
             this.cuboidY.Value = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            0});
+            65536});
             // 
             // cuboidX
             // 
@@ -399,7 +422,7 @@
             65536});
             this.cuboidX.Location = new System.Drawing.Point(68, 26);
             this.cuboidX.Maximum = new decimal(new int[] {
-            25,
+            1,
             0,
             0,
             0});
@@ -412,10 +435,10 @@
             this.cuboidX.Size = new System.Drawing.Size(120, 20);
             this.cuboidX.TabIndex = 3;
             this.cuboidX.Value = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            0});
+            65536});
             // 
             // cuboidZLabel
             // 
@@ -514,7 +537,7 @@
             65536});
             this.sphereRadius.Location = new System.Drawing.Point(68, 26);
             this.sphereRadius.Maximum = new decimal(new int[] {
-            10,
+            1,
             0,
             0,
             0});
@@ -527,10 +550,10 @@
             this.sphereRadius.Size = new System.Drawing.Size(120, 20);
             this.sphereRadius.TabIndex = 3;
             this.sphereRadius.Value = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            0});
+            65536});
             // 
             // spherePhiLabel
             // 
@@ -608,12 +631,12 @@
             65536});
             this.positionZ.Location = new System.Drawing.Point(68, 69);
             this.positionZ.Maximum = new decimal(new int[] {
-            25,
+            10,
             0,
             0,
             0});
             this.positionZ.Minimum = new decimal(new int[] {
-            25,
+            10,
             0,
             0,
             -2147483648});
@@ -632,12 +655,12 @@
             65536});
             this.positionY.Location = new System.Drawing.Point(68, 46);
             this.positionY.Maximum = new decimal(new int[] {
-            25,
+            10,
             0,
             0,
             0});
             this.positionY.Minimum = new decimal(new int[] {
-            25,
+            10,
             0,
             0,
             -2147483648});
@@ -656,12 +679,12 @@
             65536});
             this.positionX.Location = new System.Drawing.Point(68, 24);
             this.positionX.Maximum = new decimal(new int[] {
-            25,
+            10,
             0,
             0,
             0});
             this.positionX.Minimum = new decimal(new int[] {
-            25,
+            10,
             0,
             0,
             -2147483648});
@@ -845,20 +868,14 @@
             // 
             // rotationZ
             // 
-            this.rotationZ.DecimalPlaces = 1;
-            this.rotationZ.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
             this.rotationZ.Location = new System.Drawing.Point(71, 69);
             this.rotationZ.Maximum = new decimal(new int[] {
-            5,
+            360,
             0,
             0,
             0});
             this.rotationZ.Minimum = new decimal(new int[] {
-            5,
+            360,
             0,
             0,
             -2147483648});
@@ -869,20 +886,14 @@
             // 
             // rotationY
             // 
-            this.rotationY.DecimalPlaces = 1;
-            this.rotationY.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
             this.rotationY.Location = new System.Drawing.Point(71, 46);
             this.rotationY.Maximum = new decimal(new int[] {
-            5,
+            360,
             0,
             0,
             0});
             this.rotationY.Minimum = new decimal(new int[] {
-            5,
+            360,
             0,
             0,
             -2147483648});
@@ -893,20 +904,14 @@
             // 
             // rotationX
             // 
-            this.rotationX.DecimalPlaces = 1;
-            this.rotationX.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
             this.rotationX.Location = new System.Drawing.Point(71, 24);
             this.rotationX.Maximum = new decimal(new int[] {
-            5,
+            360,
             0,
             0,
             0});
             this.rotationX.Minimum = new decimal(new int[] {
-            5,
+            360,
             0,
             0,
             -2147483648});
@@ -985,7 +990,7 @@
             65536});
             this.coneRadius.Location = new System.Drawing.Point(71, 48);
             this.coneRadius.Maximum = new decimal(new int[] {
-            10,
+            1,
             0,
             0,
             0});
@@ -998,10 +1003,10 @@
             this.coneRadius.Size = new System.Drawing.Size(120, 20);
             this.coneRadius.TabIndex = 4;
             this.coneRadius.Value = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            0});
+            65536});
             // 
             // coneHeight
             // 
@@ -1013,7 +1018,7 @@
             65536});
             this.coneHeight.Location = new System.Drawing.Point(71, 23);
             this.coneHeight.Maximum = new decimal(new int[] {
-            25,
+            1,
             0,
             0,
             0});
@@ -1026,10 +1031,10 @@
             this.coneHeight.Size = new System.Drawing.Size(120, 20);
             this.coneHeight.TabIndex = 3;
             this.coneHeight.Value = new decimal(new int[] {
-            2,
+            5,
             0,
             0,
-            0});
+            65536});
             // 
             // coneDivisionLabel
             // 
@@ -1142,7 +1147,7 @@
             65536});
             this.cylinderRadius.Location = new System.Drawing.Point(71, 49);
             this.cylinderRadius.Maximum = new decimal(new int[] {
-            10,
+            1,
             0,
             0,
             0});
@@ -1155,10 +1160,10 @@
             this.cylinderRadius.Size = new System.Drawing.Size(120, 20);
             this.cylinderRadius.TabIndex = 4;
             this.cylinderRadius.Value = new decimal(new int[] {
-            2,
+            5,
             0,
             0,
-            0});
+            65536});
             // 
             // cylinderHeight
             // 
@@ -1170,7 +1175,7 @@
             65536});
             this.cylinderHeight.Location = new System.Drawing.Point(71, 25);
             this.cylinderHeight.Maximum = new decimal(new int[] {
-            25,
+            1,
             0,
             0,
             0});
@@ -1186,7 +1191,7 @@
             5,
             0,
             0,
-            0});
+            65536});
             // 
             // cylinderDivisionLabel
             // 
@@ -1262,8 +1267,8 @@
             // 
             // optionsGroupBox
             // 
+            this.optionsGroupBox.Controls.Add(this.edgesCheckBox);
             this.optionsGroupBox.Controls.Add(this.fillCheckBox);
-            this.optionsGroupBox.Controls.Add(this.interpolationCheckBox);
             this.optionsGroupBox.Controls.Add(this.zBufferingCheckBox);
             this.optionsGroupBox.Controls.Add(this.cullingCheckBox);
             this.optionsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1273,6 +1278,19 @@
             this.optionsGroupBox.TabIndex = 21;
             this.optionsGroupBox.TabStop = false;
             this.optionsGroupBox.Text = "Options";
+            // 
+            // edgesCheckBox
+            // 
+            this.edgesCheckBox.AutoSize = true;
+            this.edgesCheckBox.Checked = true;
+            this.edgesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.edgesCheckBox.Location = new System.Drawing.Point(135, 29);
+            this.edgesCheckBox.Name = "edgesCheckBox";
+            this.edgesCheckBox.Size = new System.Drawing.Size(56, 17);
+            this.edgesCheckBox.TabIndex = 4;
+            this.edgesCheckBox.Text = "Edges";
+            this.edgesCheckBox.UseVisualStyleBackColor = true;
+            this.edgesCheckBox.CheckedChanged += new System.EventHandler(this.edgesCheckBox_CheckedChanged);
             // 
             // fillCheckBox
             // 
@@ -1286,19 +1304,6 @@
             this.fillCheckBox.Text = "Fill";
             this.fillCheckBox.UseVisualStyleBackColor = true;
             this.fillCheckBox.CheckedChanged += new System.EventHandler(this.fillCheckBox_CheckedChanged);
-            // 
-            // interpolationCheckBox
-            // 
-            this.interpolationCheckBox.AutoSize = true;
-            this.interpolationCheckBox.Checked = true;
-            this.interpolationCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.interpolationCheckBox.Location = new System.Drawing.Point(13, 75);
-            this.interpolationCheckBox.Name = "interpolationCheckBox";
-            this.interpolationCheckBox.Size = new System.Drawing.Size(170, 17);
-            this.interpolationCheckBox.TabIndex = 2;
-            this.interpolationCheckBox.Text = "Vertices attributes interpolation";
-            this.interpolationCheckBox.UseVisualStyleBackColor = true;
-            this.interpolationCheckBox.CheckedChanged += new System.EventHandler(this.interpolationCheckBox_CheckedChanged);
             // 
             // zBufferingCheckBox
             // 
@@ -1460,7 +1465,7 @@
             // 
             this.cameraFar.Location = new System.Drawing.Point(71, 45);
             this.cameraFar.Maximum = new decimal(new int[] {
-            2000,
+            1000,
             0,
             0,
             0});
@@ -1473,27 +1478,21 @@
             this.cameraFar.Size = new System.Drawing.Size(120, 20);
             this.cameraFar.TabIndex = 8;
             this.cameraFar.Value = new decimal(new int[] {
-            1000,
+            500,
             0,
             0,
             0});
             // 
             // cameraFOV
             // 
-            this.cameraFOV.DecimalPlaces = 1;
-            this.cameraFOV.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
             this.cameraFOV.Location = new System.Drawing.Point(71, 19);
             this.cameraFOV.Maximum = new decimal(new int[] {
-            6,
+            120,
             0,
             0,
             0});
             this.cameraFOV.Minimum = new decimal(new int[] {
-            1,
+            10,
             0,
             0,
             0});
@@ -1502,7 +1501,7 @@
             this.cameraFOV.Size = new System.Drawing.Size(120, 20);
             this.cameraFOV.TabIndex = 7;
             this.cameraFOV.Value = new decimal(new int[] {
-            1,
+            90,
             0,
             0,
             0});
@@ -1534,10 +1533,211 @@
             this.cameraFOVLabel.TabIndex = 0;
             this.cameraFOVLabel.Text = "FOV:";
             // 
+            // lightButton
+            // 
+            this.lightButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lightButton.Location = new System.Drawing.Point(3, 613);
+            this.lightButton.Name = "lightButton";
+            this.lightButton.Size = new System.Drawing.Size(210, 24);
+            this.lightButton.TabIndex = 26;
+            this.lightButton.Text = "Add light";
+            this.lightButton.UseVisualStyleBackColor = true;
+            this.lightButton.Click += new System.EventHandler(this.lightButton_Click);
+            // 
+            // lightGroupBox
+            // 
+            this.lightGroupBox.Controls.Add(this.lightZ);
+            this.lightGroupBox.Controls.Add(this.lightY);
+            this.lightGroupBox.Controls.Add(this.lightX);
+            this.lightGroupBox.Controls.Add(this.colorButton);
+            this.lightGroupBox.Controls.Add(this.attentuation);
+            this.lightGroupBox.Controls.Add(this.intensity);
+            this.lightGroupBox.Controls.Add(this.lightAttentuationLabel);
+            this.lightGroupBox.Controls.Add(this.lightIntensityLabel);
+            this.lightGroupBox.Controls.Add(this.lightColorLabel);
+            this.lightGroupBox.Controls.Add(this.lightPositionLabel);
+            this.lightGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lightGroupBox.Location = new System.Drawing.Point(3, 503);
+            this.lightGroupBox.Name = "lightGroupBox";
+            this.lightGroupBox.Size = new System.Drawing.Size(210, 104);
+            this.lightGroupBox.TabIndex = 27;
+            this.lightGroupBox.TabStop = false;
+            this.lightGroupBox.Text = "Light";
+            // 
+            // lightZ
+            // 
+            this.lightZ.DecimalPlaces = 1;
+            this.lightZ.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.lightZ.Location = new System.Drawing.Point(162, 12);
+            this.lightZ.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.lightZ.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.lightZ.Name = "lightZ";
+            this.lightZ.Size = new System.Drawing.Size(42, 20);
+            this.lightZ.TabIndex = 10;
+            // 
+            // lightY
+            // 
+            this.lightY.DecimalPlaces = 1;
+            this.lightY.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.lightY.Location = new System.Drawing.Point(108, 11);
+            this.lightY.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.lightY.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.lightY.Name = "lightY";
+            this.lightY.Size = new System.Drawing.Size(48, 20);
+            this.lightY.TabIndex = 9;
+            // 
+            // lightX
+            // 
+            this.lightX.DecimalPlaces = 1;
+            this.lightX.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.lightX.Location = new System.Drawing.Point(56, 12);
+            this.lightX.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.lightX.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.lightX.Name = "lightX";
+            this.lightX.Size = new System.Drawing.Size(46, 20);
+            this.lightX.TabIndex = 8;
+            // 
+            // colorButton
+            // 
+            this.colorButton.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.colorButton.Location = new System.Drawing.Point(76, 34);
+            this.colorButton.Name = "colorButton";
+            this.colorButton.Size = new System.Drawing.Size(120, 20);
+            this.colorButton.TabIndex = 7;
+            this.colorButton.UseVisualStyleBackColor = false;
+            this.colorButton.Click += new System.EventHandler(this.colorButton_Click);
+            // 
+            // attentuation
+            // 
+            this.attentuation.DecimalPlaces = 1;
+            this.attentuation.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.attentuation.Location = new System.Drawing.Point(76, 78);
+            this.attentuation.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.attentuation.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.attentuation.Name = "attentuation";
+            this.attentuation.Size = new System.Drawing.Size(120, 20);
+            this.attentuation.TabIndex = 6;
+            this.attentuation.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // intensity
+            // 
+            this.intensity.DecimalPlaces = 1;
+            this.intensity.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.intensity.Location = new System.Drawing.Point(76, 56);
+            this.intensity.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.intensity.Name = "intensity";
+            this.intensity.Size = new System.Drawing.Size(120, 20);
+            this.intensity.TabIndex = 5;
+            this.intensity.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            // 
+            // lightAttentuationLabel
+            // 
+            this.lightAttentuationLabel.AutoSize = true;
+            this.lightAttentuationLabel.Location = new System.Drawing.Point(3, 78);
+            this.lightAttentuationLabel.Name = "lightAttentuationLabel";
+            this.lightAttentuationLabel.Size = new System.Drawing.Size(67, 13);
+            this.lightAttentuationLabel.TabIndex = 3;
+            this.lightAttentuationLabel.Text = "Attentuation:";
+            // 
+            // lightIntensityLabel
+            // 
+            this.lightIntensityLabel.AutoSize = true;
+            this.lightIntensityLabel.Location = new System.Drawing.Point(3, 58);
+            this.lightIntensityLabel.Name = "lightIntensityLabel";
+            this.lightIntensityLabel.Size = new System.Drawing.Size(49, 13);
+            this.lightIntensityLabel.TabIndex = 2;
+            this.lightIntensityLabel.Text = "Intensity:";
+            // 
+            // lightColorLabel
+            // 
+            this.lightColorLabel.AutoSize = true;
+            this.lightColorLabel.Location = new System.Drawing.Point(3, 39);
+            this.lightColorLabel.Name = "lightColorLabel";
+            this.lightColorLabel.Size = new System.Drawing.Size(34, 13);
+            this.lightColorLabel.TabIndex = 1;
+            this.lightColorLabel.Text = "Color:";
+            // 
+            // lightPositionLabel
+            // 
+            this.lightPositionLabel.AutoSize = true;
+            this.lightPositionLabel.Location = new System.Drawing.Point(3, 19);
+            this.lightPositionLabel.Name = "lightPositionLabel";
+            this.lightPositionLabel.Size = new System.Drawing.Size(47, 13);
+            this.lightPositionLabel.TabIndex = 0;
+            this.lightPositionLabel.Text = "Position:";
+            // 
             // fpsTimer
             // 
-            this.fpsTimer.Interval = 1000;
+            this.fpsTimer.Interval = 10;
             this.fpsTimer.Tick += new System.EventHandler(this.fpsTimer_Tick);
+            // 
+            // colorDialog
+            // 
+            this.colorDialog.Color = System.Drawing.Color.Red;
             // 
             // Form
             // 
@@ -1550,6 +1750,7 @@
             this.Name = "Form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "3D ENGINE";
+            this.SizeChanged += new System.EventHandler(this.Form_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_KeyDown);
             this.outerTablePanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.drawingPictureBox)).EndInit();
@@ -1602,6 +1803,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.cameraClose)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cameraFar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cameraFOV)).EndInit();
+            this.lightGroupBox.ResumeLayout(false);
+            this.lightGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lightZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lightY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lightX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.attentuation)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.intensity)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1630,9 +1838,6 @@
         private System.Windows.Forms.GroupBox cylinderGroupBox;
         private System.Windows.Forms.Button loadButton;
         private System.Windows.Forms.Button saveButton;
-        private System.Windows.Forms.NumericUpDown cuboidZ;
-        private System.Windows.Forms.NumericUpDown cuboidY;
-        private System.Windows.Forms.NumericUpDown cuboidX;
         private System.Windows.Forms.Label cuboidZLabel;
         private System.Windows.Forms.Label cuboidYLabel;
         private System.Windows.Forms.Label cuboidXLabel;
@@ -1673,7 +1878,6 @@
         private System.Windows.Forms.Label cylinderDivisionLabel;
         private System.Windows.Forms.Label cylinderRadiusLabel;
         private System.Windows.Forms.Label cylinderHeightLabel;
-        private System.Windows.Forms.CheckBox interpolationCheckBox;
         private System.Windows.Forms.CheckBox zBufferingCheckBox;
         private System.Windows.Forms.CheckBox cullingCheckBox;
         private System.Windows.Forms.ListBox lightsListBox;
@@ -1696,6 +1900,23 @@
         private System.Windows.Forms.Label cameraFarLabel;
         private System.Windows.Forms.Label cameraFOVLabel;
         private System.Windows.Forms.Timer fpsTimer;
+        private System.Windows.Forms.CheckBox edgesCheckBox;
+        private System.Windows.Forms.NumericUpDown cuboidZ;
+        private System.Windows.Forms.NumericUpDown cuboidY;
+        private System.Windows.Forms.NumericUpDown cuboidX;
+        private System.Windows.Forms.Button lightButton;
+        private System.Windows.Forms.GroupBox lightGroupBox;
+        private System.Windows.Forms.NumericUpDown lightZ;
+        private System.Windows.Forms.NumericUpDown lightY;
+        private System.Windows.Forms.NumericUpDown lightX;
+        private System.Windows.Forms.Button colorButton;
+        private System.Windows.Forms.NumericUpDown attentuation;
+        private System.Windows.Forms.NumericUpDown intensity;
+        private System.Windows.Forms.Label lightAttentuationLabel;
+        private System.Windows.Forms.Label lightIntensityLabel;
+        private System.Windows.Forms.Label lightColorLabel;
+        private System.Windows.Forms.Label lightPositionLabel;
+        private System.Windows.Forms.ColorDialog colorDialog;
     }
 }
 

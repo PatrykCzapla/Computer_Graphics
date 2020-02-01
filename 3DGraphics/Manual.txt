@@ -1,0 +1,44 @@
+Aby narysować figurę (prostopadłościan, stożek, walec, kula) należy wybrać parametry figury w odpowiednim miejscu, a 
+następnie kliknąć przysik 'Create nazwaFigury'. Brane tutaj są również pod uwagę aktualnie wpisane dane pozycji, rotacji i skali.
+Aby zmienić pozycję, rotację lub skalę danej figury należy wybrać ją na liście modeli a następnie odpowiednimi kontrolkami zmienić wartości.
+Aby edytować dowolną figurę należy zaznaczyć żądaną figurę w liście modeli na dole strony, a następnie 
+przy użyciu tych samych kontrolek wybrać żądane wartości i kliknąć przycisk 'Edit' powyżej listy modeli.
+Przycisk 'Clear' służy do wyczyszczenia obecnej listy modeli, ale nie świateł lub kamer. Aby usunąć model,
+należy wybrać go z listy modeli oraz kliknąć przycisk 'Delete' nad listą modeli. 
+
+Aby dodać kamerę należy wybrać żądane przez siebie parametry kamery w grupBoxie 'Camera' a następnie kliknąć przycisk 'Add camera'.
+Aby edytować kamerą należy zaznaczyć ją w liście kamer, wybrać jej własności w tych samych kontrolkach co przy tworzeniu i kliknąć przycisk 'Edit' nad listą kamer.
+Nie może być mniej niż jedna kamera. Domyślnie kamera patrzy na punkt (0, 0, 0), jednak jeśli zaznaczony jest jakiś model,
+to kamerą bedzie patrzeć w ten punkt, nie będzie jednak śledzić modelu. Światło zaznaczone jest punktem na ekranie.
+
+Edycja i tworzenie świateł odbywa się analogicznie do kamer. Może nie być światła w scenie.
+
+Na górnym pasku aplikacji wyświetla się liczba klatek na sekundę. Aplikacja jest w pełni skalowalna.
+
+Przyciski 'Load scene' oraz 'Save scene' służą do załadowania/zapisania bieżącej sceny z/do pliku .txt za pomocą serializacji binarnej.
+
+Checkboxy w prawym dolnym rogu służą do włączania/wyłączania opcji dodatkowych: wypełniania, rysowania krawędzi, z-bufora i backface cullingu.
+
+Za pomocą klawiszy W, S, A, D można zmieniać parametr z bieżącej kamery. Pozycję kamery można również zmieniać za pomocą myszki.
+Parametry x i y klikająć lewym przyciskiem myszy na obszarze rysowania a następnie przeciągając w odpowiednią stronę.
+Z kolei parametr 'z' klikając prawym przyciskiem myszy i przeciągając;
+
+Podstawowa kamera jest w pozycji (0, 0, 10) ma kąt widzenia 1 rad, dalszą ściane w odległości 100 a bliższą 1.
+
+P.S.
+W aplikacji czasami algorytm skan-linii nie wypełnia figur idealnie.
+Ponadto model oświetlenia nie jest idealny, ale zabrakło mi czasu żeby znaleźć przyczynę.
+
+
+
+Lista miejsc zawierających dane funkcjonalności:
+Dodawanie, edycja figur - klasy Form.cs, Cone.cs, Cuboid.cs, Cone.cs, Cylinder.cs, Sphere.cs, Model.cs, Mesh.cs
+Dodawanie, edycja świateł - klasy Form.cs, Light.cs
+Dodawanie, edycja świateł - klasy Form.cs, Camera.cs
+Wyświetlanie sceny - klasa Renderer.cs
+Macierze - klasa Matrix.cs
+Algorytm skan-linii - klasa Triangle.cs
+Zapis i wczytywanie scen - klasa Form.cs
+Backface culling - klasy Triangle.cs, Renderer.cs
+Z-Bufor - klasy DirectBitmap.cs, Triangle.cs
+Oświetlenie i cieniowanie Phonga - klasa Triagle.cs

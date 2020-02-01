@@ -20,13 +20,15 @@ namespace Lab4
         public static bool fill = true;
         public static bool backfaceCulling = true;
         public static bool zBuffer = true;
-        public static bool interpolatiton = true;
+        public static bool edges = true;
+
+        public static List<Light> lights = new List<Light>();
 
         private List<Model> models = new List<Model>();
         private List<Scene> scenes = new List<Scene>();
         private List<Camera> cameras = new List<Camera>();
 
-        private Camera currentCam;
+        public static Camera currentCam;
         private Scene currentScene;
         private Model currentModel;
 
@@ -35,17 +37,20 @@ namespace Lab4
         private double prevX = -1;
         private double prevY = -1;
 
-        private int FPS = 0;
         private int counter = 0;
+
+        private int FPS = 0;
+        private DateTime date;
 
         public Form()
         {
             InitializeComponent();
+            this.Text = "FPS: " + FPS;
             dbm = new DirectBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
             drawingPictureBox.Image = dbm.Bitmap;
 
-            currentCam = new Camera(new Vector(0, 0, 10), new Vector(0, 0, 0), 1, 1000, 1);
-            currentScene = new Scene(models, currentCam);
+            currentCam = new Camera(new Vector(0, 0, 10), new Vector(0, 0, 0), 1, 100, 1);
+            currentScene = new Scene(models, currentCam, lights);
             scenes.Add(currentScene);
             cameras.Add(currentCam);
 
@@ -54,18 +59,39 @@ namespace Lab4
             renderer = new Renderer();
 
             fpsTimer.Start();
+            date = DateTime.Now;
+
+            lightX.Maximum = dbm.Width - 1;
+            lightY.Maximum = dbm.Height - 1;
         }
 
         private void drawAll()
         {
             FPS++;
-
             dbm.Dispose();
             dbm = new DirectBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
-
+          
+           
             renderer.render(currentScene);
+            foreach (Light light in lights)
+                light.Draw();
             drawingPictureBox.Image = dbm.Bitmap;
             drawingPictureBox.Invalidate();
+        }
+
+        private void setModelVectors(Model model)
+        {
+            model.position.values[0] = (double)positionX.Value;
+            model.position.values[1] = -(double)positionY.Value;
+            model.position.values[2] = (double)positionZ.Value;
+
+            model.rotation.values[0] = (double)rotationX.Value;
+            model.rotation.values[1] = (double)rotationY.Value;
+            model.rotation.values[2] = (double)rotationZ.Value;
+
+            model.scale.values[0] = (double)scaleX.Value;
+            model.scale.values[1] = (double)scaleY.Value;
+            model.scale.values[2] = (double)scaleZ.Value;
         }
 
         private void cuboidButton_Click(object sender, EventArgs e)
@@ -74,28 +100,15 @@ namespace Lab4
             double y = (double)cuboidY.Value;
             double z = (double)cuboidZ.Value;
 
-            Cuboid cuboid = new Cuboid();
-            Mesh mesh = cuboid.createCuboid(x, y, z);
-            Model model = new Model(mesh, "Cuboid");
+            Cuboid model = new Cuboid(x, y , z);
 
-            model.position.values[0] = (double)positionX.Value;
-            model.position.values[1] = -(double)positionY.Value;
-            model.position.values[2] = (double)positionZ.Value;
+            setModelVectors(model);
 
-            model.rotation.values[0] = (double)rotationX.Value;
-            model.rotation.values[1] = (double)rotationY.Value;
-            model.rotation.values[2] = (double)rotationZ.Value;
+            models.Add(model);
 
-            model.scale.values[0] = (double)scaleX.Value;
-            model.scale.values[1] = (double)scaleY.Value;
-            model.scale.values[2] = (double)scaleZ.Value;
-
-            foreach (Scene s in scenes)
-                s.models.Add(model);
 
             addModelToList(model);
 
-            drawAll();
         }
 
         private void coneButton_Click(object sender, EventArgs e)
@@ -104,28 +117,14 @@ namespace Lab4
             double radius = (double)coneRadius.Value;
             double height = (double)coneHeight.Value;
 
-            Cone cone = new Cone();
-            Mesh mesh = cone.createCone(div, radius, height);
-            Model model = new Model(mesh, "Cone");
+            Cone model = new Cone(div, radius, height);
 
-            model.position.values[0] = (double)positionX.Value;
-            model.position.values[1] = -(double)positionY.Value;
-            model.position.values[2] = (double)positionZ.Value;
+            setModelVectors(model);
 
-            model.rotation.values[0] = (double)rotationX.Value;
-            model.rotation.values[1] = (double)rotationY.Value;
-            model.rotation.values[2] = (double)rotationZ.Value;
-
-            model.scale.values[0] = (double)scaleX.Value;
-            model.scale.values[1] = (double)scaleY.Value;
-            model.scale.values[2] = (double)scaleZ.Value;
-
-            foreach (Scene s in scenes)
-                s.models.Add(model);
+            models.Add(model);
 
             addModelToList(model);
 
-            drawAll();
         }
 
         private void sphereButton_Click(object sender, EventArgs e)
@@ -134,28 +133,14 @@ namespace Lab4
             int theta = (int)sphereTheta.Value;
             int phi = (int)spherePhi.Value;
 
-            Sphere sphere = new Sphere(radius);
-            Mesh mesh = sphere.createSphere(phi, theta);
-            Model model = new Model(mesh, "Sphere");
+            Sphere model = new Sphere(radius, phi, theta);
 
-            model.position.values[0] = (double)positionX.Value;
-            model.position.values[1] = -(double)positionY.Value;
-            model.position.values[2] = (double)positionZ.Value;
+            setModelVectors(model);
 
-            model.rotation.values[0] = (double)rotationX.Value;
-            model.rotation.values[1] = (double)rotationY.Value;
-            model.rotation.values[2] = (double)rotationZ.Value;
-
-            model.scale.values[0] = (double)scaleX.Value;
-            model.scale.values[1] = (double)scaleY.Value;
-            model.scale.values[2] = (double)scaleZ.Value;
-
-            foreach (Scene s in scenes)
-                s.models.Add(model);
+            models.Add(model);
 
             addModelToList(model);
 
-            drawAll();
         }
 
         private void cylinderButton_Click(object sender, EventArgs e)
@@ -164,28 +149,14 @@ namespace Lab4
             double height = (double)cylinderHeight.Value;
             double radius = (double)cylinderRadius.Value;
 
-            Cylinder cylinder = new Cylinder();
-            Mesh mesh = cylinder.createCylinder(div, radius, height);
-            Model model = new Model(mesh, "Cylinder");
+            Cylinder model = new Cylinder(div, radius, height);
 
-            model.position.values[0] = (double)positionX.Value;
-            model.position.values[1] = -(double)positionY.Value;
-            model.position.values[2] = (double)positionZ.Value;
+            setModelVectors(model);
 
-            model.rotation.values[0] = (double)rotationX.Value;
-            model.rotation.values[1] = (double)rotationY.Value;
-            model.rotation.values[2] = (double)rotationZ.Value;
-
-            model.scale.values[0] = (double)scaleX.Value;
-            model.scale.values[1] = (double)scaleY.Value;
-            model.scale.values[2] = (double)scaleZ.Value;
-
-            foreach (Scene s in scenes)
-                s.models.Add(model);
+            models.Add(model);
 
             addModelToList(model);
 
-            drawAll();
         }
 
         private void addCameraToList(Camera cam)
@@ -198,21 +169,24 @@ namespace Lab4
             modelsListBox.Items.Add(model.name + " " + +modelsListBox.Items.Count);
         }
 
+        private void addLightToList(Light light)
+        {
+            lightsListBox.Items.Add("Light " + lightsListBox.Items.Count);
+        }
+
 
         private void position_ValueChanged(object sender, EventArgs e)
         {
             if (currentModel == null) return;
             Vector position = new Vector((double)positionX.Value, -(double)positionY.Value, (double)positionZ.Value);
             currentModel.position = position;
-            drawAll();
         }
 
         private void rotation_ValueChanged(object sender, EventArgs e)
         {
             if (currentModel == null) return;
-            Vector rotation = new Vector((double)rotationX.Value, (double)rotationY.Value, (double)rotationZ.Value);
+            Vector rotation = new Vector(convertToRadians((double)rotationX.Value), convertToRadians((double)rotationY.Value), convertToRadians((double)rotationZ.Value));
             currentModel.rotation = rotation;
-            drawAll();
         }
 
         private void scale_ValueChanged(object sender, EventArgs e)
@@ -220,7 +194,6 @@ namespace Lab4
             if (currentModel == null) return;
             Vector scale = new Vector((double)scaleX.Value, (double)scaleY.Value, (double)scaleZ.Value);
             currentModel.scale = scale;
-            drawAll();
         }
 
         private void clearButton_Click(object sender, EventArgs e)
@@ -263,31 +236,21 @@ namespace Lab4
             if (index == -1) return;
             modelsListBox.Items.RemoveAt(index);
             models.RemoveAt(index);
-            drawAll();
         }
 
         private void fillCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             fill = !fill;
-            drawAll();
         }
 
         private void zBufferingCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             zBuffer = !zBuffer;
-            drawAll();
         }
 
         private void cullingCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             backfaceCulling = !backfaceCulling;
-            drawAll();
-        }
-
-        private void interpolationCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            interpolatiton = !interpolatiton;
-            drawAll();
         }
 
         private void camerasListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -300,26 +263,26 @@ namespace Lab4
 
             currentScene = scenes.Find(s => s.camera == currentCam);
 
-            drawAll();
         }
 
         private void cameraDeleteButton_Click(object sender, EventArgs e)
         {
             int index = camerasListBox.SelectedIndex;
             if (index == -1 || cameras.Count == 1) return;
-            modelsListBox.Items.RemoveAt(index);
-            models.RemoveAt(index);
+            camerasListBox.Items.RemoveAt(index);
+            cameras.RemoveAt(index);
 
             currentCam = cameras[0];
 
             currentScene = scenes.Find(s => s.camera == currentCam);
 
-            drawAll();
+            camerasListBox.SelectedIndex = 0;
+
         }
 
         private void cameraButton_Click(object sender, EventArgs e)
         {
-            double fov = (double)cameraFOV.Value;
+            double fov = convertToRadians((double)cameraFOV.Value);
             double far = (double)cameraFar.Value;
             double close = (double)cameraClose.Value;
 
@@ -340,28 +303,24 @@ namespace Lab4
             }
             cameras.Add(newCam);
             addCameraToList(newCam);
-            currentScene = new Scene(models, newCam);
+            currentScene = new Scene(models, newCam, lights);
             scenes.Add(currentScene);
             currentCam = newCam;
-            drawAll();
         }
 
         private void moveCameraX(Camera cam, double x)
         {
             cameras.Find(c => c==cam).position.values[0] += x;
-            drawAll();
         }
 
         private void moveCameraY(Camera cam, double y)
         {
             cameras.Find(c => c == cam).position.values[1] += y;
-            drawAll();
         }
 
         private void moveCameraZ(Camera cam, double z)
         {
             cameras.Find(c => c == cam).position.values[2] += z;
-            drawAll();
         }
 
         private void drawingPictureBox_MouseDown(object sender, MouseEventArgs e)
@@ -372,14 +331,22 @@ namespace Lab4
 
         private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
         {
-            counter++;
-            if (counter != 10) return;
-            counter = 0;
             if (prevY == -1) return;
+            counter++;
+            if (counter != 5) return;
+            counter = 0;
             double dx = e.X - prevX;
             double dy = e.Y - prevY;
-            if (dx != 0) moveCameraX(currentCam, dx / drawingPictureBox.Width);
-            if (dy != 0) moveCameraY(currentCam, dy / drawingPictureBox.Height);
+            if(e.Button == MouseButtons.Left)
+            {
+                if (dx != 0) moveCameraX(currentCam, -dx / drawingPictureBox.Width);
+                if (dy != 0) moveCameraY(currentCam, -dy / drawingPictureBox.Height);
+            }
+            else if(e.Button == MouseButtons.Right)
+            {
+                if (dy != 0) moveCameraZ(currentCam, dy / drawingPictureBox.Height);
+            }
+            
         }
 
         private void drawingPictureBox_MouseUp(object sender, MouseEventArgs e)
@@ -396,6 +363,14 @@ namespace Lab4
             else if (e.KeyCode == Keys.S)
             {
                 moveCameraZ(currentCam, 0.3);
+            }
+            else if (e.KeyCode == Keys.D)
+            {
+                moveCameraX(currentCam, 0.3);
+            }
+            else if (e.KeyCode == Keys.A)
+            {
+                moveCameraX(currentCam, -0.3);
             }
         }
 
@@ -417,6 +392,7 @@ namespace Lab4
         private void loadButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = @"\Debug";
             openFileDialog.Filter = "TXT Files (*.txt)|*.txt";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -429,6 +405,8 @@ namespace Lab4
 
                 models = scenes.First().models;
 
+                lights = scenes.First().lights;
+
                 cameras = new List<Camera>();
 
                 foreach(Scene s in scenes)
@@ -437,6 +415,10 @@ namespace Lab4
                 }
 
                 camerasListBox.Items.Clear();
+
+                lightsListBox.Items.Clear();
+
+                modelsListBox.Items.Clear();
 
                 currentScene = scenes.First();
                 currentModel = null;
@@ -448,9 +430,16 @@ namespace Lab4
                 foreach (Camera c in cameras)
                     addCameraToList(c);
 
-                drawAll();
+                foreach (Light l in lights)
+                    addLightToList(l) ;
+
 
             }
+        }
+
+        private double convertToRadians(double angle)
+        {
+            return angle * Math.PI / 180;
         }
 
         private void cameraEditButton_Click(object sender, EventArgs e)
@@ -460,7 +449,7 @@ namespace Lab4
 
             Camera cam = cameras[index];
 
-            double fov = (double)cameraFOV.Value;
+            double fov = convertToRadians((double)cameraFOV.Value);
             double far = (double)cameraFar.Value;
             double close = (double)cameraClose.Value;
 
@@ -471,7 +460,6 @@ namespace Lab4
             currentCam = cam;
             currentScene = scenes.Find(s => s.camera == currentCam);
 
-            drawAll();
         }
 
         private void modelEditButton_Click(object sender, EventArgs e)
@@ -493,27 +481,13 @@ namespace Lab4
                         double y = (double)cuboidY.Value;
                         double z = (double)cuboidZ.Value;
 
-                        Cuboid cuboid = new Cuboid();
-                        Mesh mesh = cuboid.createCuboid(x, y, z);
-                        Model newModel = new Model(mesh, "Cuboid");
+                        Cuboid newModel = new Cuboid(x, y, z);
 
-                        newModel.position.values[0] = (double)positionX.Value;
-                        newModel.position.values[1] = -(double)positionY.Value;
-                        newModel.position.values[2] = (double)positionZ.Value;
-
-                        newModel.rotation.values[0] = (double)rotationX.Value;
-                        newModel.rotation.values[1] = (double)rotationY.Value;
-                        newModel.rotation.values[2] = (double)rotationZ.Value;
-
-                        newModel.scale.values[0] = (double)scaleX.Value;
-                        newModel.scale.values[1] = (double)scaleY.Value;
-                        newModel.scale.values[2] = (double)scaleZ.Value;
+                        setModelVectors(newModel);
 
                         foreach (Scene s in scenes)
                             s.models.Insert(index, newModel);
 
-
-                        drawAll();
 
                         break;
                     }
@@ -523,26 +497,13 @@ namespace Lab4
                         double radius = (double)coneRadius.Value;
                         double height = (double)coneHeight.Value;
 
-                        Cone cone = new Cone();
-                        Mesh mesh = cone.createCone(div, radius, height);
-                        Model newModel = new Model(mesh, "Cone");
+                        Cone newModel = new Cone(div, radius, height);
 
-                        newModel.position.values[0] = (double)positionX.Value;
-                        newModel.position.values[1] = -(double)positionY.Value;
-                        newModel.position.values[2] = (double)positionZ.Value;
-
-                        newModel.rotation.values[0] = (double)rotationX.Value;
-                        newModel.rotation.values[1] = (double)rotationY.Value;
-                        newModel.rotation.values[2] = (double)rotationZ.Value;
-
-                        newModel.scale.values[0] = (double)scaleX.Value;
-                        newModel.scale.values[1] = (double)scaleY.Value;
-                        newModel.scale.values[2] = (double)scaleZ.Value;
+                        setModelVectors(newModel);
 
                         foreach (Scene s in scenes)
                             s.models.Insert(index, newModel);
 
-                        drawAll();
 
                         break;
                     }
@@ -552,26 +513,13 @@ namespace Lab4
                         double height = (double)cylinderHeight.Value;
                         double radius = (double)cylinderRadius.Value;
 
-                        Cylinder cylinder = new Cylinder();
-                        Mesh mesh = cylinder.createCylinder(div, radius, height);
-                        Model newModel = new Model(mesh, "Cylinder");
+                        Cylinder newModel = new Cylinder(div, radius, height);
 
-                        newModel.position.values[0] = (double)positionX.Value;
-                        newModel.position.values[1] = -(double)positionY.Value;
-                        newModel.position.values[2] = (double)positionZ.Value;
-
-                        newModel.rotation.values[0] = (double)rotationX.Value;
-                        newModel.rotation.values[1] = (double)rotationY.Value;
-                        newModel.rotation.values[2] = (double)rotationZ.Value;
-
-                        newModel.scale.values[0] = (double)scaleX.Value;
-                        newModel.scale.values[1] = (double)scaleY.Value;
-                        newModel.scale.values[2] = (double)scaleZ.Value;
+                        setModelVectors(newModel);
 
                         foreach (Scene s in scenes)
                             s.models.Insert(index, newModel);
 
-                        drawAll();
                         break;
                     }
                 case "Sphere":
@@ -580,27 +528,14 @@ namespace Lab4
                         int theta = (int)sphereTheta.Value;
                         int phi = (int)spherePhi.Value;
 
-                        Sphere sphere = new Sphere(radius);
-                        Mesh mesh = sphere.createSphere(phi, theta);
-                        Model newModel = new Model(mesh, "Sphere");
+                        Sphere newModel = new Sphere(radius, phi, theta);
 
-                        newModel.position.values[0] = (double)positionX.Value;
-                        newModel.position.values[1] = -(double)positionY.Value;
-                        newModel.position.values[2] = (double)positionZ.Value;
-
-                        newModel.rotation.values[0] = (double)rotationX.Value;
-                        newModel.rotation.values[1] = (double)rotationY.Value;
-                        newModel.rotation.values[2] = (double)rotationZ.Value;
-
-                        newModel.scale.values[0] = (double)scaleX.Value;
-                        newModel.scale.values[1] = (double)scaleY.Value;
-                        newModel.scale.values[2] = (double)scaleZ.Value;
+                        setModelVectors(newModel);
 
                         foreach (Scene s in scenes)
                             s.models.Insert(index, newModel);
 
 
-                        drawAll();
                         break;
                     }
                 default:
@@ -614,9 +549,69 @@ namespace Lab4
 
         private void fpsTimer_Tick(object sender, EventArgs e)
         {
-            this.Text = "3D ENGINE    FPS: " + FPS;
+            if ((DateTime.Now - date).TotalSeconds >= 1)
+            {
+                this.Text = "FPS: " + FPS;
+                date = DateTime.Now;
+                FPS = 0;
+            }
+            drawAll();
+        }
 
-            FPS = 0;
+        private void edgesCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            edges = !edges;
+        }
+
+        private void lightButton_Click(object sender, EventArgs e)
+        {           
+            double inten = (double)intensity.Value;
+            double att = (double)attentuation.Value;
+            Color color = colorButton.BackColor;
+
+            Vector pos = new Vector((double)lightX.Value, (double)lightY.Value, (double)lightZ.Value);
+
+            Light light = new Light(pos, color, inten, att);
+            lights.Add(light);
+
+            addLightToList(light);
+
+        }
+
+        private void lightDeleteButton_Click(object sender, EventArgs e)
+        {
+            int index = lightsListBox.SelectedIndex;
+            if (index == -1) return;
+            lightsListBox.Items.RemoveAt(index);
+            lights.RemoveAt(index);
+
+        }
+
+        private void lightEditButton_Click(object sender, EventArgs e)
+        {
+            int index = lightsListBox.SelectedIndex;
+            if (index == -1) return;
+
+            Light light = lights[index];
+
+            light.intensity = (double)intensity.Value;
+            light.attentuation = (double)attentuation.Value;
+            light.color = colorButton.BackColor;
+
+            light.position = new Vector((double)lightX.Value, (double)lightY.Value, (double)lightZ.Value);
+        }
+
+        private void colorButton_Click(object sender, EventArgs e)
+        {
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+                colorButton.BackColor = colorDialog.Color;
+        }
+
+        private void Form_SizeChanged(object sender, EventArgs e)
+        {
+            renderer.aspect = (double)dbm.Width / (double)dbm.Height;
+            lightX.Maximum = dbm.Width - 1;
+            lightY.Maximum = dbm.Height - 1;
         }
     }
 }

@@ -6,19 +6,29 @@ using System.Threading.Tasks;
 
 namespace Lab4
 {
-    public class Sphere
+    [Serializable]
+    public class Sphere : Model
     {
-        double radius;
+        public double radius;
+        public int slices;
+        public int stacks;
 
-        public Sphere(double radius)
+        public Sphere(double radius, int slices, int stacks)
         {
             this.radius = radius;
+            this.slices = slices;
+            this.stacks = stacks;
+            position = new Vector(0, 0, 0);
+            rotation = new Vector(0, 0, 0);
+            scale = new Vector(1, 1, 1);
+            this.name = "Sphere";            
+            generateMesh();
+            mesh.makeMesh();
         }
 
-        public Mesh createSphere(int slices, int stacks)
+        public void generateMesh()
         {
             Mesh mesh = new Mesh();
-            mesh.triangles = new List<Triangle>();
 
             Triangle triangle = new Triangle();
 
@@ -42,6 +52,8 @@ namespace Lab4
                         triangle.vertices.Add(v0);
                         triangle.vertices.Add(v2);
                         triangle.vertices.Add(v3);
+                        foreach (Vertex v in triangle.vertices)
+                            v.makeNormal(this.position);
                         mesh.triangles.Add(triangle);
                     }
                     else if(t + 1 == stacks)
@@ -50,6 +62,8 @@ namespace Lab4
                         triangle.vertices.Add(v2);
                         triangle.vertices.Add(v0);
                         triangle.vertices.Add(v1);
+                        foreach (Vertex v in triangle.vertices)
+                            v.makeNormal(this.position);
                         mesh.triangles.Add(triangle);
                     }
                     else
@@ -58,18 +72,21 @@ namespace Lab4
                         triangle.vertices.Add(v0);
                         triangle.vertices.Add(v1);
                         triangle.vertices.Add(v3);
+                        foreach (Vertex v in triangle.vertices)
+                            v.makeNormal(this.position);
                         mesh.triangles.Add(triangle);
 
                         triangle = new Triangle();
                         triangle.vertices.Add(v1);
                         triangle.vertices.Add(v2);
                         triangle.vertices.Add(v3);
+                        foreach (Vertex v in triangle.vertices)
+                            v.makeNormal(this.position);
                         mesh.triangles.Add(triangle);
                     }
                 }
             }
-            mesh.makeMesh();
-            return mesh;
+            this.mesh = mesh;
         }
 
 

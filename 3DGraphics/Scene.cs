@@ -13,10 +13,13 @@ namespace Lab4
 
         public Camera camera;
 
-        public Scene(List<Model> models, Camera camera)
+        public List<Light> lights;
+
+        public Scene(List<Model> models, Camera camera, List<Light> lights)
         {
             this.models = models;
             this.camera = camera;
+            this.lights = lights;
         }
     }
 }

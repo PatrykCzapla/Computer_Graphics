@@ -6,22 +6,39 @@ using System.Threading.Tasks;
 
 namespace Lab4
 {
-    public class Cuboid
+    [Serializable]
+    public class Cuboid : Model
     {
-        public Mesh createCuboid(double a, double b, double c)
+        public double a;
+        public double b;
+        public double c;
+
+        public Cuboid(double a, double b, double c)
+        {
+            this.a = a;
+            this.b = b;
+            this.c = c;
+            generateMesh();
+            this.mesh.makeMesh();
+            this.name = "Cuboid";
+            position = new Vector(0, 0, 0);
+            rotation = new Vector(0, 0, 0);
+            scale = new Vector(1, 1, 1);
+        }
+
+        public void generateMesh()
         {
             double aMid = a / 2;
             double bMid = b / 2;
             double cMid = c / 2;
 
             Mesh mesh = new Mesh();
-            mesh.triangles = new List<Triangle>();
 
             Triangle triangle = new Triangle();
             Vector normal = new Vector(0, 0, -1);
-            Vertex v0 = new Vertex(aMid, bMid, -cMid, normal, 0.748573, 0.750412);
-            Vertex v1 = new Vertex(aMid, -bMid, -cMid, normal, 0.749279, 0.501284);
-            Vertex v2 = new Vertex(-aMid, -bMid, -cMid, normal, 0.999110, 0.501077);
+            Vertex v0 = new Vertex(aMid, bMid, -cMid, normal);
+            Vertex v1 = new Vertex(aMid, -bMid, -cMid, normal);
+            Vertex v2 = new Vertex(-aMid, -bMid, -cMid, normal);
 
             triangle.vertices.Add(v0);
             triangle.vertices.Add(v1);
@@ -29,9 +46,9 @@ namespace Lab4
             mesh.triangles.Add(triangle);
 
             triangle = new Triangle();
-            v0 = new Vertex(aMid, bMid, -cMid, normal, 0.748573, 0.750412);
-            v1 = new Vertex(-aMid, -bMid, -cMid, normal, 0.999110, 0.501077);
-            v2 = new Vertex(-aMid, bMid, -cMid, normal, 0.999455, 0.750380);
+            v0 = new Vertex(aMid, bMid, -cMid, normal);
+            v1 = new Vertex(-aMid, -bMid, -cMid, normal);
+            v2 = new Vertex(-aMid, bMid, -cMid, normal);
 
             triangle.vertices.Add(v0);
             triangle.vertices.Add(v1);
@@ -40,9 +57,9 @@ namespace Lab4
 
             triangle = new Triangle();
             normal = new Vector(-1, 0, 0);
-            v0 = new Vertex(-aMid, -bMid, cMid, normal, 0.250471, 0.500702);
-            v1 = new Vertex(-aMid, bMid, cMid, normal, 0.249682, 0.749677);
-            v2 = new Vertex(-aMid, bMid, -cMid, normal, 0.001085, 0.750380);
+            v0 = new Vertex(-aMid, -bMid, cMid, normal);
+            v1 = new Vertex(-aMid, bMid, cMid, normal);
+            v2 = new Vertex(-aMid, bMid, -cMid, normal);
 
             triangle.vertices.Add(v0);
             triangle.vertices.Add(v1);
@@ -50,9 +67,9 @@ namespace Lab4
             mesh.triangles.Add(triangle);
 
             triangle = new Triangle();
-            v0 = new Vertex(-aMid, -bMid, cMid, normal, 0.250471, 0.500702);
-            v1 = new Vertex(-aMid, bMid, -cMid, normal, 0.001085, 0.750380);
-            v2 = new Vertex(-aMid, -bMid, -cMid, normal, 0.001517, 0.499994);
+            v0 = new Vertex(-aMid, -bMid, cMid, normal);
+            v1 = new Vertex(-aMid, bMid, -cMid, normal);
+            v2 = new Vertex(-aMid, -bMid, -cMid, normal);
 
             triangle.vertices.Add(v0);
             triangle.vertices.Add(v1);
@@ -61,9 +78,9 @@ namespace Lab4
 
             triangle = new Triangle();
             normal = new Vector(0, 0, 1);
-            v0 = new Vertex(aMid, -bMid, cMid, normal, 0.499422, 0.500239);
-            v1 = new Vertex(aMid, bMid, cMid, normal, 0.500149, 0.750166);
-            v2 = new Vertex(-aMid, -bMid, cMid, normal, 0.250471, 0.500702);
+            v0 = new Vertex(aMid, -bMid, cMid, normal);
+            v1 = new Vertex(aMid, bMid, cMid, normal);
+            v2 = new Vertex(-aMid, -bMid, cMid, normal);
 
             triangle.vertices.Add(v0);
             triangle.vertices.Add(v1);
@@ -71,9 +88,9 @@ namespace Lab4
             mesh.triangles.Add(triangle);
 
             triangle = new Triangle();
-            v0 = new Vertex(aMid, bMid, cMid, normal, 0.500149, 0.750166);
-            v1 = new Vertex(-aMid, bMid, cMid, normal, 0.249682, 0.749677);
-            v2 = new Vertex(-aMid, -bMid, cMid, normal, 0.250471, 0.500702);
+            v0 = new Vertex(aMid, bMid, cMid, normal);
+            v1 = new Vertex(-aMid, bMid, cMid, normal);
+            v2 = new Vertex(-aMid, -bMid, cMid, normal);
 
             triangle.vertices.Add(v0);
             triangle.vertices.Add(v1);
@@ -82,9 +99,9 @@ namespace Lab4
 
             triangle = new Triangle();
             normal = new Vector(1, 0, 0);
-            v0 = new Vertex(aMid, -bMid, -cMid, normal, 0.250471, 0.500702);
-            v1 = new Vertex(aMid, bMid, -cMid, normal, 0.748573, 0.750412);
-            v2 = new Vertex(aMid, -bMid, cMid, normal, 0.499422, 0.500239);
+            v0 = new Vertex(aMid, -bMid, -cMid, normal);
+            v1 = new Vertex(aMid, bMid, -cMid, normal);
+            v2 = new Vertex(aMid, -bMid, cMid, normal);
 
             triangle.vertices.Add(v0);
             triangle.vertices.Add(v1);
@@ -92,9 +109,9 @@ namespace Lab4
             mesh.triangles.Add(triangle);
 
             triangle = new Triangle();
-            v0 = new Vertex(aMid, bMid, -cMid, normal, 0.748573, 0.750412);
-            v1 = new Vertex(aMid, bMid, cMid, normal, 0.500149, 0.750166);
-            v2 = new Vertex(aMid, -bMid, cMid, normal, 0.499422, 0.500239);
+            v0 = new Vertex(aMid, bMid, -cMid, normal);
+            v1 = new Vertex(aMid, bMid, cMid, normal);
+            v2 = new Vertex(aMid, -bMid, cMid, normal);
 
             triangle.vertices.Add(v0);
             triangle.vertices.Add(v1);
@@ -103,9 +120,9 @@ namespace Lab4
 
             triangle = new Triangle();
             normal = new Vector(0, 1, 0);
-            v0 = new Vertex(aMid, bMid, -cMid, normal, 0.748573, 0.750412);
-            v1 = new Vertex(-aMid, bMid, -cMid, normal, 0.748355, 0.998230);
-            v2 = new Vertex(aMid, bMid, cMid, normal, 0.500149, 0.750166);
+            v0 = new Vertex(aMid, bMid, -cMid, normal);
+            v1 = new Vertex(-aMid, bMid, -cMid, normal);
+            v2 = new Vertex(aMid, bMid, cMid, normal);
 
             triangle.vertices.Add(v0);
             triangle.vertices.Add(v1);
@@ -113,9 +130,9 @@ namespace Lab4
             mesh.triangles.Add(triangle);
 
             triangle = new Triangle();
-            v0 = new Vertex(-aMid, bMid, -cMid, normal, 0.748355, 0.998230);
-            v1 = new Vertex(-aMid, bMid, cMid, normal, 0.500193, 0.998728);
-            v2 = new Vertex(aMid, bMid, cMid, normal, 0.500149, 0.750166);
+            v0 = new Vertex(-aMid, bMid, -cMid, normal);
+            v1 = new Vertex(-aMid, bMid, cMid, normal);
+            v2 = new Vertex(aMid, bMid, cMid, normal);
 
             triangle.vertices.Add(v0);
             triangle.vertices.Add(v1);
@@ -124,9 +141,9 @@ namespace Lab4
 
             triangle = new Triangle();
             normal = new Vector(0, -1, 0);
-            v0 = new Vertex(aMid, -bMid, -cMid, normal, 0.749279, 0.501284);
-            v1 = new Vertex(aMid, -bMid, cMid, normal, 0.499422, 0.500239);
-            v2 = new Vertex(-aMid, -bMid, cMid, normal, 0.498993, 0.250415);
+            v0 = new Vertex(aMid, -bMid, -cMid, normal);
+            v1 = new Vertex(aMid, -bMid, cMid, normal);
+            v2 = new Vertex(-aMid, -bMid, cMid, normal);
 
             triangle.vertices.Add(v0);
             triangle.vertices.Add(v1);
@@ -134,17 +151,16 @@ namespace Lab4
             mesh.triangles.Add(triangle);
 
             triangle = new Triangle();
-            v0 = new Vertex(aMid, -bMid, -cMid, normal, 0.749279, 0.501284);
-            v1 = new Vertex(-aMid, -bMid, cMid, normal, 0.498993, 0.250415);
-            v2 = new Vertex(-aMid, -bMid, -cMid, normal, 0.748953, 0.250920);
+            v0 = new Vertex(aMid, -bMid, -cMid, normal);
+            v1 = new Vertex(-aMid, -bMid, cMid, normal);
+            v2 = new Vertex(-aMid, -bMid, -cMid, normal);
 
             triangle.vertices.Add(v0);
             triangle.vertices.Add(v1);
             triangle.vertices.Add(v2);
             mesh.triangles.Add(triangle);
 
-            mesh.makeMesh();
-            return mesh;
+            this.mesh = mesh;
         }
 
     }

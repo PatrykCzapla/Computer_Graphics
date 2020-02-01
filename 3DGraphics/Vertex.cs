@@ -21,12 +21,8 @@ namespace Lab4
         public Vector transformationPosition;
         public Vector screenPosition;
 
-        public Vertex(Vertex v)
-        {
-            this.x = v.x;
-            this.y = v.y;
-            this.z = v.z;
-        }
+        public Vector transformationNormal;
+        public Vector inCameraPosition;
 
         public Vertex(double x, double y, double z)
         {
@@ -35,7 +31,7 @@ namespace Lab4
             this.z = z;
         }
 
-        public Vertex(double x, double y, double z, Vector normalVector, double Tx, double Ty)
+        public Vertex(double x, double y, double z, Vector normalVector, double Tx = -1, double Ty = -1)
         {
             this.x = x;
             this.y = y;
@@ -43,18 +39,6 @@ namespace Lab4
             this.normalVector = normalVector;
             this.Tx = Tx;
             this.Ty = Ty;
-        }
-
-        public void Draw(Color color)
-        {
-            for (int i = -2; i < 3; i++)
-                for (int j = -2; j < 3; j++)
-                {
-                    if (this.x + i < 0 || this.x + i >= Form.dbm.Width || this.y + j < 0 || this.y + j >= Form.dbm.Height) 
-                        continue;
-                    Form.dbm.SetPixel((int)x + i, (int)y + j, color);
-                }
-            return;
         }
 
         public void Transform(double W, double H, Matrix projectionMatrix, Matrix viewMatrix, Matrix modelMatrix)
@@ -69,8 +53,18 @@ namespace Lab4
                 transformationPosition.values[i] /= transformationPosition.values[3];
             screenPosition.values[0] = ((transformationPosition.values[0] + 1) / 2) * W;
             screenPosition.values[1] = ((transformationPosition.values[1] + 1) / 2) * H;
-            screenPosition.values[2] = (transformationPosition.values[2] + 1) / 2;
+            screenPosition.values[2] = (transformationPosition.values[2] + 1)/ 2;
 
+            double[] tmp = { normalVector.values[0], normalVector.values[1], normalVector.values[2], 0 };
+            transformationNormal = viewMatrix.MatrixByVector(modelMatrix.MatrixByVector(new Vector(tmp)));
+            inCameraPosition = viewMatrix.MatrixByVector(modelMatrix.MatrixByVector(vector));
+
+        }
+
+        public void makeNormal(Vector center)
+        {
+            normalVector = new Vector(x - center.values[0], y - center.values[1], z - center.values[2]);
+            normalVector = normalVector.normalize();
         }
     }
 }
