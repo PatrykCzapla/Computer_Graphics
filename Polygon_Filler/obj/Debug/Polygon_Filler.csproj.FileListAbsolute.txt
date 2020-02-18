@@ -1,0 +1,12 @@
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Polygon_Filler\bin\Debug\Polygon_Filler.exe.config
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Polygon_Filler\bin\Debug\Polygon_Filler.exe
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Polygon_Filler\bin\Debug\Polygon_Filler.pdb
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Polygon_Filler\obj\Debug\Polygon_Filler.csprojAssemblyReference.cache
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Polygon_Filler\obj\Debug\Polygon_Filler.Properties.Resources.resources
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Polygon_Filler\obj\Debug\Polygon_Filler.csproj.GenerateResource.cache
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Polygon_Filler\obj\Debug\Polygon_Filler.exe
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Polygon_Filler\obj\Debug\Polygon_Filler.pdb
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Polygon_Filler\obj\Debug\Polygon_Filler.Form.resources
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Polygon_Filler\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Polygon_Filler\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\01135064\Desktop\MiNI\Grafika komputerowa 1\Github\Graphics\Polygon_Filler\obj\Debug\Polygon_Filler.csproj.CopyComplete
